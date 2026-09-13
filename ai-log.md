@@ -1,4 +1,4 @@
-# AI Usage Log — Sweet Flowers
+# AI Usage Log Sweet Flowers
 
 Per the course AI policy, AI was used only to explain concepts, organize work and check structure — never to write our page text, report, or images. All site text, data and photos are our own.
 
