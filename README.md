@@ -43,7 +43,7 @@ git clone https://github.com/munirasagyndyqova/sweet-flowers.git
 
 ## Reports & submission materials
 
-- [Tag checklist](checklist.docx)
+- [Tag checklist](checklist.md)
 - [PDF report](report.pdf)-Task A & Task B with screenshots
 - [Hand-drawn sketch](sketch.jpg)
 - [AI usage log](ai-log.md)
