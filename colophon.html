@@ -1,1 +1,107 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Colophon page explaining how the Sweet Flowers website was built, the tools used, and the lessons learned.">
+  <meta name="author" content="Koshkinbayeva Akbota">
+  <title>Colophon - Sweet Flowers</title>
+  <!-- Author: Koshkinbayeva Akbota -->
+  <!-- I included a meta description to summarize the technical nature of this page for search engines and users. -->
+</head>
+<body>
+
+<header>
+  <p><strong>Sweet Flowers</strong></p>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="flowers.html">Flowers</a></li>
+      <li><a href="delivery.html">Delivery</a></li>
+      <li><a href="order.html">Order</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="contacts.html">Contacts</a></li>
+      <li><a href="colophon.html">Colophon</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <h1>Colophon</h1>
+  <p>This page describes how the Sweet Flowers website was created.</p>
+
+  <hr>
+
+  <section>
+    <h2>Who created the website</h2>
+    <p>The website was created by <strong>Nurziya Kenes, Sagyndykova Munira and Koshkinbayeva Akbota</strong> as part of an HTML basics assignment. Participant 3 was responsible for the technical pages, including this <em>colophon</em>. <b>All</b> pages were written by hand using a WebStorm and notebook.</p>
+  </section>
+
+  <section>
+    <h2>How we collected information</h2>
+    <p>Information about flowers and delivery was collected from public domain resources and by working at this place. We ensured that all data used is accurate and up-to-date, relying on official <abbr title="Kazakhstan">KZ</abbr> suppliers. We also will use <abbr title="Cascading Style Sheets">CSS</abbr> for basic styling later in the project.</p>
+  </section>
+
+  <section>
+    <h2>How we organized HTML</h2>
+    <p>The website is organized into several pages. Each page is linked through a common navigation menu. The main structure uses semantic HTML5 tags like <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, and <code>&lt;footer&gt;</code>.</p>
+
+    <!-- I used a div here because there is no semantic HTML element specifically designed to group a text description with a preformatted code block. -->
+    <div class="file-tree-container">
+      <p>Here is an example of the file structure:</p>
+      <pre>
+sweet-flowers/
+├── images/
+├── index.html
+├── about.html
+├── delivery.html
+├── flowers.html
+├── order.html
+├── reviews.html
+├── contacts.html
+└── colophon.html
+      </pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>What tools we used</h2>
+    <p>We used a WebStorm and notebook. To speed up the process, we used keyboard shortcuts like <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy and <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste code snippets.</p>
+    <p>When validating our HTML, we sometimes saw errors. For example, the validator output looked like this:</p>
+    <samp>Error: Element 'div' not allowed as child of element 'ul' in this context.</samp>
+    <p>We fixed these issues by using the correct semantic tags.</p>
+    <p><small>We used W3Schools and YouTube channels tj create this site and solve the errors....</small></p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>How pages are connected</h2>
+    <p>All pages are connected via relative links in the <code>&lt;nav&gt;</code> element. For example, to go to the contacts page, we use <code>&lt;a href="contacts.html"&gt;Contacts&lt;/a&gt;</code>.</p>
+
+    <!-- I used a span here to highlight a specific term inline without breaking the text flow, as no semantic inline tag applies perfectly. -->
+    <p>We also used <span>relative paths</span> to link images and other resources, ensuring the site works locally without a web server.</p>
+  </section>
+
+  <section>
+    <h2>What we learned</h2>
+    <p>We learned how to structure a multi-page website, the importance of semantic HTML, and how to use various text-level semantics like <code>&lt;q&gt;</code>, <code>&lt;cite&gt;</code>, and <code>&lt;address&gt;</code>.</p>
+    <p>Special characters like <code>&amp;amp;</code> and <code>&amp;lt;</code> must be encoded as HTML entities to display correctly. For example: &lt;html&gt; &amp; &copy;.</p>
+
+    <blockquote>
+      <p><q>Code is like humor. When you have to explain it, it’s bad:(</q></p>
+      <footer>— <cite>Cory House</cite></footer>
+    </blockquote>
+    <p>This quote <mark>resonated</mark> with our team as we tried to keep our markup clean and self-explanatory.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Contact us: <a href="mailto:info@sweetflowers.kz">info@sweetflowers.kz</a> | <a href="tel:+77081115757">+7 (708) 111-57-57</a></p>
+  <p>&copy; 2026 Sweet Flowers. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
