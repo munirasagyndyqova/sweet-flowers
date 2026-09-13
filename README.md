@@ -45,7 +45,7 @@ git clone https://github.com/munirasagyndyqova/sweet-flowers.git
 
 - [Tag checklist](checklist.md)
 - [PDF report](report.pdf)-Task A & Task B with screenshots
-- [Hand-drawn sketch](sketch.jpg)
+- [Hand-drawn sketch](pic.jpg)
 - [AI usage log](ai-log.md)
 
 ## Notes
