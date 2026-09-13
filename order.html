@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order - Sweet Flowers</title>
+</head>
+
+<body>
+
+<header>
+  <h1>Sweet Flowers</h1>
+
+  <nav>
+    <a href="about.html">ABOUT US</a>
+    <a href="order.html">ORDER</a>
+    <a href="delivery.html">DELIVERY</a>
+  </nav>
+</header>
+
+<main>
+
+  <section>
+
+    <h2>Place Your Order</h2>
+
+    <p>
+      Choose your flowers and provide your delivery information.
+    </p>
+
+    <form>
+
+      <fieldset>
+
+        <legend>Customer Information</legend>
+
+        <label for="name">Full Name:</label>
+        <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your name"
+                required
+        >
+
+        <br><br>
+
+        <label for="phone">Phone Number:</label>
+        <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="+7 700 000 00 00"
+                required
+        >
+
+        <br><br>
+
+        <label for="email">Email:</label>
+        <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="example@gmail.com"
+        >
+
+      </fieldset>
+
+
+      <fieldset>
+
+        <legend>Choose Your Bouquet</legend>
+
+        <label for="flowers">Flower Type:</label>
+
+        <select id="flowers" name="flowers">
+
+          <option value="roses">Roses</option>
+          <option value="tulips">Tulips</option>
+          <option value="peonies">Peonies</option>
+          <option value="mixed">Mixed Bouquet</option>
+          <option value="custom">Custom Bouquet</option>
+
+        </select>
+
+        <br><br>
+
+        <label for="quantity">Number of Bouquets:</label>
+
+        <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                min="1"
+                max="20"
+                value="1"
+        >
+
+      </fieldset>
+
+
+      <fieldset>
+
+        <legend>Delivery Information</legend>
+
+        <label for="address">Delivery Address:</label>
+
+        <br>
+
+        <textarea
+                id="address"
+                name="address"
+                rows="4"
+                cols="40"
+                placeholder="Enter your delivery address"
+                required
+        ></textarea>
+
+        <br><br>
+
+        <label for="date">Delivery Date:</label>
+
+        <input
+                type="date"
+                id="date"
+                name="date"
+        >
+
+        <br><br>
+
+        <label for="time">Preferred Time:</label>
+
+        <input
+                type="time"
+                id="time"
+                name="time"
+        >
+
+      </fieldset>
+
+
+      <fieldset>
+
+        <legend>Payment Method</legend>
+
+        <input
+                type="radio"
+                id="cash"
+                name="payment"
+                value="cash"
+        >
+
+        <label for="cash">Cash</label>
+
+        <br>
+
+        <input
+                type="radio"
+                id="card"
+                name="payment"
+                value="card"
+        >
+
+        <label for="card">Card Online</label>
+
+        <br>
+
+        <input
+                type="radio"
+                id="kaspi"
+                name="payment"
+                value="kaspi"
+        >
+
+        <label for="kaspi">Kaspi Pay</label>
+
+      </fieldset>
+
+
+      <fieldset>
+
+        <legend>Additional Information</legend>
+
+        <label for="message">Message for the Florist:</label>
+
+        <br>
+
+        <textarea
+                id="message"
+                name="message"
+                rows="5"
+                cols="40"
+                placeholder="Write a message or special request"
+        ></textarea>
+
+      </fieldset>
+
+
+      <br>
+
+      <button type="submit">Place Order</button>
+      <button type="reset">Clear Form</button>
+
+    </form>
+
+  </section>
+
+</main>
+
+<footer>
+
+  <p>&copy; 2026 Sweet Flowers</p>
+
+  <a href="index.html">Back to Menu</a>
+
+</footer>
+
+</body>
+</html>
