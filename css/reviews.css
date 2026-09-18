@@ -1,0 +1,129 @@
+/*Koshkinbayeva Akbota*/
+
+/*Review action buttons*/
+.review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.review-actions .btn {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.7rem 1.4rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(214, 51, 108, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.review-actions .btn:hover {
+  background-color: #b02a5b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(214, 51, 108, 0.4);
+}
+
+/*Review article cards*/
+article {
+  background-color: var(--bg-light);
+  border-left: 5px solid var(--primary-color);
+  border-radius: 0 8px 8px 0;
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 0.6s ease-out both;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+article:hover {
+  transform: translateX(4px);
+  box-shadow: 0 6px 16px rgba(214, 51, 108, 0.15);
+}
+
+article h3 {
+  color: var(--primary-color);
+  margin-top: 0;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px dashed var(--accent-color);
+}
+
+/* Quote inside a review */
+article q {
+  display: block;
+  font-style: italic;
+  color: #495057;
+  margin: 0.8rem 0;
+  padding: 0.6rem 1rem;
+  background-color: #ffffff;
+  border-left: 3px solid var(--accent-color);
+  border-radius: 0 6px 6px 0;
+}
+
+article cite {
+  font-style: normal;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+/*Review photos*/
+figure {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+article figure img {
+  width: 100%;
+  max-width: 400px;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--accent-color);
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  animation: zoomIn 0.6s ease-out both;
+}
+
+article figure img:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 20px rgba(214, 51, 108, 0.25);
+}
+
+figcaption {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+
+/* "Read original review" links */
+article a[target="_blank"] {
+  display: inline-block;
+  color: var(--primary-color);
+  font-weight: bold;
+  text-decoration: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+article a[target="_blank"]:hover {
+  background-color: var(--accent-color);
+  color: var(--text-dark);
+}
+
+/*Code pill*/
+code {
+  background-color: var(--text-dark);
+  color: var(--accent-color);
+  font-family: 'Courier New', monospace;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}

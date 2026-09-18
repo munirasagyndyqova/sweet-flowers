@@ -1,4 +1,17 @@
+/*
+   Palette (5 colours):
+     #d6336c  rose pink    — primary brand colour of the shop
+     #fcc2d7  soft pink    — accent that echoes rose petals
+     #212529  charcoal     — readable body text and headings
+     #fff5f7  blush white  — calm background so flowers stand out
+     #f8f9fa  off white    — subtle contrast for form fields and rows
 
+   Neutrals (not part of the palette):
+     #ffffff  white        — card surfaces
+     #dee2e6  light gray   — borders only
+*/
+
+/*Design tokens*/
 :root {
   --primary-color: #d6336c;
   --accent-color: #fcc2d7;
@@ -168,6 +181,7 @@ dd {
   margin: 0 0 0.4rem 1.5rem;
   color: #495057;
 }
+
 /*Inline highlights*/
 mark {
   background-color: var(--accent-color);
