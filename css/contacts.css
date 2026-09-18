@@ -1,0 +1,137 @@
+/*Koshkinbayeva Akbota*/
+
+/*Jump links at top of page*/
+main > p:first-of-type {
+  text-align: center;
+  background-color: var(--bg-light);
+  padding: 0.8rem;
+  border-radius: 6px;
+  border: 1px dashed var(--primary-color);
+}
+
+main > p:first-of-type a {
+  color: var(--primary-color);
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+main > p:first-of-type a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+/* ---------- Address block ---------- */
+address {
+  font-style: normal;
+  background-color: var(--bg-light);
+  border-left: 4px solid var(--primary-color);
+  padding: 1rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1rem 0;
+}
+
+address a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+address a:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+/* ---------- Table (shop locations) ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background-color: #ffffff;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+table caption {
+  font-weight: bold;
+  font-size: 1.05rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+table th,
+table td {
+  border: 1px solid var(--border-color);
+  padding: 0.7rem 0.9rem;
+  text-align: left;
+}
+
+table thead th {
+  background-color: var(--accent-color);
+  color: var(--text-dark);
+  font-weight: bold;
+}
+
+table tbody tr {
+  transition: background-color 0.3s ease;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+table tbody tr:hover {
+  background-color: #fff0f6;
+}
+
+/* ---------- Gallery of shop photos ---------- */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(214, 51, 108, 0.08);
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+.gallery figure {
+  margin: 0;
+  flex: 1 1 250px;
+  max-width: 300px;
+  background-color: var(--bg-light);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: zoomIn 0.6s ease-out both;
+}
+
+.gallery figure:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(214, 51, 108, 0.2);
+}
+
+.gallery img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.gallery figure:hover img {
+  transform: scale(1.08);
+}
+
+.gallery figcaption {
+  padding: 0.6rem 0.8rem;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #495057;
+  text-align: center;
+  background-color: #ffffff;
+}

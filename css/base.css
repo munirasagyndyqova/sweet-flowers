@@ -1,0 +1,381 @@
+/*
+   Palette (5 colours):
+     #d6336c  rose pink    — primary brand colour of the shop
+     #fcc2d7  soft pink    — accent that echoes rose petals
+     #212529  charcoal     — readable body text and headings
+     #fff5f7  blush white  — calm background so flowers stand out
+     #f8f9fa  off white    — subtle contrast for form fields and rows
+
+   Neutrals (not part of the palette):
+     #ffffff  white        — card surfaces
+     #dee2e6  light gray   — borders only
+*/
+
+/*Design tokens*/
+:root {
+  --primary-color: #d6336c;
+  --accent-color: #fcc2d7;
+  --text-dark: #212529;
+  --bg-light: #fff5f7;
+  --text-light: #f8f9fa;
+  --border-color: #dee2e6;
+}
+
+/*Universal selector: reset box model*/
+* {
+  box-sizing: border-box;
+}
+
+/*Base typography*/
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.2px;
+  color: var(--text-dark);
+  background-color: var(--bg-light);
+  margin: 0;
+  padding: 0;
+  animation: pageFadeIn 0.8s ease-out both;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: var(--primary-color);
+}
+
+/*Header*/
+header {
+  background: linear-gradient(135deg, #d6336c 0%, #b02a5b 100%);
+  color: #ffffff;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.6s ease-out both;
+}
+
+header > p {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0 0 1rem 0;
+  letter-spacing: 2px;
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+/*Navigation*/
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+nav a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/*Main layout*/
+main {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+main > h1 {
+  color: var(--primary-color);
+  font-size: 2rem;
+  text-align: center;
+  border-bottom: 3px solid var(--accent-color);
+  padding-bottom: 0.5rem;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+/*Sections*/
+section {
+  background-color: #ffffff;
+  border: 1px solid var(--accent-color);
+  border-radius: 10px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(214, 51, 108, 0.08);
+  animation: fadeInUp 0.6s ease-out both;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+section:hover {
+  box-shadow: 0 6px 16px rgba(214, 51, 108, 0.15);
+  transform: translateY(-2px);
+}
+
+section:nth-of-type(1) { animation-delay: 0.1s; }
+section:nth-of-type(2) { animation-delay: 0.2s; }
+section:nth-of-type(3) { animation-delay: 0.3s; }
+section:nth-of-type(4) { animation-delay: 0.4s; }
+section:nth-of-type(5) { animation-delay: 0.5s; }
+
+section h2 {
+  color: var(--primary-color);
+  margin-top: 0;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 0.4rem;
+}
+
+/* Was green — now charcoal so subheadings stay readable and distinct */
+section h3 {
+  color: var(--text-dark);
+  margin-top: 0;
+}
+
+/*Aside*/
+aside {
+  background-color: var(--bg-light);
+  border: 2px dashed var(--primary-color);
+  border-radius: 10px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+aside h3,
+aside h4 {
+  color: var(--primary-color);
+}
+
+aside ul,
+aside ol {
+  padding-left: 1.5rem;
+}
+
+aside li {
+  margin-bottom: 0.3rem;
+}
+
+/*Definition list*/
+dl {
+  margin: 1rem 0;
+}
+
+dt {
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-top: 0.6rem;
+}
+
+dd {
+  margin: 0 0 0.4rem 1.5rem;
+  color: #495057;
+}
+
+/*Inline highlights*/
+mark {
+  background-color: var(--accent-color);
+  color: var(--text-dark);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-weight: bold;
+  animation: highlightPulse 2s ease-in-out infinite;
+}
+
+main > p > span {
+  background-color: var(--accent-color);
+  color: var(--text-dark);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+/*Horizontal rule*/
+hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+  margin: 2rem 0;
+}
+
+/*Blockquote*/
+blockquote {
+  background-color: var(--bg-light);
+  border-left: 5px solid var(--primary-color);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.5rem;
+  margin: 2rem 0;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #495057;
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+blockquote footer {
+  margin-top: 0.6rem;
+  text-align: right;
+  font-style: normal;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/*Forms*/
+form {
+  margin-top: 1.5rem;
+}
+
+fieldset {
+  border: 2px solid var(--accent-color);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 0;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+legend {
+  font-weight: bold;
+  font-size: 1.15rem;
+  color: var(--primary-color);
+  padding: 0 0.6rem;
+}
+
+form p {
+  margin: 0.8rem 0;
+}
+
+form label {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form input[type="number"],
+form input[type="date"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin-top: 0.3rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(214, 51, 108, 0.15);
+}
+
+form textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+form input[type="radio"],
+form input[type="checkbox"] {
+  margin-right: 0.4rem;
+  accent-color: var(--primary-color);
+}
+
+form button {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 0.8rem;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+form button[type="submit"] {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(214, 51, 108, 0.3);
+}
+
+form button[type="submit"]:hover {
+  background-color: #b02a5b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(214, 51, 108, 0.4);
+}
+
+form button[type="reset"] {
+  background-color: #e9ecef;
+  color: var(--text-dark);
+}
+
+form button[type="reset"]:hover {
+  background-color: #ced4da;
+  transform: translateY(-2px);
+}
+
+/*Footer*/
+footer {
+  background-color: var(--text-dark);
+  color: #ffffff;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  margin-top: 2rem;
+}
+
+footer a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/*Keyframe animations*/
+
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes titleGlow {
+  0%, 100% { text-shadow: 0 0 6px rgba(255, 255, 255, 0.4); }
+  50%      { text-shadow: 0 0 16px rgba(255, 255, 255, 0.9); }
+}
+
+@keyframes highlightPulse {
+  0%, 100% { background-color: #fcc2d7; }
+  50%      { background-color: #ffb3d1; }
+}
