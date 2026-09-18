@@ -1,0 +1,216 @@
+/* Sweet Flowers — Delivery page
+   Author: Nurziya
+   Personal stylesheet
+*/
+
+
+main {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 25px;
+}
+
+
+main > section {
+    background: #ffffff;
+    border: 1px solid #fcc2d7;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(214, 51, 108, 0.08);
+}
+
+
+main > section > h2 {
+    color: #d6336c;
+    margin-top: 0;
+    border-bottom: 2px solid #fcc2d7;
+    padding-bottom: 10px;
+}
+
+
+.delivery-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.delivery-table th,
+.delivery-table td {
+    border: 1px solid #dee2e6;
+    padding: 12px;
+    text-align: left;
+}
+
+.delivery-table th {
+    background-color: #fcc2d7;
+    color: #212529;
+}
+
+.delivery-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+
+.locations-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+
+.location-card {
+    position: relative;
+    background-color: #ffffff;
+    border: 1px solid #fcc2d7;
+    border-radius: 10px;
+    padding: 20px;
+    min-height: 150px;
+}
+
+
+.location-card:last-child {
+    grid-column: 1 / -1;
+}
+
+
+.location-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(214, 51, 108, 0.15);
+}
+
+
+.location-card h3 {
+    color: #d6336c;
+    margin-top: 0;
+}
+
+
+.location-card h3::before {
+    content: "✿ ";
+    color: #d6336c;
+}
+
+
+.location-card::after {
+    content: "Sweet Flowers";
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 0.7rem;
+    color: #d6336c;
+}
+
+
+.important-info {
+    background-color: #fff5f7;
+    border-left: 5px solid #d6336c;
+    padding: 18px;
+    border-radius: 8px;
+}
+
+
+.payment-methods {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
+
+.payment-methods > li {
+    flex: 1 1 180px;
+    padding: 12px;
+    background-color: #fff5f7;
+    border-radius: 8px;
+}
+
+
+.payment-image {
+    max-width: 180px;
+    border-radius: 10px;
+    display: block;
+    margin: 15px auto;
+}
+
+
+img[alt] {
+    border: 1px solid #fcc2d7;
+}
+
+
+.locations-grid article p {
+    margin: 7px 0;
+}
+
+
+.locations-grid > article {
+    line-height: 1.5;
+}
+
+
+h2 + p {
+    margin-top: 10px;
+}
+
+
+.location-card:first-child {
+    border-top: 4px solid #d6336c;
+}
+
+
+#delivery-note {
+    color: #d6336c;
+    font-weight: 600;
+}
+
+.delivery-table th,
+.delivery-table td {
+    font-size: 0.95rem;
+}
+
+
+.quick-order {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background-color: #d6336c;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    z-index: 10;
+}
+
+.quick-order:hover {
+    background-color: #b02a5b;
+}
+
+.important-info {
+    position: static;
+}
+
+
+.important-info p {
+    color: #212529;
+}
+
+#delivery-note {
+    color: #d6336c;
+}
+
+@media (max-width: 700px) {
+
+    .locations-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .location-card:last-child {
+        grid-column: auto;
+    }
+
+    .payment-methods {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
