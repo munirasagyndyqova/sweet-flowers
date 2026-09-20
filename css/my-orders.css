@@ -1,0 +1,308 @@
+/*Author: Koshkinbayeva Akbota*/
+
+/*CSS-only login fallback*/
+.dashboard-section {
+    display: none;
+}
+
+.dashboard-section:target {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    animation: fadeInUp 0.6s ease-out both;
+}
+
+/* Every direct child of the dashboard spans the full width
+   so the summary row and the table sit on their own lines. */
+.dashboard-section:target > h2,
+.dashboard-section:target > h3,
+.dashboard-section:target > p,
+.dashboard-section:target > table,
+.dashboard-section:target > dl,
+.dashboard-section:target > ol,
+.dashboard-section:target > div {
+    grid-column: 1 / -1;
+}
+
+/* Modern browsers: hide login when the dashboard is open */
+body:has(#dashboard:target) #login {
+    display: none;
+}
+
+/* If JavaScript/backend is added later, these classes can be toggled
+   by the servlet-rendered markup instead of :target. */
+.dashboard-section.is-visible {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+/*Login form*/
+.login-section {
+    max-width: 480px;
+    margin: 2rem auto;                 /* centering: margin auto */
+    background-color: #ffffff;
+    border: 1px solid var(--accent-color);
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(214, 51, 108, 0.12);
+    animation: fadeInUp 0.6s ease-out both;
+}
+
+.login-section h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-top: 0;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.5rem;
+}
+
+.login-form fieldset {
+    border: 2px solid var(--accent-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+/*Buttons as links*/
+.btn {
+    display: inline-block;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.btn-login {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(214, 51, 108, 0.3);
+}
+
+.btn-login:hover {
+    background-color: #b02a5b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(214, 51, 108, 0.4);
+}
+
+.btn-logout {
+    background-color: #e9ecef;
+    color: var(--text-dark);
+}
+
+.btn-logout:hover {
+    background-color: #ced4da;
+    transform: translateY(-2px);
+}
+
+/*Status summary cards — Flexbox*/
+.status-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;            /* centering: flex */
+    align-items: stretch;
+}
+
+.status-card {
+    flex: 1 1 200px;
+    max-width: 260px;
+    background-color: #ffffff;
+    border: 1px solid var(--accent-color);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(214, 51, 108, 0.08);
+    position: relative;                 /* containing block for ::before */
+    animation: fadeInUp 0.6s ease-out both;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.status-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(214, 51, 108, 0.18);
+}
+
+.status-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-dark);
+    font-size: 1rem;
+}
+
+.status-count {
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin: 0.2rem 0;
+    color: var(--primary-color);
+    letter-spacing: 1px;
+    animation: highlightPulse 2.5s ease-in-out infinite;
+}
+
+.status-active {
+    border-left: 6px solid var(--primary-color);
+}
+
+.status-awaiting {
+    border-left: 6px solid gold;        /* named colour */
+}
+
+.status-completed {
+    border-left: 6px solid #b02a5b;
+}
+
+.status-card::before {
+    content: "•";
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 1.4rem;
+    color: var(--accent-color);
+    animation: titleGlow 2s ease-in-out infinite;
+}
+
+/*Orders table*/
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(214, 51, 108, 0.08);
+    animation: fadeInUp 0.6s ease-out both;
+}
+
+.orders-table caption {
+    font-weight: bold;
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    margin-bottom: 0.6rem;
+    text-align: left;
+    padding: 0 0.3rem;
+}
+
+.orders-table th,
+.orders-table td {
+    border: 1px solid var(--border-color);
+    padding: 0.7rem 0.9rem;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.orders-table thead th {
+    background-color: var(--accent-color);
+    color: var(--text-dark);
+    font-weight: bold;
+    letter-spacing: 0.3px;
+}
+
+.orders-table tbody tr {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.orders-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.orders-table tbody tr:hover {
+    background-color: #fff0f6;
+    transform: scale(1.005);
+}
+
+/*Status badges*/
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+}
+
+.badge-awaiting {
+    background-color: gold;             /* named colour */
+    color: var(--text-dark);
+}
+
+.badge-onway {
+    background-color: var(--accent-color);
+    color: var(--text-dark);
+}
+
+.badge-completed {
+    background-color: #b02a5b;
+    color: #ffffff;
+}
+
+/*Status legend*/
+.status-legend {
+    display: grid;
+    grid-template-columns: minmax(140px, auto) 1fr;
+    gap: 0.6rem 1.5rem;
+    margin: 1rem 0;
+}
+
+.status-legend dt {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.status-legend dd {
+    margin: 0;
+    color: #495057;
+}
+
+/*Code*/
+code {
+    background-color: var(--text-dark);
+    color: var(--accent-color);
+    font-family: 'Courier New', monospace;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+/* ---------- Back-to-top ---------- */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 0.6rem 1rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    animation: highlightPulse 2.5s ease-in-out infinite;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-to-top:hover {
+    background-color: #b02a5b;
+    transform: translateY(-3px);
+}
+
+/* Centering: absolute + transform*/
+.dashboard-section:target > h2 {
+    position: relative;
+    text-align: center;
+}
+
+.dashboard-section:target > h2::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
