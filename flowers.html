@@ -8,6 +8,8 @@
     <meta name="author" content="Munira Sagyndykova">
 
     <title>Sweet Flowers — Flowers</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/flowers.css">
 </head>
 
 <body>
@@ -17,12 +19,12 @@
     <nav>
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="flowers.html">Flowers</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="order.html">Order</a></li>
-            <li><a href="contacts.html">Contacts</a></li>
+            <li><a href="flowers.html">Flowers</a></li>
             <li><a href="delivery.html">Delivery</a></li>
-            <li><a href="colophon.html">Colophon</a></li>
+            <li><a href="order.html">Order</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="contacts.html">Contacts</a></li>
         </ul>
     </nav>
 </header>
@@ -42,7 +44,7 @@ Each bouquet is carefully wrapped and prepared with attention to detail, so it a
         </p>
     </section>
 
-    <article>
+    <section>
         <h2>Popular Choices</h2>
 
         <ul>
@@ -50,7 +52,7 @@ Each bouquet is carefully wrapped and prepared with attention to detail, so it a
             <li>PEONIES</li>
             <li>TULIPS</li>
         </ul>
-    </article>
+    </section>
 <table>
     <caption> <h3>Sweet Flowers Bouquet Prices</h3></caption>
 
@@ -123,10 +125,10 @@ Each bouquet is carefully wrapped and prepared with attention to detail, so it a
 </p>
 
 <figure>
-    <h3>
+    <h4>
     Sweet Flowers provides <abbr title="flower arrangement">FA</abbr>
     services.
-    </h3>
+    </h4>
     <h3> Our Popular bouquets</h3>
     <img src="images/bs2.jpg"
          alt="Pink flower bouquet at Sweet Flowers">
@@ -144,140 +146,6 @@ Each bouquet is carefully wrapped and prepared with attention to detail, so it a
     </figcaption>
 </figure>
 
-<section>
-    <h2>Flower Bouquet Request</h2>
-
-    <p>
-        If you would like to ask about a bouquet, you can fill in this form.
-        Please provide your contact details and choose the flowers you are
-        interested in.
-    </p>
-
-    <form method="post" action="#">
-
-        <!-- This form does not send data to a server yet because there is no backend. -->
-
-        <fieldset>
-            <legend>Request details</legend>
-
-            <label for="customer-name">Name:</label>
-            <input
-                type="text"
-                id="customer-name"
-                name="customer-name"
-                placeholder="Your name"
-                required
-            >
-
-            <br>
-
-            <label for="customer-email">Email:</label>
-            <input
-                type="email"
-                id="customer-email"
-                name="customer-email"
-                placeholder="Your email"
-                required
-            >
-
-            <br>
-
-            <label for="customer-phone">Phone:</label>
-            <input
-                type="tel"
-                id="customer-phone"
-                name="customer-phone"
-                placeholder="+7 700 000 00 00"
-                required
-            >
-
-            <br>
-
-            <label for="quantity">Number of bouquets:</label>
-            <input
-                type="number"
-                id="quantity"
-                name="quantity"
-                min="1"
-                placeholder="1"
-                required
-            >
-
-            <br>
-
-            <label for="date">Preferred date:</label>
-            <input
-                type="date"
-                id="date"
-                name="date"
-                required
-            >
-
-            <p>Preferred contact method:</p>
-
-            <input
-                type="radio"
-                id="contact-email"
-                name="contact-method"
-                value="email"
-                required
-            >
-            <label for="contact-email">Email</label>
-
-            <input
-                type="radio"
-                id="contact-phone"
-                name="contact-method"
-                value="phone"
-            >
-            <label for="contact-phone">Phone</label>
-
-            <br><br>
-
-            <input
-                type="checkbox"
-                id="greeting-card"
-                name="greeting-card"
-                value="yes"
-            >
-            <label for="greeting-card">Add a greeting card</label>
-
-            <br><br>
-
-            <label for="flower-type">Choose flowers:</label>
-            <select id="flower-type" name="flower-type" required>
-                <option value="">Select flowers</option>
-                <option value="roses">Roses</option>
-                <option value="tulips">Tulips</option>
-                <option value="mixed">Mixed bouquet</option>
-            </select>
-
-            <br><br>
-
-            <label for="message">Additional message:</label>
-            <br>
-            <textarea
-                id="message"
-                name="message"
-                placeholder="Write your wishes here"
-                rows="5"
-                cols="40"
-            ></textarea>
-
-            <br><br>
-
-            <button type="submit">Submit request</button>
-            <button type="reset">Reset</button>
-
-        </fieldset>
-    </form>
-</section>
 </main>
-    <footer>
-    <h3>Sweet Flowers</h3>
-    <i>Phone: +7 708 111 57 57</i>
-    
-    <i>&copy; 2026 Sweet Flowers</i>
-</footer>
 </body>
 </html>

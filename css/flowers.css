@@ -1,0 +1,339 @@
+/*Sagyndykova Munira*/
+
+
+/* Page Header  */
+.flowers-page-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: slideDown 0.6s ease-out both;
+}
+
+.flowers-page-header h1 {
+  color: #d6336c;
+  font-size: 2.1rem;
+  border-bottom: 3px solid #fcc2d7;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.flowers-page-header p {
+  color: #495057;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+/*Catalog Grid Layout*/
+.flowers-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+/*Flower Card Component*/
+.flower-card {
+  background-color: #ffffff;
+  border: 1px solid #fcc2d7;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(214, 51, 108, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  animation: zoomIn 0.6s ease-out both;
+}
+
+.flower-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(214, 51, 108, 0.2);
+}
+
+/* Card Image & Hover Zoom */
+.flower-card-image {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background-color: #fff5f7;
+}
+
+.flower-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.flower-card:hover .flower-card-image img {
+  transform: scale(1.08);
+}
+
+/* Card Content Details */
+.flower-card-body {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.flower-card-body h3 {
+  color: #d6336c;
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px dashed #fcc2d7;
+  padding-bottom: 0.3rem;
+}
+
+.flower-card-body p {
+  color: #212529;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
+  flex-grow: 1;
+}
+
+/* Price & Purchase Controls*/
+.flower-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 0.8rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.flower-price {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #d6336c;
+}
+
+.btn-order {
+  background-color: #d6336c;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(214, 51, 108, 0.3);
+}
+
+.btn-order:hover {
+  background-color: #b02a5b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(214, 51, 108, 0.4);
+}
+
+/*Badge Positioning (Assignment Requirement)*/
+.flower-card .badge-popular {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: #d6336c;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+main > h1::before,
+main > h2::before {
+  content: "✦ ";
+  color: #d6336c;
+}
+
+/* ---------- Table ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background-color: #ffffff;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+table caption {
+  font-weight: bold;
+  font-size: 1.05rem;
+  color: #d6336c;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+table th, table td {
+  border: 1px solid #dee2e6;
+  padding: 0.7rem 0.9rem;
+  text-align: left;
+}
+
+table thead th {
+  background-color: #fcc2d7;
+  color: #212529;
+  font-weight: bold;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+table tbody tr:hover {
+  background-color: #fff0f6;
+}
+
+/* ---------- Form ---------- */
+form { margin-top: 1.5rem; }
+
+fieldset {
+  border: 2px solid #fcc2d7;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 0;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+legend {
+  font-weight: bold;
+  font-size: 1.15rem;
+  color: #d6336c;
+  padding: 0 0.6rem;
+}
+
+form p { margin: 0.8rem 0; }
+form label { font-weight: 600; color: #212529; }
+
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form input[type="number"],
+form input[type="date"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin-top: 0.3rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form input:focus, form select:focus, form textarea:focus {
+  outline: none;
+  border-color: #d6336c;
+  box-shadow: 0 0 0 3px rgba(214, 51, 108, 0.15);
+}
+
+form textarea { resize: vertical; min-height: 110px; }
+
+form input[type="radio"], form input[type="checkbox"] {
+  margin-right: 0.4rem;
+  accent-color: #d6336c;
+}
+
+form button {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 0.8rem;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+form button[type="submit"] {
+  background-color: #d6336c;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(214, 51, 108, 0.3);
+}
+
+form button[type="submit"]:hover {
+  background-color: #b02a5b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(214, 51, 108, 0.4);
+}
+
+form button[type="reset"] {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+form button[type="reset"]:hover {
+  background-color: #ced4da;
+  transform: translateY(-2px);
+}
+
+/* ---------- Mark & Highlights ---------- */
+mark {
+  background-color: #fcc2d7;
+  color: #212529;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-weight: bold;
+  animation: highlightPulse 2s ease-in-out infinite;
+}
+
+main > p > span {
+  background-color: #fcc2d7;
+  color: #212529;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-weight: 600;
+}
+footer {
+  background-color: #212529;
+  color: #ffffff;
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-top: 3rem;
+}
+
+footer h3 {
+  color: #fcc2d7;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+footer i {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-style: normal;
+  color: #dee2e6;
+}
+
+footer a {
+  color: #fcc2d7;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/*Filter Section / Aside Style*/
+.catalog-filter-aside {
+  background-color: #fff5f7;
+  border: 2px dashed #d6336c;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.catalog-filter-aside h3 {
+  color: #d6336c;
+  margin-top: 0;
+}
