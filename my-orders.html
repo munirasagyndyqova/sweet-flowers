@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Log in to your Sweet Flowers account and see your current and past orders.">
+    <meta name="author" content="Koshkinbayeva Akbota">
+    <title>My Orders — Sweet Flowers</title>
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/my-orders.css">
+</head>
+<body id="top">
+<!-- Author: Koshkinbayeva Akbota wrote this page -->
+
+<header>
+    <p><strong>Sweet Flowers</strong></p>
+    <nav aria-label="Main navigation">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="flowers.html">Flowers</a></li>
+            <li><a href="delivery.html">Delivery</a></li>
+            <li><a href="order.html">Order</a></li>
+            <li><a href="my-orders.html" aria-current="page">My Orders</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="contacts.html">Contacts</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h1>My Orders</h1>
+    <p>
+        Sign in to your Sweet Flowers account to see the status of your bouquets,
+        your delivery dates and your order history. The login is a static
+        placeholder in this version &mdash; a Java servlet and a SQL database
+        will be connected later in the course.
+    </p>
+
+
+    <section id="login" class="login-section" aria-label="Login form">
+        <h2>Sign in</h2>
+        <p><small>Demo: any name + password <code>flower</code> (front-end only).</small></p>
+
+        <!-- action="login"     → will map to the LoginServlet later
+             method="post"     → correct verb for credentials
+             name="username"   → will match the SQL column customers.username
+             name="password"   → will match the SQL column customers.password_hash
+             autocomplete      → helps browsers and password managers -->
+        <form method="post" action="login" class="login-form" id="login-form">
+            <fieldset>
+                <legend>Your account</legend>
+
+                <p>
+                    <label for="username">Name or email</label><br>
+                    <input type="text"
+                           id="username"
+                           name="username"
+                           required
+                           autocomplete="username"
+                           placeholder="akbota or you@email.com">
+                </p>
+
+                <p>
+                    <label for="password">Password</label><br>
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           required
+                           autocomplete="current-password"
+                           minlength="4"
+                           placeholder="••••••••">
+                </p>
+
+                <p>
+                    <input type="checkbox" id="remember" name="remember" value="true" checked>
+                    <label for="remember">Remember me on this device</label>
+                </p>
+
+                <!-- Temporary CSS-only fallback so the page still demonstrates the
+                     dashboard before the servlet exists. Once the servlet is live,
+                     delete the <a> and keep only the <button type="submit">. -->
+                <p>
+                    <a href="#dashboard" class="btn btn-login">Log in (demo)</a>
+                    <button type="reset">Clear</button>
+                </p>
+
+                <!-- hidden field ready for CSRF token in the Java phase -->
+                <!-- <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"> -->
+            </fieldset>
+        </form>
+    </section>
+
+    <section id="dashboard"
+             class="dashboard-section"
+             aria-label="My orders"
+             data-customer-id="1">
+        <h2>Welcome back, <span class="user-name">Akbota</span></h2>
+        <p>
+            Here is a summary of your orders. Orders move through
+            <mark>awaiting delivery</mark>, <mark>on the way</mark> and
+            <mark>completed</mark> statuses. We update this table every morning at
+            09:00 <abbr title="Almaty Time">ALMT</abbr>.
+        </p>
+
+        <!-- The three counters below will come from SQL aggregate queries:
+             SELECT status, COUNT(*) FROM orders
+             WHERE customer_id = ? GROUP BY status; -->
+        <div class="status-summary">
+            <article class="status-card status-active">
+                <h3>Active</h3>
+                <p class="status-count" data-status="active">2</p>
+                <p><small>Orders in progress right now.</small></p>
+            </article>
+
+            <article class="status-card status-awaiting">
+                <h3>Awaiting delivery</h3>
+                <p class="status-count" data-status="awaiting">1</p>
+                <p><small>Waiting for the driver.</small></p>
+            </article>
+
+            <article class="status-card status-completed">
+                <h3>Completed</h3>
+                <p class="status-count" data-status="completed">3</p>
+                <p><small>Delivered and confirmed.</small></p>
+            </article>
+        </div>
+
+        <h3>Order history</h3>
+        <!-- class + id + data-customer-id give the Java layer a hook -->
+        <table class="orders-table" id="orders-table" data-customer-id="1">
+            <caption>My Sweet Flowers orders — 2026</caption>
+            <thead>
+            <tr>
+                <th scope="col">Order&nbsp;#</th>
+                <th scope="col">Bouquet</th>
+                <th scope="col">Ordered</th>
+                <th scope="col">Delivery</th>
+                <th scope="col">Status</th>
+                <th scope="col">Total</th>
+            </tr>
+            </thead>
+            <tbody id="orders-tbody">
+            <!-- Each <tr> below = one row of the SQL result set.
+                 data-order-id = orders.id (primary key).
+                 data-status   = orders.status (for CSS filtering later). -->
+            <tr data-order-id="101" data-status="completed">
+                <th scope="row">SF-2026-101</th>
+                <td>Romantic Rose</td>
+                <td>12.09.2026</td>
+                <td>14.09.2026</td>
+                <td><span class="badge badge-completed">Completed</span></td>
+                <td>12&nbsp;500&#8372;</td>
+            </tr>
+            <tr data-order-id="102" data-status="completed">
+                <th scope="row">SF-2026-102</th>
+                <td>Spring Tulip</td>
+                <td>15.09.2026</td>
+                <td>17.09.2026</td>
+                <td><span class="badge badge-completed">Completed</span></td>
+                <td>9&nbsp;800&#8372;</td>
+            </tr>
+            <tr data-order-id="103" data-status="awaiting">
+                <th scope="row">SF-2026-103</th>
+                <td>Summer Mix</td>
+                <td>17.09.2026</td>
+                <td>19.09.2026</td>
+                <td><span class="badge badge-awaiting">Awaiting delivery</span></td>
+                <td>8&nbsp;200&#8372;</td>
+            </tr>
+            <tr data-order-id="104" data-status="onway">
+                <th scope="row">SF-2026-104</th>
+                <td>White Peony</td>
+                <td>18.09.2026</td>
+                <td>20.09.2026</td>
+                <td><span class="badge badge-onway">On the way</span></td>
+                <td>15&nbsp;000&#8372;</td>
+            </tr>
+            <tr data-order-id="105" data-status="completed">
+                <th scope="row">SF-2026-105</th>
+                <td>Autumn Bunch</td>
+                <td>05.09.2026</td>
+                <td>07.09.2026</td>
+                <td><span class="badge badge-completed">Completed</span></td>
+                <td>6&nbsp;400&#8372;</td>
+            </tr>
+            <!-- Later, JSP/Thymeleaf replaces the five rows above with one loop:
+                 <c:forEach var="o" items="${orders}">
+                   <tr data-order-id="${o.id}" data-status="${o.status}"> ... </tr>
+                 </c:forEach> -->
+            </tbody>
+        </table>
+        <p><small>Prices include VAT and free delivery inside the city ring road.</small></p>
+
+        <h3>What the statuses mean</h3>
+        <dl class="status-legend">
+            <dt>Awaiting delivery</dt>
+            <dd>The bouquet is finished and waiting for the driver.</dd>
+
+            <dt>On the way</dt>
+            <dd>The driver has collected the bouquet and is driving to you.</dd>
+
+            <dt>Completed</dt>
+            <dd>The bouquet was delivered and you confirmed it.</dd>
+        </dl>
+
+        <h3>Quick actions</h3>
+        <!-- Each action will eventually be its own form or link to a servlet:
+             /order?repeat=103
+             /account/address
+             /receipts/101.pdf
+             /reviews/new?order=101 -->
+        <ol type="I">
+            <li>Order the same bouquet again</li>
+            <li>Change the delivery address</li>
+            <li>Download the receipt</li>
+            <li>Leave a review</li>
+        </ol>
+
+        <p>
+            <!-- In the Java phase this becomes a POST to /logout (or a link to
+                 /logout, whichever your servlet expects). -->
+            <a href="#login" class="btn btn-logout">Log out</a>
+        </p>
+    </section>
+
+    <hr>
+
+    <section aria-label="How orders work">
+        <h2>How Your Orders Work</h2>
+        <p>
+            Every order you place at Sweet Flowers gets a unique number starting with
+            <code>SF-</code>. You can use it to track the bouquet, ask a question, or
+            request a change. Your <strong>first order</strong> of the month always
+            comes with a small surprise &mdash; a sprig of <i>gypsophila</i> tied to
+            the ribbon. Our regular customer <cite>Anna K.</cite> said in her review
+            on 14 February 2026 that <q>the little extras always make me smile</q>.
+        </p>
+
+        <h3>Delivery options</h3>
+        <ul>
+            <li>Standard delivery
+                <ul>
+                    <li>Same day inside the city</li>
+                    <li>Next day outside the ring road</li>
+                </ul>
+            </li>
+            <li>Pickup from any of our five shops</li>
+            <li>Gift wrapping and a handwritten card</li>
+        </ul>
+
+        <h3>Why customers stay with us</h3>
+        <ul>
+            <li>Fresh flowers from local growers</li>
+            <li>Free delivery for orders over 10&nbsp;000&#8372;</li>
+            <li>24/7 support by phone and WhatsApp</li>
+        </ul>
+
+        <p>
+            Read more about us on
+            <a href="https://www.instagram.com/sweet.flowers.ast"
+               target="_blank" rel="noopener noreferrer">Instagram</a>, or jump back
+            to the <a href="#login">login section</a>.
+        </p>
+    </section>
+
+    <aside>
+        <h3>From the Shop</h3>
+        <blockquote>
+            <p>
+                Flowers are the music of the ground. From earth&rsquo;s lips spoken
+                without sound.
+            </p>
+            <footer>— <cite>Edwin Curran</cite></footer>
+        </blockquote>
+        <p>
+            Our 6<sup>th</sup> anniversary is coming soon, and we offer
+            <em>exclusive</em> discounts for <strong>loyal customers</strong>.
+            Use the code <code>FLOWER10</code> for 10% off.
+        </p>
+        <p>
+            Prefer a real conversation? Call
+            <a href="tel:+77081115757">+7 (708) 111-57-57</a> or write to
+            <a href="mailto:info@sweetflowers.kz">info@sweetflowers.kz</a>.
+        </p>
+    </aside>
+</main>
+
+<footer>
+    <p>
+        Contact us:
+        <a href="mailto:info@sweetflowers.kz">info@sweetflowers.kz</a>
+        |
+        <a href="tel:+77081115757">+7 (708) 111-57-57</a>
+    </p>
+    <p>&copy; 2026 Sweet Flowers. All rights reserved.</p>
+</footer>
+
+<a class="back-to-top" href="#top" aria-label="Back to top">↑ Top</a>
+
+</body>
+</html>
