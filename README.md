@@ -9,7 +9,7 @@ A website for **Sweet Flowers**, a real flower shop in Astana, Kazakhstan.
 |---|---|
 | Sagyndykova Munira | `index.html`, `flowers.html` |
 | Kenes Nurziya | `about.html`, `order.html`, `delivery.html` |
-| Koshkinbayeva Akbota | `reviews.html`, `colophon.html`, `contacts.html` |
+| Koshkinbayeva Akbota | `reviews.html`, `my-orders.html`, `contacts.html` |
 
 ## Project structure
 
@@ -22,7 +22,6 @@ sweet-flowers/
 ├── delivery.html      — delivery & payment info
 ├── reviews.html       — customer reviews
 ├── contacts.html      — contacts and location
-├── colophon.html      — how the site was built
 ├── images/            — photos used across the site
 └── README.md
 ```
@@ -44,6 +43,7 @@ git clone https://github.com/munirasagyndyqova/sweet-flowers.git
 ## Reports & submission materials
 
 - [Tag checklist](checklist.md)
+- [CSS checklist](CSS-CHECKLIST.md)
 - [PDF report](report.pdf)-Task A & Task B with screenshots
 - [Hand-drawn sketch](pic.jpg)
 - [AI usage log](ai-log.md)
