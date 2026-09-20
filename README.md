@@ -67,6 +67,9 @@ Each team member styled their own assigned pages, writing custom CSS to enhance 
 | Kenes Nurziya | `about.html`, `order.html`, `delivery.html` |
 | Koshkinbayeva Akbota | `reviews.html`, `colophon.html`, `contacts.html` |
 
+## Project structure
+
+```
 sweet-flowers/
 ├── css/               — custom CSS stylesheets for all pages
 ├── images/            — photos used across the site
@@ -78,7 +81,7 @@ sweet-flowers/
 ├── reviews.html       — customer reviews
 ├── contacts.html      — contacts and location
 └── README.md
-
+```
 ## Updated Project Structure
 
 A dedicated `css/` folder was added to manage all the individual stylesheets cleanly.
