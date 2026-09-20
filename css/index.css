@@ -1,0 +1,88 @@
+/*Sagyndykova Munira*/
+h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-align: center;
+  margin: 25px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  
+  /* Pink neon glow effect */
+  text-shadow: 
+    0 0 5px #fff,
+    0 0 10px #fff,
+    0 0 20px #e85a71,
+    0 0 30px #e85a71,
+    0 0 40px #e85a71,
+    0 0 55px #e85a71;
+
+  /* Smooth pulsating glow animation */
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* Glow Keyframe Animation */
+@keyframes glow {
+  from {
+    text-shadow: 
+      0 0 5px #fff,
+      0 0 10px #fff,
+      0 0 20px #e85a71,
+      0 0 30px #e85a71,
+      0 0 40px #e85a71;
+  }
+  to {
+    text-shadow: 
+      0 0 10px #fff,
+      0 0 20px #ffb6c1,
+      0 0 30px #ffb6c1,
+      0 0 40px #e85a71,
+      0 0 50px #e85a71,
+      0 0 70px #e85a71;
+  }
+}
+
+/* Hero Section Banner */
+.hero {
+  position: relative;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../images/shop-photo1.jpg') center/cover no-repeat;
+  color: #ffffff;
+  text-align: center;
+  padding: 80px 20px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 25px;
+}
+
+/* Features Grid Layout */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin: 40px 0;
+}
+
+.feature-card {
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  border-top: 4px solid #e85a71;
+}
+
+.feature-card h3 {
+  color: #4a4a4a;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  color: #666666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
