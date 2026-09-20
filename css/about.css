@@ -1,16 +1,16 @@
-/* Sweet Flowers — About Us page
+/* Sweet Flowers About Us page
    Author: Nurziya
    Personal stylesheet
 */
 
-/* Page layout */
+
 main {
     max-width: 1000px;
     margin: 40px auto;
     padding: 0 25px;
 }
 
-/* About sections */
+
 main > section {
     background: #ffffff;
     border: 1px solid #fcc2d7;
@@ -20,7 +20,7 @@ main > section {
     box-shadow: 0 4px 12px rgba(214, 51, 108, 0.08);
 }
 
-/* Main heading */
+
 main > section:first-child h2 {
     color: #d6336c;
     border-bottom: 2px solid #fcc2d7;
@@ -32,7 +32,7 @@ main section p {
     line-height: 1.7;
 }
 
-/* Flower list */
+
 main section:nth-child(2) ul {
     display: flex;
     flex-wrap: wrap;
@@ -51,13 +51,13 @@ main section:nth-child(2) li {
     text-align: center;
 }
 
-/* Hover effect */
+
 main section:nth-child(2) li:hover {
     background: #fcc2d7;
     transform: translateY(-2px);
 }
 
-/* Team section */
+
 .team-section {
     border-left: 5px solid #d6336c;
 }
@@ -90,27 +90,27 @@ a[href^="tel:"] {
     letter-spacing: 0.5px;
 }
 
-/* Descendant selector */
+
 main section h2 {
     color: #d6336c;
 }
 
-/* Child selector */
+
 main > section > h2 {
     margin-top: 0;
 }
 
-/* Adjacent sibling selector */
+
 h2 + p {
     margin-top: 10px;
 }
 
-/* Grouping selector */
+
 h2, h3 {
     font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Pseudo-class */
+
 section li:first-child {
     font-weight: bold;
 }
@@ -129,7 +129,7 @@ section li:first-child {
     border-radius: 10px;
 }
 
-/* Clear float */
+
 .about-card::after {
     content: "";
     display: block;
@@ -141,7 +141,7 @@ section li:first-child {
     border-top: 4px solid #fcc2d7;
 }
 
-/* Fixed button */
+
 .quick-order {
     position: fixed;
     right: 20px;
@@ -157,11 +157,6 @@ section li:first-child {
     background: #b02a5b;
 }
 
-/* Specificity experiment
-   .contact-section p = 0-1-1
-   #about-intro = 1-0-0
-   The ID selector has higher specificity.
-*/
 
 .contact-section p {
     color: #212529;
