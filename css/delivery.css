@@ -19,6 +19,7 @@ main > section {
     padding: 25px;
     margin-bottom: 25px;
     box-shadow: 0 4px 12px rgba(214, 51, 108, 0.08);
+   text-align: center;
 }
 
 
