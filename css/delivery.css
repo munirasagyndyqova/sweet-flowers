@@ -39,7 +39,7 @@ main > section > h2 {
 .delivery-table td {
     border: 1px solid #dee2e6;
     padding: 12px;
-    text-align: left;
+    text-align: center;
 }
 
 .delivery-table th {
