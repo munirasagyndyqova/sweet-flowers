@@ -8,79 +8,343 @@
     <meta name="author" content="Munira Sagyndykova">
 
     <title>Sweet Flowers — Home</title>
+
+    <!-- Bootstrap v5.3.2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/index.css">
 </head>
 
-<body>
-<header>
-    <h1>Sweet Flowers</h1>
+<!-- Author: Munira Sagyndykova -->
 
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="flowers.html">Flowers</a></li>
-            <li><a href="delivery.html">Delivery</a></li>
-            <li><a href="my-orders.html">My Orders</a></li>
-            <li><a href="order.html">Order</a></li>
-            <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="contacts.html">Contacts</a></li>
-        </ul>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm py-3">
+
+        <div class="container flex-column position-relative">
+
+            <h1 class="navbar-brand fs-1 fw-bold text-white mb-3">
+                Sweet Flowers
+            </h1>
+
+            <button class="navbar-toggler position-absolute top-0 end-0 mt-2"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse w-100 justify-content-center"
+                 id="navbarNav">
+
+                <ul class="navbar-nav gap-2 gap-md-4 text-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold active"
+                           href="index.html">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="about.html">About</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="flowers.html">Flowers</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="delivery.html">Delivery</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="my-orders.html">My Orders</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="order.html">Order</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="reviews.html">Reviews</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="contacts.html">Contacts</a>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
     </nav>
 </header>
 
+
 <main>
-<h2>Sweet Flowers</h2>
 
-<section>
-    <h2>Welcome to Sweet Flowers</h2>
+    <!-- container-fluid is used because this section should use the full screen width -->
+    <section class="container-fluid bg-light py-5">
 
-    <p>
-        Step into <em>Sweet Flowers</em> and discover a world where every bloom tells a story. Nestled in the heart of Astana, 
-        our shop brings together the freshest roses, peonies, eustomas, hydrangeas, and seasonal flowers to help you 
-        celebrate life's most meaningful moments. Whether you're searching for a gift, decorating a special event, 
-        or simply want to brighten your day, our florists are here to craft something beautiful just for you. 
-        We believe that flowers have the <strong>power</strong> to express what words often cannot, and that is why we put so much 
-        care into every single arrangement we create. From the moment you walk through our doors or visit us online, 
-        you'll feel the warmth and passion behind everything we do.
-    </p>
-</section>
+        <div class="container">
 
-<article>
-    <h2>Our Flower Shop</h2>
+            <div class="row align-items-center g-4">
 
-    <p>
-        <!-- Information about the flower shop and its services -->
-        Sweet Flowers was founded on a simple idea: flowers should feel personal. Our team of skilled florists 
-        sources blooms directly from trusted growers, ensuring every arrangement is fresh, vibrant, and made to last. 
-        From elegant wedding bouquets to cozy everyday arrangements, we take pride in paying attention to the smallest 
-        details, making sure each petal and stem is placed with purpose. We also offer fast citywide delivery, 
-        corporate floral services, and weekly subscriptions for those who want to keep fresh flowers in their lives 
-        all year round. Our goal is to make choosing and sending flowers effortless, so you can focus on the joy of 
-        giving. Come visit us, and let <mark>Sweet Flowers help you</mark> celebrate every occasion with color, fragrance, and love.
-    </p>
-</article>
-<figure>
-    <img src="images/sweet.jpg"
-         alt="Exterior of Sweet Flowers flower shop">
+                <div class="col-12 col-lg-7 text-center text-lg-start">
 
-    <figcaption>
-        Sweet Flowers flower shop.
-    </figcaption>
-</figure>
-<aside>
-    <h3>Opening Hours</h3>
+                    <h2 class="display-4 fw-bold text-primary">
+                        Sweet Flowers
+                    </h2>
 
-    <i>around the clock</i>
-</aside>
+                    <p class="lead">
+                        Welcome to Sweet Flowers
+                    </p>
+
+                    <p>
+                        Step into <em>Sweet Flowers</em> and discover a world where
+                        every bloom tells a story. Nestled in the heart of Astana,
+                        our shop brings together the freshest roses, peonies,
+                        eustomas, hydrangeas, and seasonal flowers to help you
+                        celebrate life's most meaningful moments.
+                    </p>
+
+                    <p class="d-none d-md-block text-muted">
+                        Whether you're searching for a gift, decorating a special
+                        event, or simply want to brighten your day, our florists
+                        are here to craft something beautiful just for you.
+                        We believe that flowers have the <strong>power</strong>
+                        to express what words often cannot.
+                    </p>
+
+                    <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center justify-content-lg-start mt-4">
+
+                        <a href="flowers.html"
+                           class="btn btn-primary btn-lg">
+                            View Flowers
+                        </a>
+
+                        <a href="order.html"
+                           class="btn btn-outline-primary">
+                            Order Now
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-12 col-lg-5 text-center">
+
+                    <figure class="mb-0">
+
+                        <img src="images/sweet.jpg"
+                             class="img-fluid rounded shadow"
+                             alt="Exterior of Sweet Flowers flower shop">
+
+                        <figcaption class="small text-muted mt-2">
+                            Sweet Flowers flower shop.
+                        </figcaption>
+
+                    </figure>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="container my-5">
+
+        <div class="row g-4">
+
+            <article class="col-12 col-md-8">
+
+                <h2 class="text-primary border-bottom pb-2">
+                    Our Flower Shop
+                </h2>
+
+                <p>
+                    Sweet Flowers was founded on a simple idea:
+                    flowers should feel personal. Our team of skilled florists
+                    sources blooms directly from trusted growers, ensuring every
+                    arrangement is fresh, vibrant, and made to last.
+                </p>
+
+                <p>
+                    From elegant wedding bouquets to cozy everyday arrangements,
+                    we take pride in paying attention to the smallest details,
+                    making sure each petal and stem is placed with purpose.
+                </p>
+
+                <p>
+                    We also offer fast citywide delivery, corporate floral services,
+                    and weekly subscriptions for those who want to keep fresh
+                    flowers in their lives all year round.
+                </p>
+
+            </article>
+
+
+            <aside class="col-12 col-md-4">
+
+                <!-- Bootstrap Card component adapted for opening hours -->
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body text-center">
+
+                        <h3 class="card-title text-primary">
+                            Opening Hours
+                        </h3>
+
+                        <p class="card-text lead">
+                            Around the clock
+                        </p>
+
+                        <span class="badge text-bg-success mb-3">
+                            Open 24/7
+                        </span>
+
+                        <div>
+                            <a href="contacts.html"
+                               class="btn btn-primary btn-sm">
+                                Contact Us
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </section>
+
+
+    <section class="container my-5">
+
+        <h2 class="text-primary text-center mb-4">
+            Why Sweet Flowers?
+        </h2>
+
+        <div class="row g-4 text-center">
+
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="p-4 bg-light border rounded shadow-sm h-100">
+
+                    <h3 class="h5 text-primary">Fresh Flowers</h3>
+
+                    <p class="mb-0">
+                        Fresh flowers are carefully selected for every bouquet.
+                    </p>
+
+                </div>
+            </div>
+
+
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="p-4 bg-light border rounded shadow-sm h-100">
+
+                    <h3 class="h5 text-primary">Fast Delivery</h3>
+
+                    <p class="mb-0">
+                        We deliver beautiful bouquets across Astana.
+                    </p>
+
+                </div>
+            </div>
+
+
+            <div class="col-12 col-md-12 col-lg-4">
+                <div class="p-4 bg-light border rounded shadow-sm h-100">
+
+                    <h3 class="h5 text-primary">Made with Love</h3>
+
+                    <p class="mb-0">
+                        Every arrangement is prepared individually with care.
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="container my-5 text-center">
+
+        <h2 class="text-primary">
+            Find Your Perfect Bouquet
+        </h2>
+
+        <p class="lead">
+            Choose beautiful flowers for someone special.
+        </p>
+
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+
+            <a href="flowers.html"
+               class="btn btn-primary">
+                Flowers
+            </a>
+
+            <a href="order.html"
+               class="btn btn-outline-primary btn-lg">
+                Make an Order
+            </a>
+
+            <button type="button"
+                    class="btn btn-secondary btn-sm"
+                    disabled>
+                New Collection Soon
+            </button>
+
+        </div>
+
+    </section>
+
 </main>
-<!-- Footer with contact information and copyright -->
-<footer>
-    <h3>Sweet Flowers</h3>
-    <i>Phone: +7 708 111 57 57</i>
-    
-    <i>&copy; 2026 Sweet Flowers</i>
+
+
+<footer class="bg-light text-center py-3 mt-5 border-top">
+
+    <h3 class="h5 text-primary">
+        Sweet Flowers
+    </h3>
+
+    <p class="mb-1">
+        Phone:
+        <a href="tel:+77081115757"
+           class="text-decoration-none">
+            +7 708 111 57 57
+        </a>
+    </p>
+
+    <p class="mb-0 text-muted small">
+        &copy; 2026 Sweet Flowers
+    </p>
+
 </footer>
+
+
+<!-- Bootstrap v5.3.2 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

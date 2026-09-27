@@ -8,145 +8,524 @@
     <meta name="author" content="Munira Sagyndykova">
 
     <title>Sweet Flowers — Flowers</title>
+
+    <!-- Bootstrap v5.3.2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/flowers.css">
 </head>
 
-<body>
-<header>
-    <p><strong>Sweet Flowers</strong></p>
+<!-- Author: Munira Sagyndykova -->
 
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="flowers.html">Flowers</a></li>
-            <li><a href="delivery.html">Delivery</a></li>
-            <li><a href="my-orders.html">My Orders</a></li>
-            <li><a href="order.html">Order</a></li>
-            <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="contacts.html">Contacts</a></li>
-        </ul>
+<body>
+
+<header>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm py-3">
+
+        <div class="container flex-column position-relative">
+
+            <p class="navbar-brand fs-1 fw-bold text-white mb-3">
+                Sweet Flowers
+            </p>
+
+            <button class="navbar-toggler position-absolute top-0 end-0 mt-2"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+
+            <div class="collapse navbar-collapse w-100 justify-content-center"
+                 id="navbarNav">
+
+                <ul class="navbar-nav gap-2 gap-md-4 text-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="index.html">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="about.html">About</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold active"
+                           href="flowers.html">Flowers</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="delivery.html">Delivery</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="my-orders.html">My Orders</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="order.html">Order</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="reviews.html">Reviews</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold"
+                           href="contacts.html">Contacts</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
     </nav>
+
 </header>
+
+
 <main>
 
-    <h1>Our Flowers</h1>
+    <!-- container-fluid is used because the section covers the full screen width -->
+    <section class="container-fluid bg-light py-5">
 
-    <section>
-        <h2>Flowers and Bouquets</h2>
+        <div class="container text-center text-md-start">
 
-        <p>
-            Flowers have a <strong>unique way of speaking</strong> when words are not enough. Whether you are celebrating a joyful milestone, expressing love, or offering comfort during difficult times, a thoughtfully arranged bouquet carries meaning that lasts far beyond the moment it is given. Our collection features fresh, hand-picked blooms sourced from trusted local and international growers, ensuring every stem is vibrant, fragrant, and long-lasting.
+            <h1 class="display-4 fw-bold text-primary">
+                Our Flowers
+            </h1>
 
-From classic roses that symbolize timeless romance to cheerful sunflowers that bring warmth and energy into any room, we offer a wide variety of flowers to suit every occasion and personal style. Our <i>skilled florists</i> take pride in combining colors, textures, and seasonal varieties to craft bouquets that feel both elegant and personal. Whether you need a simple gesture of appreciation, a grand centerpiece for a wedding, or a comforting arrangement for a loved one, we are here to help you find the perfect match.
+            <p class="lead">
+                Flowers and Bouquets
+            </p>
 
-Each bouquet is carefully wrapped and prepared with attention to detail, so it arrives looking as beautiful as the moment it was created. Explore our selection below and discover the perfect flowers to express exactly what you feel.
+            <p class="d-none d-md-block text-muted">
+                Fresh, hand-picked flowers for every special occasion.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="container my-5">
+
+        <div class="row g-4">
+
+            <div class="col-12 col-lg-8">
+
+                <h2 class="text-primary">
+                    Flowers and Bouquets
+                </h2>
+
+                <p>
+                    Flowers have a <strong>unique way of speaking</strong>
+                    when words are not enough. Whether you are celebrating a
+                    joyful milestone, expressing love, or offering comfort
+                    during difficult times, a thoughtfully arranged bouquet
+                    carries meaning that lasts far beyond the moment it is given.
+                </p>
+
+                <p>
+                    Our collection features fresh, hand-picked blooms sourced
+                    from trusted local and international growers, ensuring every
+                    stem is vibrant, fragrant, and long-lasting.
+                </p>
+
+                <p>
+                    From classic roses that symbolize timeless romance to cheerful
+                    sunflowers that bring warmth and energy into any room, we offer
+                    a wide variety of flowers to suit every occasion and personal style.
+                </p>
+
+                <p>
+                    Our <i>skilled florists</i> take pride in combining colors,
+                    textures, and seasonal varieties to craft bouquets that feel
+                    both elegant and personal.
+                </p>
+
+            </div>
+
+
+            <div class="col-12 col-lg-4">
+
+                <!-- Bootstrap List Group component adapted for popular flowers -->
+
+                <h2 class="h4 text-primary">
+                    Popular Choices
+                </h2>
+
+                <ul class="list-group shadow-sm">
+
+                    <li class="list-group-item">
+                        ROSES
+                    </li>
+
+                    <li class="list-group-item">
+                        PEONIES
+                    </li>
+
+                    <li class="list-group-item">
+                        TULIPS
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="container my-5">
+
+        <h2 class="text-primary text-center mb-4">
+            Our Popular Bouquets
+        </h2>
+
+        <div class="row g-4">
+
+            <div class="col-12 col-md-6">
+
+                <!-- Bootstrap Card component adapted for bouquet -->
+                <div class="card h-100 shadow-sm">
+
+                    <img src="images/bs2.jpg"
+                         class="card-img-top img-fluid"
+                         alt="Pink flower bouquet at Sweet Flowers">
+
+                    <div class="card-body">
+
+                        <h3 class="card-title h5 text-primary">
+                            Pink Delight
+                        </h3>
+
+                        <p class="card-text">
+                            Pink bouquet available at Sweet Flowers.
+                        </p>
+
+                        <a href="order.html"
+                           class="btn btn-primary">
+                            Order Bouquet
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+                <div class="card h-100 shadow-sm">
+
+                    <img src="images/b1.jpg"
+                         class="card-img-top img-fluid"
+                         alt="Mixed flower bouquet at Sweet Flowers">
+
+                    <div class="card-body">
+
+                        <h3 class="card-title h5 text-primary">
+                            Mixed Bouquet
+                        </h3>
+
+                        <p class="card-text">
+                            Mixed flower bouquet.
+                        </p>
+
+                        <a href="order.html"
+                           class="btn btn-outline-primary">
+                            Order Bouquet
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="container my-5">
+
+        <h2 class="text-primary mb-4">
+            Sweet Flowers Bouquet Prices
+        </h2>
+
+        <div class="table-responsive">
+
+            <table class="table table-striped table-hover align-middle border">
+
+                <thead class="table-light">
+
+                    <tr>
+                        <th scope="col">Bouquet</th>
+                        <th scope="col">Flowers</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Price</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <th scope="row">
+                            "Wow-factor" premium bouquet
+                        </th>
+
+                        <td>
+                            Peonies, Peony-flowered spray roses,
+                            Hydrangeas, Eustomas
+                        </td>
+
+                        <td>Medium</td>
+
+                        <td>56,000 ₸</td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <th scope="row">
+                            Pink Delight – Premium Bouquet
+                        </th>
+
+                        <td>
+                            Spray roses, peony-style spray roses,
+                            lush hydrangeas
+                        </td>
+
+                        <td>Large</td>
+
+                        <td>106,000 ₸</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <section class="container my-5">
+
+        <h2 class="text-primary text-center mb-4">
+            Flower Types
+        </h2>
+
+        <div class="row g-4">
+
+
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <div class="bg-light border rounded shadow-sm p-4 h-100">
+
+                    <h3 class="h5 text-primary">
+                        Roses
+                    </h3>
+
+                    <!-- Nested row inside a column -->
+                    <div class="row g-2">
+
+                        <div class="col-6">
+                            <div class="border rounded p-2 text-center">
+                                Pink roses
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="border rounded p-2 text-center">
+                                White roses
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <div class="bg-light border rounded shadow-sm p-4 h-100">
+
+                    <h3 class="h5 text-primary">
+                        Tulips
+                    </h3>
+
+                    <ul class="mb-0">
+                        <li>Pink tulips</li>
+                        <li>White tulips</li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-12 col-md-12 col-lg-4">
+
+                <div class="bg-light border rounded shadow-sm p-4 h-100">
+
+                    <h3 class="h5 text-primary">
+                        Peonies
+                    </h3>
+
+                    <ul class="mb-0">
+                        <li>Pink peonies</li>
+                        <li>White peonies</li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="container my-5">
+
+        <div class="row g-4">
+
+
+            <div class="col-12 col-md-6">
+
+                <h2 class="text-primary">
+                    How to Choose a Bouquet
+                </h2>
+
+                <ol class="list-group list-group-numbered shadow-sm">
+
+                    <li class="list-group-item">
+                        Choose the flowers.
+                    </li>
+
+                    <li class="list-group-item">
+                        Choose the bouquet size.
+                    </li>
+
+                    <li class="list-group-item">
+                        Check the price.
+                    </li>
+
+                </ol>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+                <h2 class="text-primary">
+                    Flower Terms
+                </h2>
+
+                <dl class="bg-light border rounded p-4">
+
+                    <dt>Bouquet</dt>
+
+                    <dd>
+                        A group of flowers arranged together.
+                    </dd>
+
+                    <dt>Florist</dt>
+
+                    <dd>
+                        A person who works with flowers and creates arrangements.
+                    </dd>
+
+                </dl>
+
+                <p class="small text-muted">
+                    We also offer
+                    <abbr title="same-day delivery">SDD</abbr>.
+                </p>
+
+                <p class="small text-muted">
+                    Sweet Flowers provides
+                    <abbr title="flower arrangement">FA</abbr>
+                    services.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="container my-5 text-center">
+
+        <h2 class="text-primary">
+            Find Your Perfect Bouquet
+        </h2>
+
+        <p class="lead">
+            Choose your favorite flowers for someone special.
         </p>
+
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+
+            <a href="order.html"
+               class="btn btn-primary btn-lg">
+                Order Now
+            </a>
+
+            <a href="contacts.html"
+               class="btn btn-outline-primary">
+                Contact Us
+            </a>
+
+            <button type="button"
+                    class="btn btn-secondary btn-sm"
+                    disabled>
+                More Flowers Soon
+            </button>
+
+        </div>
+
     </section>
-
-    <section>
-        <h2>Popular Choices</h2>
-
-        <ul>
-            <li>ROSES</li>
-            <li>PEONIES</li>
-            <li>TULIPS</li>
-        </ul>
-    </section>
-<table>
-    <caption> <h3>Sweet Flowers Bouquet Prices</h3></caption>
-
-    <thead>
-        <tr>
-            <th scope="col">Bouquet</th>
-            <th scope="col"> Flowers</th>
-            <th scope="col"> Size</th>
-            <th scope="col"> Price</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        <tr>
-            <th scope="row">"Wow-factor" premium bouquet</th>
-            <td>  Peonies, Peony-flowered spray roses, Hydrangeas, Eustomas</td>
-            <td>  Medium</td>
-            <td>  56.000</td>
-        </tr>
-
-        <tr>
-            <th scope="row">Pink Delight – Premium Bouquet</th>
-            <td>spray roses, peony-style spray roses,lush hydrangeas</td>
-            <td>Large</td>
-            <td>106.000</td>
-        </tr>
-    </tbody>
-</table>
-<h2>Flower Types</h2>
-
-<ul>
-    <li>Roses
-        <ul>
-            <li>Pink roses</li>
-            <li>White roses</li>
-        </ul>
-    </li>
-
-    <li>Tulips
-        <ul>
-            <li>Pink tulips</li>
-            <li>White tulips</li>
-        </ul>
-    </li>
-    <li>Peonies
-        <ul>
-            <li>Pink peonies</li>
-            <li>White peonies</li>
-        </ul>
-    </li>
-</ul>
-<h2>How to Choose a Bouquet</h2>
-
-<ol start="1">
-    <li>Choose the flowers.</li>
-    <li>Choose the bouquet size.</li>
-    <li>Check the price.</li>
-</ol>
-<h2>Flower Terms</h2>
-
-<dl>
-    <dt>Bouquet</dt>
-    <dd>A group of flowers arranged together.</dd>
-
-    <dt>Florist</dt>
-    <dd>A person who works with flowers and creates arrangements.</dd>
-</dl>
-<p>
-    We also offer <abbr title="same-day delivery">SDD</abbr>.
-</p>
-
-<figure>
-    <h4>
-    Sweet Flowers provides <abbr title="flower arrangement">FA</abbr>
-    services.
-    </h4>
-    <h3> Our Popular bouquets</h3>
-    <img src="images/bs2.jpg"
-         alt="Pink flower bouquet at Sweet Flowers">
-
-    <figcaption>
-        Pink bouquet available at Sweet Flowers.
-    </figcaption>
-</figure>
-<figure>
-    <img src="images/b1.jpg"
-         alt="Mixed flower bouquet at Sweet Flowers">
-
-    <figcaption>
-        Mixed flower bouquet.
-    </figcaption>
-</figure>
 
 </main>
+
+
+<footer class="bg-light text-center py-3 mt-5 border-top">
+
+    <p class="mb-0 text-muted small">
+        &copy; 2026 Sweet Flowers
+    </p>
+
+</footer>
+
+
+<!-- Bootstrap v5.3.2 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
