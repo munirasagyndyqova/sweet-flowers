@@ -1,0 +1,20 @@
+Author: Kenes Nurziya
+What I removed from my custom CSS and how Bootstrap replaced it:
+
+1. Layout & Grid:
+- Removed `display: grid; grid-template-columns; gap` (e.g., `.locations-grid`). Replaced with Bootstrap `.row` and `.col-12 col-md-6 col-lg-4`.
+- Removed `display: flex; flex-direction; flex-wrap` (e.g., `.payment-methods`). Replaced with `.d-flex .flex-wrap .gap-3`.
+
+2. Containers & Spacing:
+- Removed `main { max-width: 1000px; margin: auto; padding }`. Replaced with Bootstrap `.container` and `.container-fluid`.
+- Removed custom margins/padding (`margin-bottom: 25px`, `padding: 20px`). Replaced with spacing utilities like `.mb-4`, `.my-5`, `.p-3`, `.py-5`.
+
+3. Components:
+- Removed `.location-card`, `.order-form`, `box-shadow`, `border-radius`. Replaced with Bootstrap `.card`, `.shadow-sm`, `.rounded`.
+- Removed table styling (`border-collapse`, `.delivery-table`). Replaced with `.table`, `.table-bordered`, `.table-striped`.
+- Removed custom form inputs (`input:focus`, `.form-group`). Replaced with `.form-control`, `.form-select`, `.form-label`.
+- Removed button styling (`.order-buttons button`). Replaced with `.btn`, `.btn-lg`, `.btn-outline-secondary`.
+
+4. Typography:
+- Removed `text-align: center`, font sizes. Replaced with `.text-center`, `.text-md-start`, `.display-5`, `.h5`, `.lead`.
+- Removed mobile media queries `@media (max-width: 700px)`. Replaced entirely by Bootstrap's responsive breakpoints (`-md`, `-lg`).
