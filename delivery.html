@@ -4,156 +4,148 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Delivery & Payment - Sweet Flowers</title>
-  <!-- Bootstrap v5.3.2 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/delivery.css">
 </head>
 <body>
 
-<header>
-
-  <nav class="navbar navbar-expand-md navbar-dark navbar-sf shadow-sm py-3">
-    <div class="container flex-column position-relative">
-      
-
-      <p class="navbar-brand fs-1 fw-bold text-white mb-3">Sweet Flowers</p>
-      
-      <button class="navbar-toggler position-absolute top-0 end-0 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<header class="bg-primary py-4 shadow-sm fade-in-up">
+  <div class="container">
+    <h1 class="display-5 text-center text-white fw-bold mb-3">Sweet Flowers</h1>
+    <nav class="navbar navbar-expand-md navbar-dark p-0">
+      <button class="navbar-toggler mx-auto mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-
-      <div class="collapse navbar-collapse w-100 justify-content-center" id="navbarNav">
-        <ul class="navbar-nav gap-2 gap-md-4 text-center">
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="about.html">About</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="flowers.html">Flowers</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="delivery.html">Delivery</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="my-orders.html">My Orders</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="order.html">Order</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="reviews.html">Reviews</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="contacts.html">Contacts</a></li>
+      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <ul class="navbar-nav gap-2 gap-md-4 text-center fw-semibold">
+          <li class="nav-item"><a class="nav-link text-white" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="flowers.html">Flowers</a></li>
+          <li class="nav-item"><a class="nav-link text-white active" href="delivery.html">Delivery</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="my-orders.html">My Orders</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="order.html">Order</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="reviews.html">Reviews</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="contacts.html">Contacts</a></li>
         </ul>
       </div>
-      
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>
-<main class="container my-5">
 
-  <section class="text-center mb-5">
-    <h2 class="display-6 text-brand">Delivery & Payment</h2>
+<main class="container my-5">
+  <section class="text-center mb-5 fade-in-up">
+    <h2 class="display-6 text-primary fw-bold">Delivery & Payment</h2>
     <p class="text-muted">Delivery zones, time and payment methods.</p>
   </section>
 
-  <section class="row g-4 mb-5">
+  <section class="row g-4 mb-5 fade-in-up">
     <div class="col-12 col-md-6">
-      <h3 class="h4 text-brand">Time & Fee</h3>
-      <table class="table table-bordered table-striped shadow-sm">
-        <thead class="table-brand">
+      <div class="bg-white p-4 rounded shadow-sm border h-100">
+        <h3 class="h4 text-primary mb-3">Time & Fee</h3>
+        <table class="table table-bordered text-center align-middle">
+          <thead class="table-primary">
           <tr>
             <th>Delivery Time</th>
             <th>Delivery Fee</th>
           </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
           <tr>
             <td>30–45 minutes</td>
             <td>Calculated by Yandex Delivery</td>
           </tr>
-        </tbody>
-      </table>
-      <p class="small text-muted mt-2">Delivery is available via Yandex Delivery. The fee depends on the rate and distance.</p>
+          </tbody>
+        </table>
+        <p class="small text-muted mt-2">Delivery is available via Yandex Delivery. The fee depends on the rate and distance.</p>
+      </div>
     </div>
 
     <div class="col-12 col-md-6">
-      <h3 class="h4 text-brand">Payment Methods & Pick Up</h3>
-      <ul class="list-group mb-3 shadow-sm">
-        <li class="list-group-item">Cash</li>
-        <li class="list-group-item">Online card payment</li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          Kaspi Pay
-          <img src="images/kaspi.png" alt="Kaspi Pay" width="80" class="rounded">
-        </li>
-      </ul>
-      <div class="alert alert-info bg-brand-light border-brand">
-        <strong>Pick Up:</strong> You can pick up your order yourself 24/7. We will notify you when it's ready.
-      </div>
-    </div>
-  </section>
-
-  <section class="mb-5">
-    <h2 class="text-brand text-center mb-4">Our Locations</h2>
-    <!-- Responsive grid for cards: 1 col on mobile, 2 on tablet, 3 on desktop -->
-    <div class="row g-4 justify-content-center">
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm border-brand location-card">
-          <div class="card-body">
-            <h3 class="card-title h5 text-brand">Sweet Flowers 1</h3>
-            <p class="card-text">Astana, Al-Farabi Avenue, 9</p>
-            <a href="tel:+77081115858" class="btn btn-brand btn-sm">Call Branch</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm border-brand location-card">
-          <div class="card-body">
-            <h3 class="card-title h5 text-brand">Sweet Flowers 2</h3>
-            <p class="card-text">Astana, Berdibek Sokpakbaev Street, 1</p>
-            <a href="tel:+77769991963" class="btn btn-brand btn-sm">Call Branch</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm border-brand location-card">
-          <div class="card-body">
-            <h3 class="card-title h5 text-brand">Sweet Flowers 3</h3>
-            <p class="card-text">Astana, E-15 Street, 16</p>
-            <a href="tel:+77071110463" class="btn btn-brand btn-sm">Call Branch</a>
-          </div>
+      <div class="bg-white p-4 rounded shadow-sm border h-100">
+        <h3 class="h4 text-primary mb-3">Payment Methods</h3>
+        <ul class="list-group list-group-flush mb-4">
+          <li class="list-group-item border-0 px-0">✔️ Cash</li>
+          <li class="list-group-item border-0 px-0">✔️ Online card payment</li>
+          <li class="list-group-item border-0 px-0 d-flex justify-content-between align-items-center">
+            ✔️ Kaspi Pay
+            <img src="images/kaspi.png" alt="Kaspi Pay" width="60" class="rounded border">
+          </li>
+        </ul>
+        <div class="alert alert-primary bg-transparent border-primary">
+          <strong>Pick Up:</strong> You can pick up your order yourself 24/7.
         </div>
       </div>
     </div>
   </section>
 
-  <section class="mb-5">
-    <h2 class="text-brand mb-3">Important Information</h2>
-    <!-- Bootstrap Component: Accordion. I copied it from docs and adapted it to show our rules -->
+  <section class="mb-5 fade-in-up">
+    <h2 class="text-primary text-center mb-4">Our Locations</h2>
+    <div class="row g-4 justify-content-center text-center">
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0 pt-3">
+          <div class="card-body">
+            <h3 class="card-title h5 text-primary">Sweet Flowers 1</h3>
+            <p class="card-text text-muted mb-3">Astana, Al-Farabi Avenue, 9</p>
+            <a href="tel:+77081115858" class="btn btn-outline-primary btn-sm rounded-pill w-100">Call Branch</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0 pt-3">
+          <div class="card-body">
+            <h3 class="card-title h5 text-primary">Sweet Flowers 2</h3>
+            <p class="card-text text-muted mb-3">Astana, B. Sokpakbaev St, 1</p>
+            <a href="tel:+77769991963" class="btn btn-outline-primary btn-sm rounded-pill w-100">Call Branch</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0 pt-3">
+          <div class="card-body">
+            <h3 class="card-title h5 text-primary">Sweet Flowers 3</h3>
+            <p class="card-text text-muted mb-3">Astana, E-15 Street, 16</p>
+            <a href="tel:+77071110463" class="btn btn-outline-primary btn-sm rounded-pill w-100">Call Branch</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-5 fade-in-up">
+    <h2 class="text-primary text-center mb-4">Important Information</h2>
     <div class="accordion shadow-sm" id="infoAccordion">
-      <div class="accordion-item">
+      <div class="accordion-item border-0">
         <h2 class="accordion-header">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+          <button class="accordion-button collapsed bg-white text-dark fw-bold border-bottom" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
             Freshness Guarantee
           </button>
         </h2>
         <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#infoAccordion">
-          <div class="accordion-body">
+          <div class="accordion-body bg-white text-muted">
             Every bouquet is prepared after the order is placed. Fresh flowers are used for every order.
           </div>
         </div>
       </div>
-      <div class="accordion-item">
+      <div class="accordion-item border-0">
         <h2 class="accordion-header">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+          <button class="accordion-button collapsed bg-white text-dark fw-bold border-bottom" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
             Order Confirmation & Delivery
           </button>
         </h2>
         <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#infoAccordion">
-          <div class="accordion-body">
-            Every online order is confirmed by our operator. Please check your order when you receive it. Delivery may take longer during bad weather.
+          <div class="accordion-body bg-white text-muted">
+            Every online order is confirmed by our operator. Delivery may take longer during bad weather.
           </div>
         </div>
       </div>
     </div>
   </section>
-
 </main>
 
-<footer class="bg-light text-center py-3 mt-auto border-top">
+<footer class="bg-white text-center py-4 mt-auto border-top">
   <p class="mb-0 text-muted small">&copy; 2026 Sweet Flowers</p>
 </footer>
 
-<!-- Bootstrap v5.3.2 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
