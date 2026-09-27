@@ -3,150 +3,232 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order - Sweet Flowers</title>
-  <!-- Bootstrap v5.3.2 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="description" content="Read real customer reviews for Sweet Flowers and leave your own feedback.">
+  <meta name="author" content="Koshkinbayeva Akbota">
+  <title>Customer Reviews - Sweet Flowers</title>
+
+  <!-- Bootstrap 5.3.8 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/order.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
+
+  <style>
+    /* Keep review photos small and uniform. */
+    article figure img.review-img {
+      width: 240px;
+      height: 170px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto;
+      border-radius: .375rem;
+    }
+  </style>
+
+  <!-- Author: Koshkinbayeva Akbota -->
+  <!-- I used a standard head structure with SEO meta tags to ensure the page is discoverable and correctly attributed. -->
 </head>
-<body class="bg-light">
+<body id="top">
 
-<header>
-
-  <nav class="navbar navbar-expand-md navbar-dark navbar-sf shadow-sm py-3">
-    <div class="container flex-column position-relative">
-      
-
-      <p class="navbar-brand fs-1 fw-bold text-white mb-3">Sweet Flowers</p>
-      
-      <button class="navbar-toggler position-absolute top-0 end-0 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse w-100 justify-content-center" id="navbarNav">
-        <ul class="navbar-nav gap-2 gap-md-4 text-center">
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="about.html">About</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="flowers.html">Flowers</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="delivery.html">Delivery</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="my-orders.html">My Orders</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="order.html">Order</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="reviews.html">Reviews</a></li>
-          <li class="nav-item"><a class="nav-link text-white fw-semibold" href="contacts.html">Contacts</a></li>
-        </ul>
-      </div>
-      
-    </div>
+<header class="bg-primary text-white text-center py-4 shadow-sm">
+  <p class="fs-3 fw-bold mb-2"><strong>Sweet Flowers</strong></p>
+  <nav>
+    <ul class="nav justify-content-center gap-2 flex-wrap">
+      <li class="nav-item"><a class="nav-link text-white" href="index.html">Home</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="about.html">About</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="flowers.html">Flowers</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="delivery.html">Delivery</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="my-orders.html">My Orders</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="order.html">Order</a></li>
+      <li class="nav-item"><a class="nav-link text-white active" aria-current="page" href="reviews.html">Reviews</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="contacts.html">Contacts</a></li>
+    </ul>
   </nav>
 </header>
 
-<main class="container my-5">
-  <section class="text-center mb-4">
-    <h2 class="display-6 text-brand">Place Your Order</h2>
-    <p class="text-muted">Choose your flowers and provide your delivery information.</p>
+<main class="container py-5">
+
+  <h1 class="display-5 text-primary text-center mb-4 fade-in-up">Customer Reviews</h1>
+
+  <!-- I used a div here because there is no semantic HTML tag for a generic grouping of action buttons. -->
+  <div class="review-actions d-flex flex-wrap justify-content-center gap-2 mb-4 fade-in-up">
+    <a href="https://go.2gis.com/jiCYV" target="_blank" rel="noopener" class="btn btn-primary">Read Real Reviews on 2GIS</a>
+    <a href="https://www.instagram.com/sweet.flowers.ast?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener" class="btn btn-outline-secondary">Us in Instagram</a>
+  </div>
+
+  <hr class="my-5">
+
+  <section class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up">
+    <h2 class="text-primary border-bottom pb-2 mb-3">Recent Feedback</h2>
+
+    <article id="review1" class="bg-light rounded-3 shadow-sm p-4 mb-4">
+      <h3 class="text-primary fs-5">Review 1</h3>
+      <p>
+        <q>Часто заказываю тут цветы для поздравления коллег. Всегда быстрое обслуживание, цветы свежие и букет соответствует фото. Ни разу еще не подводили 😍 Цена и качество соответствует всегда 🥰</q>
+      </p>
+      <figure class="mb-3">
+        <img src="images/bouquet-review.PNG" alt="Photo from a review"
+             width="240" height="170"
+             class="review-img shadow-sm">
+        <figcaption class="text-center small text-muted mt-2">Photo of a bouquet reviewed by our customers.</figcaption>
+      </figure>
+      <p class="mb-1">— <cite>Диалара Абжанова</cite></p>
+      <p class="small text-muted">Posted on: 19.02.2024</p>
+      <p class="mb-0"><a href="https://2gis.kz/reviews/70000001060585742/review/73862956" target="_blank" rel="noopener" class="link-primary fw-bold">Read original review</a></p>
+    </article>
+
+    <article id="review2" class="bg-light rounded-3 shadow-sm p-4 mb-4">
+      <h3 class="text-primary fs-5">Review 2</h3>
+      <p>
+        <q>Спасибо Флористу Амине за хорошее обслуживание и за красивый букет ,еще подарили такой комплиментик из гипсофил.Обязательно приду еще раз 😍😍😍😍😍😍❤️‍🩹</q>
+      </p>
+      <figure class="mb-3">
+        <img src="images/bouquet-review2.png" alt="Photo from a review"
+             width="240" height="170"
+             class="review-img shadow-sm">
+        <figcaption class="text-center small text-muted mt-2">Photo of a bouquet reviewed by our customers.</figcaption>
+      </figure>
+      <p class="mb-1">— <cite>Тогжан Жолдыбай</cite></p>
+      <p class="small text-muted">Posted on: 29.08.2026</p>
+      <p class="mb-0"><a href="https://2gis.kz/reviews/70000001060585742/review/273429291" target="_blank" rel="noopener" class="link-primary fw-bold">Read original review</a></p>
+    </article>
+
+    <article class="bg-light rounded-3 shadow-sm p-4 mb-0">
+      <h3 class="text-primary fs-5">Review 3</h3>
+      <p>
+        <q>Рақмет сіздерге! 💐🎈
+          Гүлдері су жаңа, хош иісі аңқып тұр, ал шариктері әдемі әрі ұзақ ұшады екен. Тапсырысты тура уақытында, өте ұқыпты жеткізіп берді. Ұжымның қызметі, қарым-қатынасы мүлдем бөлек — өз ісінің нағыз шеберлері!
+          Көңіл-күйді бір көтеріп тастадыңыздар. Баршаңызға шын жүректен кеңес беремін, еш өкінбейсіздер! Жұмыстарыңызға береке берсін! 🔥👍
+          (Акбота есімді бойжеткенге ерекше рақмет! Қолы алтын, өз ісінің шебері екен!😍👍)</q>
+      </p>
+      <figure class="mb-3">
+        <img src="images/bouquet-review3.png" alt="Photo from a review"
+             width="240" height="170"
+             class="review-img shadow-sm">
+        <figcaption class="text-center small text-muted mt-2">Photo of a bouquet reviewed by our customers.</figcaption>
+      </figure>
+      <p class="mb-1">— <cite>Камила Есжанова</cite></p>
+      <p class="small text-muted">Posted on: 03.09.2026</p>
+      <p class="mb-0"><a href="https://2gis.kz/reviews/70000001060585742/review/293007225" target="_blank" rel="noopener" class="link-primary fw-bold">Read original review</a></p>
+    </article>
   </section>
 
-  <div class="row justify-content-center">
-    <div class="col-12 col-lg-8">
-      <form class="bg-white p-4 p-md-5 rounded shadow-sm border-brand">
-        
-        <fieldset class="mb-4">
-          <legend class="h5 text-brand border-bottom pb-2">Customer Information</legend>
-          <div class="row g-3">
-            <div class="col-12 col-md-6">
-              <label for="name" class="form-label">Full Name:</label>
-              <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
-            </div>
-            <div class="col-12 col-md-6">
-              <label for="phone" class="form-label">Phone Number:</label>
-              <input type="tel" id="phone" name="phone" class="form-control" placeholder="+7 700 000 00 00" required>
-            </div>
-            <div class="col-12">
-              <label for="email" class="form-label">Email:</label>
-              <input type="email" id="email" name="email" class="form-control" placeholder="example@gmail.com">
-            </div>
-          </div>
-        </fieldset>
+  <aside class="bg-light rounded-3 shadow-sm p-4 mb-4 fade-in-up">
+    <h3 class="text-primary">Additional Information</h3>
+    <p>Average Rating: <strong>5 out of 5 stars</strong>.</p>
+    <p>Our shop is rated <mark class="bg-primary-subtle">in Astana</mark> for customer satisfaction.</p>
 
-        <fieldset class="mb-4">
-          <legend class="h5 text-brand border-bottom pb-2">Choose Your Bouquet</legend>
-          <div class="row g-3 align-items-end">
-            <div class="col-12 col-md-8">
-              <label for="flowers" class="form-label">Flower Type:</label>
-              <select id="flowers" name="flowers" class="form-select">
-                <option value="roses">Roses</option>
-                <option value="tulips">Tulips</option>
-                <option value="peonies">Peonies</option>
-                <option value="mixed">Mixed Bouquet</option>
-              </select>
-            </div>
-            <div class="col-12 col-md-4">
-              <label for="quantity" class="form-label">Quantity:</label>
-              <input type="number" id="quantity" name="quantity" class="form-control" min="1" max="20" value="1">
-            </div>
-          </div>
-        </fieldset>
+    <h4 class="text-primary fs-5 mt-3">Why choose us?</h4>
+    <ul>
+      <li>Fresh flowers
+        <ul>
+          <li>Local suppliers</li>
+          <li>Daily deliveries</li>
+        </ul>
+      </li>
+      <li>Fast delivery</li>
+      <li>24/7 support</li>
+    </ul>
 
-        <fieldset class="mb-4">
-          <legend class="h5 text-brand border-bottom pb-2">Delivery Information</legend>
-          <div class="mb-3">
-            <label for="address" class="form-label">Delivery Address:</label>
-            <textarea id="address" name="address" class="form-control" rows="3" placeholder="Enter your delivery address" required></textarea>
-          </div>
-          <div class="row g-3">
-            <div class="col-12 col-md-6">
-              <label for="date" class="form-label">Delivery Date:</label>
-              <input type="date" id="date" name="date" class="form-control">
-            </div>
-            <div class="col-12 col-md-6">
-              <label for="time" class="form-label">Preferred Time:</label>
-              <input type="time" id="time" name="time" class="form-control">
-            </div>
-          </div>
-        </fieldset>
+    <h4 class="text-primary fs-5 mt-3">Our top 3 bouquets:</h4>
+    <ol type="I">
+      <li>Romantic Rose</li>
+      <li>Spring Tulip</li>
+      <li>Summer Mix</li>
+    </ol>
 
-        <fieldset class="mb-4">
-          <legend class="h5 text-brand border-bottom pb-2">Payment Method</legend>
-          <div class="d-flex flex-wrap gap-3">
-            <div class="form-check">
-              <input type="radio" id="cash" name="payment" value="cash" class="form-check-input" checked>
-              <label for="cash" class="form-check-label">Cash</label>
-            </div>
-            <div class="form-check">
-              <input type="radio" id="card" name="payment" value="card" class="form-check-input">
-              <label for="card" class="form-check-label">Card Online</label>
-            </div>
-            <div class="form-check">
-              <input type="radio" id="kaspi" name="payment" value="kaspi" class="form-check-input">
-              <label for="kaspi" class="form-check-label">Kaspi Pay</label>
-            </div>
-          </div>
-        </fieldset>
+    <h4 class="text-primary fs-5 mt-3">Flower Glossary:</h4>
+    <dl class="mb-0">
+      <dt><abbr title="A flower arrangement">Bouquet</abbr></dt>
+      <dd>A bunch of flowers arranged in an artistic way.</dd>
+      <dt><abbr title="The art of growing flowers">Floristry</abbr></dt>
+      <dd>The study and practice of growing and arranging flowers.</dd>
+    </dl>
+  </aside>
 
-        <fieldset class="mb-4">
-          <label for="message" class="form-label">Message for the Florist:</label>
-          <textarea id="message" name="message" class="form-control" rows="3" placeholder="Special requests..."></textarea>
-        </fieldset>
+  <p>Our 6<sup>th</sup> anniversary is coming soon! We offer <em>exclusive</em> discounts for <strong>loyal customers</strong>.</p>
+  <p>Don't forget to use the code <code>FLOWER10</code> for a 10% discount.</p>
 
-        <!-- Buttons with variants: brand, outline, size (lg), and disabled state -->
-        <div class="d-flex flex-wrap gap-2 justify-content-between">
-          <div>
-            <button type="submit" class="btn btn-brand btn-lg">Place Order</button>
-            <button type="reset" class="btn btn-outline-secondary btn-lg">Clear</button>
-          </div>
-          <button type="button" class="btn btn-secondary disabled" disabled>Apply Promo (Coming Soon)</button>
-        </div>
-        
-      </form>
-    </div>
-  </div>
+  <blockquote class="blockquote border-start border-4 border-primary ps-3 my-4">
+    <p>Flowers are the music of the ground. From earth's lips spoken without sound.</p>
+    <footer class="small text-muted">— <cite>Edwin Curran</cite></footer>
+  </blockquote>
+
+  <!-- I used a span here to highlight a specific term inline without breaking the text flow, as no semantic tag applies. -->
+  <p>We also offer <span class="bg-primary-subtle px-2 rounded">custom floral arrangements</span> for weddings and events.</p>
+
+  <section class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up">
+    <h2 class="text-primary border-bottom pb-2 mb-3">Leave a Review</h2>
+    <!-- This form does not send data to a server yet, as there is no backend in this phase. -->
+    <form method="post" action="#">
+      <fieldset class="border rounded-3 p-4">
+        <legend class="fs-5 text-primary float-none w-auto px-2">Share your experience</legend>
+
+        <p class="mb-3">
+          <label for="name" class="form-label fw-semibold">Name:</label><br>
+          <input type="text" id="name" name="name" class="form-control" required placeholder="Your Name">
+        </p>
+
+        <p class="mb-3">
+          <label for="email" class="form-label fw-semibold">Email:</label><br>
+          <input type="email" id="email" name="email" class="form-control" required placeholder="your@email.com">
+        </p>
+
+        <p class="mb-3">
+          <label for="phone" class="form-label fw-semibold">Phone:</label><br>
+          <input type="tel" id="phone" name="phone" class="form-control" placeholder="+7 (___) ___-__-__">
+        </p>
+
+        <p class="mb-3">
+          <label for="rating" class="form-label fw-semibold">Rating (1-5):</label><br>
+          <input type="number" id="rating" name="rating" class="form-control" min="1" max="5" value="5">
+        </p>
+
+        <p class="mb-3">
+          <label for="date" class="form-label fw-semibold">Date of visit:</label><br>
+          <input type="date" id="date" name="date" class="form-control">
+        </p>
+
+        <p class="mb-3">
+          <label class="form-label fw-semibold">Would you recommend us?</label><br>
+          <input type="radio" id="yes" name="recommend" value="yes" class="form-check-input" checked>
+          <label for="yes" class="form-check-label">Yes</label><br>
+          <input type="radio" id="no" name="recommend" value="no" class="form-check-input">
+          <label for="no" class="form-check-label">No</label>
+        </p>
+
+        <p class="form-check mb-3">
+          <input type="checkbox" id="newsletter" name="newsletter" class="form-check-input" checked>
+          <label for="newsletter" class="form-check-label">Subscribe to our newsletter</label>
+        </p>
+
+        <p class="mb-3">
+          <label for="subject" class="form-label fw-semibold">Subject:</label><br>
+          <select id="subject" name="subject" class="form-select">
+            <option value="praise">Praise</option>
+            <option value="suggestion">Suggestion</option>
+            <option value="complaint">Complaint</option>
+          </select>
+        </p>
+
+        <p class="mb-3">
+          <label for="message" class="form-label fw-semibold">Your Review:</label><br>
+          <textarea id="message" name="message" rows="5" cols="40" class="form-control" required placeholder="Write your review here..."></textarea>
+        </p>
+
+        <p class="d-flex flex-wrap gap-2 mb-0">
+          <button type="submit" class="btn btn-primary">Send Review</button>
+          <button type="reset" class="btn btn-outline-secondary">Reset Form</button>
+        </p>
+      </fieldset>
+    </form>
+  </section>
+
 </main>
 
-<footer class="bg-white text-center py-3 mt-auto border-top">
-  <p class="mb-0 text-muted small">&copy; 2026 Sweet Flowers</p>
+<footer class="bg-dark text-white text-center py-4 mt-5">
+  <p class="mb-1">Contact us: <a href="mailto:info@sweetflowers.kz" class="link-light">info@sweetflowers.kz</a> | <a href="tel:+77081115757" class="link-light">+7 (708) 111-57-57</a></p>
+  <p class="mb-0 small">&copy; 2026 Sweet Flowers. All rights reserved.</p>
 </footer>
 
-<!-- Bootstrap v5.3.2 JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
