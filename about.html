@@ -4,111 +4,117 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us - Sweet Flowers</title>
+  <!-- Bootstrap v5.3.2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/about.css">
 </head>
-<!-- Author:Kenes Nurziya -->
+<!-- Author: Kenes Nurziya -->
 <body>
 
 <header>
-<p><strong>Sweet Flowers</strong></p>
-<!-- Navigation links allow users to move between the website pages --> 
- <nav>
-   <ul>
-     <li><a href="index.html">Home</a></li>
-     <li><a href="about.html">About</a></li>
-     <li><a href="flowers.html">Flowers</a></li>
-     <li><a href="delivery.html">Delivery</a></li>
-     <li><a href="my-orders.html">My Orders</a></li>
-     <li><a href="order.html">Order</a></li>
-     <li><a href="reviews.html">Reviews</a></li>
-     <li><a href="contacts.html">Contacts</a></li>
-   </ul>
- </nav>
+  <!-- Bootstrap Navbar: collapses into a toggler on small screens -->
+  <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm">
+    <div class="container">
+      <p class="navbar-brand mb-0 text-brand"><strong>Sweet Flowers</strong></p>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="flowers.html">Flowers</a></li>
+          <li class="nav-item"><a class="nav-link" href="delivery.html">Delivery</a></li>
+          <li class="nav-item"><a class="nav-link" href="my-orders.html">My Orders</a></li>
+          <li class="nav-item"><a class="nav-link" href="order.html">Order</a></li>
+          <li class="nav-item"><a class="nav-link" href="reviews.html">Reviews</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacts.html">Contacts</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </header>
-<!-- Main contains the primary content of the About Us page -->
+
 <main>
-
-  <section>
-    <h2>About Us</h2>
-
-    <p>
-      We started with a small flower workshop and a simple idea:
-      every bouquet should make someone's day special.
-    </p>
-
-    <p>
-      Today, Sweet Flowers delivers fresh bouquets to different
-      areas of Astana. We prepare every order individually and
-      carefully choose flowers for each arrangement.
-    </p>
-  </section>
-<!-- Section describes the history and idea of the flower shop -->
-
-  <section>
-    <h2>Our Flowers</h2>
-
-    <p>
-      We work with fresh flowers and carefully select every stem
-      before creating a bouquet.
-    </p>
-
-    <ul>
-      <li>Fresh roses</li>
-      <li>Tulips</li>
-      <li>Peonies</li>
-      <li>Seasonal flowers</li>
-      <li>Custom flower arrangements</li>
-    </ul>
-  </section>
-<!-- Section presents the main types of flowers offered by the shop -->
-
-  <section>
-    <h2>Our Team</h2>
-
-    <p>
-      Our florists, couriers and customer support team work together
-      to make every order special.
-    </p>
-
-    <blockquote>
-      We create every bouquet as if it were a gift for someone we love.
-    </blockquote>
+  <!-- I chose container-fluid here because it allows the background color (bg-brand-light) to stretch across the entire screen width, unlike a normal container. -->
+  <section class="container-fluid bg-brand-light py-5 text-center text-md-start">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-12 col-md-8">
+          <!-- Typography utilities: display-5, fw-bold -->
+          <h2 class="display-5 fw-bold text-brand">About Us</h2>
+          <p class="lead">
+            We started with a small flower workshop and a simple idea:
+            every bouquet should make someone's day special.
+          </p>
+          <p class="d-none d-md-block text-muted">
+            Today, Sweet Flowers delivers fresh bouquets to different
+            areas of Astana. We prepare every order individually and
+            carefully choose flowers for each arrangement.
+          </p>
+        </div>
+      </div>
+    </div>
   </section>
 
-
-  <section>
-    <h2>Why Choose Us?</h2>
-<!-- Unordered list is used to show flower types -->
-    <ol>
-      <li>Fresh flowers</li>
-      <li>Individual bouquet design</li>
-      <li>Careful packaging</li>
-      <li>Fast delivery</li>
-      <li>Friendly customer service</li>
-    </ol>
+  <!-- Standard container to keep content centered with max-width -->
+  <section class="container my-5">
+    <div class="row g-4 align-items-center">
+      <div class="col-12 col-lg-6">
+        <h2 class="text-brand border-bottom-brand pb-2">Our Flowers</h2>
+        <p>We work with fresh flowers and carefully select every stem before creating a bouquet.</p>
+      </div>
+      <div class="col-12 col-lg-6">
+        <!-- Nesting: A row inside a column -->
+        <ul class="row g-2 list-unstyled mb-0 text-center">
+          <li class="col-6 col-md-4"><div class="p-3 bg-brand-light border-brand rounded shadow-sm">Fresh roses</div></li>
+          <li class="col-6 col-md-4"><div class="p-3 bg-brand-light border-brand rounded shadow-sm">Tulips</div></li>
+          <li class="col-6 col-md-4"><div class="p-3 bg-brand-light border-brand rounded shadow-sm">Peonies</div></li>
+          <li class="col-6 col-md-4"><div class="p-3 bg-brand-light border-brand rounded shadow-sm">Seasonal</div></li>
+          <li class="col-12 col-md-8"><div class="p-3 bg-brand-light border-brand rounded shadow-sm">Custom arrangements</div></li>
+        </ul>
+      </div>
+    </div>
   </section>
 
-
-  <section>
-    <h2>Contact Us</h2>
-
-    <p>
-      Have a question about your bouquet?
-      <span>Contact our team and we will be happy to help.</span>
-    </p>
-
-    <p>
-      Phone:
-      <a href="tel:+77081115858">+7 708 111 58 58</a>
-    </p>
+  <section class="container my-5">
+    <div class="row g-4">
+      <div class="col-12 col-md-6 border-start border-brand border-5">
+        <h2 class="text-brand">Our Team</h2>
+        <p>Our florists, couriers and customer support team work together to make every order special.</p>
+        <blockquote class="blockquote bg-brand-light p-3 rounded fst-italic">
+          <p class="mb-0">"We create every bouquet as if it were a gift for someone we love."</p>
+        </blockquote>
+      </div>
+      
+      <div class="col-12 col-md-6">
+        <h2 class="text-brand">Why Choose Us?</h2>
+        <ol class="list-group list-group-numbered shadow-sm">
+          <li class="list-group-item">Fresh flowers</li>
+          <li class="list-group-item">Individual bouquet design</li>
+          <li class="list-group-item">Careful packaging</li>
+          <li class="list-group-item">Fast delivery</li>
+        </ol>
+      </div>
+    </div>
   </section>
 
+  <section class="container my-5 text-center bg-brand-light p-5 rounded shadow-sm">
+    <h2 class="text-brand">Contact Us</h2>
+    <p class="lead">Have a question about your bouquet?</p>
+    <p>Contact our team and we will be happy to help.</p>
+    <p class="fs-4">
+      Phone: <a href="tel:+77081115858" class="text-brand text-decoration-none fw-bold">+7 708 111 58 58</a>
+    </p>
+  </section>
 </main>
-<!-- Footer contains copyright information and a link back to the main page -->
-<footer>
-  <p>&copy; 2026 Sweet Flowers</p>
+
+<footer class="bg-light text-center py-3 mt-auto border-top">
+  <p class="mb-0 text-muted small">&copy; 2026 Sweet Flowers</p>
 </footer>
 
+<!-- Bootstrap v5.3.2 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
