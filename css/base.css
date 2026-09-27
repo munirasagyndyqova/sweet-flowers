@@ -1,33 +1,15 @@
-/* ============================================================
-   base.css — Correction layer on top of Bootstrap 5.3.3
-   Palette (5):
-     #d6336c  rose pink   — primary brand colour
-     #fcc2d7  soft pink   — accent / hover
-     #212529  charcoal    — body text
-     #fff5f7  blush white — section background
-     #f8f9fa  off white   — subtle contrast
-   ============================================================ */
-
 :root {
-  --bs-primary: #d6336c;         /* override Bootstrap's primary */
+  --bs-primary: #d6336c;
   --bs-primary-rgb: 214, 51, 108;
   --bs-body-font-family: 'Georgia', 'Times New Roman', serif;
   --bs-body-color: #212529;
   --bs-body-bg: #fff5f7;
-  --sf-soft-pink: #fcc2d7;
 }
-
 body {
-  font-family: var(--bs-body-font-family);
   letter-spacing: 0.2px;
+  animation: pageFadeIn .8s ease-out both;
 }
-
-h1, h2, h3, h4, h5 {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-/* Bootstrap's .btn-primary uses --bs-primary — the button below is enough.
-   We only tweak the hover shade, which Bootstrap does not match to our brand. */
+h1, h2, h3, h4, h5 { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .btn-primary {
   --bs-btn-bg: #d6336c;
   --bs-btn-border-color: #d6336c;
@@ -36,26 +18,71 @@ h1, h2, h3, h4, h5 {
   --bs-btn-active-bg: #9a2450;
   --bs-btn-active-border-color: #9a2450;
 }
-
-/* Brand navbar tint — Bootstrap has bg-* utilities, but none match our brand pink. */
-.navbar-sf {
-  background-color: #d6336c;
-}
-
-/* Small correction: Bootstrap tables default to transparent headers. */
-.table-brand thead {
+.btn { transition: transform .2s ease, box-shadow .3s ease, background-color .3s ease; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(214, 51, 108, .35); }
+.navbar-sf { background-color: #d6336c; animation: slideDown .6s ease-out both; }
+.navbar-brand { animation: titleGlow 3s ease-in-out infinite; }
+.navbar-sf .nav-link { transition: background-color .3s ease, transform .2s ease; border-radius: .25rem; }
+.navbar-sf .nav-link:hover { background-color: rgba(255, 255, 255, .2); transform: translateY(-2px); }
+.table-brand thead { background-color: #fcc2d7; }
+.table tbody tr { transition: background-color .3s ease; }
+.card { animation: fadeInUp .6s ease-out both; transition: transform .3s ease, box-shadow .3s ease; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(214, 51, 108, .18); }
+.badge { transition: transform .2s ease; }
+.card:hover .badge { transform: scale(1.05); }
+.figure-img { animation: zoomIn .6s ease-out both; transition: transform .5s ease, box-shadow .3s ease; }
+.figure-img:hover { transform: scale(1.03); box-shadow: 0 8px 20px rgba(214, 51, 108, .25); }
+mark {
   background-color: #fcc2d7;
+  padding: .1rem .4rem;
+  border-radius: 3px;
+  animation: highlightPulse 2s ease-in-out infinite;
 }
-
-/* CSS-only login fallback for my-orders.html — kept from Assignment 2,
-   because Bootstrap has no component that shows one section and hides
-   another without JavaScript. */
+/* Fixed back-to-top / quick-action buttons */
+.position-fixed.btn { animation: pulse 2.5s ease-in-out infinite; }
+.position-fixed.btn:hover { animation-play-state: paused; }
+.alert { animation: fadeInUp .6s ease-out both; }
+.list-group-item { transition: background-color .3s ease, transform .2s ease; }
+.list-group-item:hover { background-color: #fff0f6; transform: translateX(4px); }
 .dashboard-section { display: none; }
 .dashboard-section:target,
-.dashboard-section.is-visible { display: block; }
+.dashboard-section.is-visible { display: block; animation: fadeInUp .6s ease-out both; }
 body:has(#dashboard:target) #login { display: none; }
-
-/* Minimal brand touch on figure images so they sit inline with our cards. */
-.figure-brand img {
-  border-radius: .5rem;
+.status-card-active    { border-left-color: #d6336c !important; }
+.status-card-awaiting  { border-left-color: #f0ad4e !important; }
+.status-card-completed { border-left-color: #b02a5b !important; }
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes titleGlow {
+  0%, 100% { text-shadow: 0 0 6px rgba(255, 255, 255, .4); }
+  50%      { text-shadow: 0 0 16px rgba(255, 255, 255, .9); }
+}
+@keyframes highlightPulse {
+  0%, 100% { background-color: #fcc2d7; }
+  50%      { background-color: #ffb3d1; }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
 }
