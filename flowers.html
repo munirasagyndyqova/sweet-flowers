@@ -121,7 +121,7 @@
     </section>
 
 
-    <section class="container my-5">
+    <section class="container my-5" id="bouquet-catalog">
 
         <div class="row g-4">
 
@@ -219,7 +219,10 @@
                         </p>
 
                         <a href="order.html"
-                           class="btn btn-primary">
+                           class="btn btn-primary"
+                           id="order-pink-delight"
+                           data-bouquet="Pink Delight"
+                           data-price="106000">
                             Order Bouquet
                         </a>
 
@@ -249,9 +252,11 @@
                         </p>
 
                         <a href="order.html"
-                           class="btn btn-outline-primary">
+                           class="btn btn-outline-primary"
+                           id="order-mixed-bouquet"
+                           data-bouquet="Mixed Bouquet">
                             Order Bouquet
-                        </a>
+</a>
 
                     </div>
 
@@ -272,8 +277,7 @@
 
         <div class="table-responsive">
 
-            <table class="table table-striped table-hover align-middle border">
-
+            <table id="bouquet-price-table" class="table table-striped table-hover align-middle border">
                 <thead class="table-light">
 
                     <tr>
@@ -493,23 +497,18 @@
         <div class="d-flex flex-wrap justify-content-center gap-2">
 
             <a href="order.html"
-               class="btn btn-primary btn-lg">
+               class="btn btn-primary btn-lg"
+               id="order-now-button">
                 Order Now
             </a>
 
             <a href="contacts.html"
-               class="btn btn-outline-primary">
+               class="btn btn-outline-primary"
+               id="contact-button">
                 Contact Us
             </a>
 
-            <button type="button"
-                    class="btn btn-secondary btn-sm"
-                    disabled>
-                More Flowers Soon
-            </button>
-
         </div>
-
     </section>
 
 </main>
