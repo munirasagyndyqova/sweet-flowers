@@ -127,3 +127,48 @@ sweet-flowers/
 - **UI Components**: Integrated interactive Bootstrap components (such as Accordions and Cards) adapted to the flower shop's content.
 - **CSS Correction Layer**: Custom CSS was drastically reduced per the assignment rules. We kept only brand colors (`#d6336c`, `#fcc2d7`), custom fonts, and minor overrides, letting Bootstrap's utility classes do the rest.
 - **Git Workflow**: Commits were made independently by each team member across multiple days to reflect the refactoring process.
+
+
+**Midterm Project: Final Logic & JavaScript Preparation**
+
+For the midterm, the Sweet Flowers website was finalized as a complete, cohesive static site. All missing logic, empty blocks, and dead links were resolved. The markup was prepared for future JavaScript integration by adding state classes (`.hidden`, `.error`, `.success`, `.selected`), empty containers for system messages, and unique IDs to interactive elements. 
+
+## Three User Journeys
+
+All paths can be completed by a single visitor from their own screen.
+
+**Journey 1: Choosing and ordering a bouquet**
+* **Start:** The visitor lands on `index.html`.
+* **Steps:** 
+  1. Clicks on "Flowers" in the navigation to view the catalog (`flowers.html`).
+  2. Compares bouquets and clicks the "Order Now" button under a specific arrangement.
+  3. The link takes them to `order.html`.
+  4. The visitor fills out their contact details, delivery address, selects "Kaspi Pay", and clicks "Place Order".
+* **End:** The form submission triggers (future JS) a success message in the `#order-message` container on the same page.
+
+**Journey 2: Checking delivery terms and contacting the shop**
+* **Start:** The visitor opens `delivery.html` to check the delivery zones and time.
+* **Steps:** 
+  1. Reads the delivery fee table and the payment methods.
+  2. Clicks on the "Freshness Guarantee" accordion to read the shop's policy.
+  3. Needs to call a specific branch, so they navigate to `contacts.html` via the top menu.
+* **End:** The visitor finds the correct phone number and address on the contacts page and clicks the `tel:` link to initiate a call.
+
+**Journey 3: Learning about the team and reading feedback**
+* **Start:** The visitor starts at `about.html` to learn about the florist team.
+* **Steps:** 
+  1. Reads the shop's story and views the team section.
+  2. Wants to see what other customers think and clicks "Reviews" in the navigation (`reviews.html`).
+  3. Reads the existing customer feedback.
+* **End:** The visitor fills out the "Leave a Review" form at the bottom of the page and submits it, where an empty container is prepared to show a "Thank you for your review" message.
+
+## Quality Pass Log
+
+Two days before the deadline, team members reviewed each other's pages on different devices to catch and fix remaining bugs.
+
+* **Fixed by Nurziya:** Removed "Coming Soon" text and `disabled` attribute from the promo button in `order.html`. Added missing `#order-message` container for form submission results. Added JS state classes to `base.css`.
+* **Fixed by Munira:**
+* **Fixed by Akbota:** 
+
+## Freeze Tag
+The complete, JS-ready structure is frozen under the Git tag `midterm`.
