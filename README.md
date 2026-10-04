@@ -167,7 +167,7 @@ All paths can be completed by a single visitor from their own screen.
 Two days before the deadline, team members reviewed each other's pages on different devices to catch and fix remaining bugs.
 
 * **Fixed by Nurziya:** Removed "Coming Soon" text and `disabled` attribute from the promo button in `order.html`. Added missing `#order-message` container for form submission results. Added JS state classes to `base.css`.
-* **Fixed by Munira:**
+* **Fixed by Munira:** Removed placeholder buttons and checked links in `index.html` and `flowers.html`. Added IDs and data attributes to important buttons, bouquet catalog, and price table to prepare the HTML structure for future JavaScript.
 * **Fixed by Akbota:** 
 
 ## Freeze Tag
