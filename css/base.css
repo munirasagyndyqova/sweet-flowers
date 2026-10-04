@@ -56,3 +56,8 @@ article figure img {
   margin: 0 auto;
   display: block;
 }
+/* State classes for JavaScript */
+.hidden { display: none !important; }
+.error { border-color: #dc3545 !important; }
+.success { border-color: #198754 !important; }
+.selected { background-color: var(--bs-primary) !important; color: #fff !important; }
