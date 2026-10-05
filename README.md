@@ -169,13 +169,13 @@ Two days before the deadline, team members reviewed each other's pages on differ
 * **Fixed by Nurziya:** Removed "Coming Soon" text and `disabled` attribute from the promo button in `order.html`. Added missing `#order-message` container for form submission results. Added JS state classes to `base.css`.
 * **Fixed by Munira:** Removed placeholder buttons and checked links in `index.html` and `flowers.html`. Added IDs and data attributes to important buttons, bouquet catalog, and price table to prepare the HTML structure for future JavaScript.
 * **Fixed by Akbota:**
-| Page | Finding | Fixed |
-|------|---------|-------|
-| reviews.html | Review photos stretched to full width | Yes — width/height on img |
-| my-orders.html | "Download receipt" link was href="#" | Yes — replaced |
-| contacts.html | Form had no result area | Yes — added #contactResult |
-| All pages | Navigation differed between pages | Yes — unified |
-| my-orders.html | Login used :has() — didn't work in older browsers | Yes — switched to sibling ~ |
+* - `reviews.html` — review photos stretched to full width → fixed with width/height on `<img>`.
+- `my-orders.html` — "Download receipt" link was `href="#"` → replaced with real links.
+- `contacts.html` — feedback form had no result area → added `#contactResult`.
+- All pages — navigation differed between pages → unified.
+- `my-orders.html` — login used `:has()`, didn't work in older browsers → switched to `~`.
+
+Re-checked after fixes: no dead links, every form has a result area, no horizontal scroll at 375px, W3C validator passes, console clean.
 
 ## Freeze Tag
 The complete, JS-ready structure is frozen under the Git tag `midterm`.
