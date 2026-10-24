@@ -7,23 +7,15 @@
     <meta name="author" content="Koshkinbayeva Akbota">
     <title>My Orders — Sweet Flowers</title>
 
-    <!-- Bootstrap 5.3.8 (CDN) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/base.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="js/main.js" defer></script>
 
-    <!-- Login / dashboard toggle. Works without :has() so it runs in every
-         browser. #dashboardView comes first in the DOM (hidden), #loginView
-         follows it, so the sibling combinator ~ can hide the login form.
-         JavaScript will later replace this by toggling .is-hidden. -->
-    <style>
-        #dashboardView { display: none; }
-        #dashboardView:target { display: block; }
-        #dashboardView:target ~ #loginView { display: none; }
-    </style>
+    <script src="js/utils.js" defer></script>
+    <script src="js/my-orders.js" defer></script>
+
 </head>
 <body id="top">
-<!-- Author: Koshkinbayeva Akbota wrote this page -->
 
 <header class="bg-primary text-white text-center py-4 shadow-sm">
     <p class="fs-3 fw-bold mb-2"><strong>Sweet Flowers</strong></p>
@@ -34,7 +26,7 @@
             <li class="nav-item"><a class="nav-link text-white" href="flowers.html">Flowers</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="delivery.html">Delivery</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="order.html">Order</a></li>
-            <li class="nav-item"><a class="nav-link text-white active" aria-current="page" href="my-orders.html">My Orders</a></li>
+            <li class="nav-item"><a class="nav-link text-white active" href="my-orders.html">My Orders</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="reviews.html">Reviews</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="contacts.html">Contacts</a></li>
         </ul>
@@ -43,39 +35,58 @@
 
 <main class="container py-5">
     <h1 class="display-5 text-primary text-center mb-4 fade-in-up">My Orders</h1>
-    <p class="text-center text-muted mb-4">
-        Sign in to your Sweet Flowers account to see the status of your bouquets,
-        your delivery dates and your order history.
-    </p>
 
-    <!-- DASHBOARD VIEW — placed BEFORE the login so the sibling combinator
-         can hide the login form when this section is targeted. Hidden by
-         default. JS will later toggle .is-hidden on it. -->
-    <section id="dashboardView" aria-label="My orders" data-customer-id="1">
-        <h2 class="text-primary border-bottom pb-2 mb-3">Welcome back, <span id="customerName">Akbota</span></h2>
+    <!-- LOGIN VIEW -->
+    <section id="loginView" class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up mx-auto" style="max-width: 600px;">
+        <h2 class="text-primary border-bottom pb-2 mb-3">Sign in</h2>
+        <p class="text-center text-muted small">Use the "Register" button in the top menu if you don't have an account.</p>
+
+        <form id="loginForm" novalidate>
+            <fieldset class="border rounded-3 p-4">
+                <legend class="fs-5 text-primary float-none w-auto px-2">Your account</legend>
+
+                <div class="mb-3">
+                    <label for="loginUsername" class="form-label fw-semibold">Name or email</label>
+                    <input type="text" id="loginUsername" class="form-control" required autocomplete="username">
+                </div>
+
+                <div class="mb-3">
+                    <label for="loginPassword" class="form-label fw-semibold">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" required autocomplete="current-password">
+                </div>
+
+                <div class="d-flex flex-wrap gap-2 mb-0">
+                    <button type="button" id="loginBtn" class="btn btn-primary">Log in</button>
+                </div>
+            </fieldset>
+            <div id="loginResult" class="result-area" role="status" aria-live="polite"></div>
+        </form>
+    </section>
+
+    <!-- DASHBOARD VIEW (Data from DB) -->
+    <section id="dashboardView" class="is-hidden" aria-label="My orders">
+        <h2 class="text-primary border-bottom pb-2 mb-3">Welcome back, <span id="customerName">User</span></h2>
         <p class="text-muted mb-4">
-            Here is a summary of your orders. Orders move through
-            <mark class="bg-primary-subtle">awaiting delivery</mark>, <mark class="bg-primary-subtle">on the way</mark> and
-            <mark class="bg-primary-subtle">completed</mark> statuses. We update this table every morning at
-            09:00 <abbr title="Almaty Time">ALMT</abbr>.
+            Here is a summary of your orders. We update this table every morning.
         </p>
 
+        <!-- Variables instead of hardcoded numbers -->
         <div class="status-summary d-flex flex-wrap gap-3 mb-4">
-            <article class="status-card status-active bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-primary flex-fill">
+            <article class="bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-primary flex-fill">
                 <h3 class="text-muted fs-6 mb-2">Active</h3>
-                <p class="display-6 fw-bold text-primary mb-1" id="activeCount" data-status="active">2</p>
+                <p class="display-6 fw-bold text-primary mb-1" id="activeCount">-</p>
                 <p class="small text-muted mb-0">Orders in progress right now.</p>
             </article>
 
-            <article class="status-card status-awaiting bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-warning flex-fill">
+            <article class="bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-warning flex-fill">
                 <h3 class="text-muted fs-6 mb-2">Awaiting delivery</h3>
-                <p class="display-6 fw-bold text-warning mb-1" id="awaitingCount" data-status="awaiting">1</p>
+                <p class="display-6 fw-bold text-warning mb-1" id="awaitingCount">-</p>
                 <p class="small text-muted mb-0">Waiting for the driver.</p>
             </article>
 
-            <article class="status-card status-completed bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-danger flex-fill">
+            <article class="bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-danger flex-fill">
                 <h3 class="text-muted fs-6 mb-2">Completed</h3>
-                <p class="display-6 fw-bold text-danger mb-1" id="completedCount" data-status="completed">3</p>
+                <p class="display-6 fw-bold text-danger mb-1" id="completedCount">-</p>
                 <p class="small text-muted mb-0">Delivered and confirmed.</p>
             </article>
         </div>
@@ -83,11 +94,11 @@
         <section class="bg-white rounded-3 shadow-sm p-4 mb-4">
             <h3 class="text-primary border-bottom pb-2 mb-3">Order history</h3>
             <div class="table-responsive">
-                <table class="orders-table table table-striped table-hover align-middle mb-0" id="ordersTable" data-customer-id="1">
-                    <caption class="text-muted">My Sweet Flowers orders — 2026</caption>
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <caption class="text-muted">My Sweet Flowers orders</caption>
                     <thead>
                     <tr>
-                        <th scope="col">Order&nbsp;#</th>
+                        <th scope="col">Order #</th>
                         <th scope="col">Bouquet</th>
                         <th scope="col">Ordered</th>
                         <th scope="col">Delivery</th>
@@ -96,188 +107,33 @@
                     </tr>
                     </thead>
                     <tbody id="ordersTbody">
-                    <tr data-order-id="101" data-status="completed">
-                        <th scope="row">SF-2026-101</th>
-                        <td>Romantic Rose</td>
-                        <td>12.09.2026</td>
-                        <td>14.09.2026</td>
-                        <td><span class="badge text-bg-danger">Completed</span></td>
-                        <td class="text-end">12&nbsp;500&#8372;</td>
-                    </tr>
-                    <tr data-order-id="102" data-status="completed">
-                        <th scope="row">SF-2026-102</th>
-                        <td>Spring Tulip</td>
-                        <td>15.09.2026</td>
-                        <td>17.09.2026</td>
-                        <td><span class="badge text-bg-danger">Completed</span></td>
-                        <td class="text-end">9&nbsp;800&#8372;</td>
-                    </tr>
-                    <tr data-order-id="103" data-status="awaiting">
-                        <th scope="row">SF-2026-103</th>
-                        <td>Summer Mix</td>
-                        <td>17.09.2026</td>
-                        <td>19.09.2026</td>
-                        <td><span class="badge text-bg-warning">Awaiting delivery</span></td>
-                        <td class="text-end">8&nbsp;200&#8372;</td>
-                    </tr>
-                    <tr data-order-id="104" data-status="onway">
-                        <th scope="row">SF-2026-104</th>
-                        <td>White Peony</td>
-                        <td>18.09.2026</td>
-                        <td>20.09.2026</td>
-                        <td><span class="badge text-bg-info">On the way</span></td>
-                        <td class="text-end">15&nbsp;000&#8372;</td>
-                    </tr>
-                    <tr data-order-id="105" data-status="completed">
-                        <th scope="row">SF-2026-105</th>
-                        <td>Autumn Bunch</td>
-                        <td>05.09.2026</td>
-                        <td>07.09.2026</td>
-                        <td><span class="badge text-bg-danger">Completed</span></td>
-                        <td class="text-end">6&nbsp;400&#8372;</td>
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Loading orders...</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <p class="small text-muted mt-3 mb-0">Prices include VAT and free delivery inside the city ring road.</p>
         </section>
 
         <section class="bg-white rounded-3 shadow-sm p-4 mb-4">
-            <h3 class="text-primary border-bottom pb-2 mb-3">What the statuses mean</h3>
-            <ul class="list-group list-group-flush mb-0">
-                <li class="list-group-item bg-transparent"><strong>Awaiting delivery</strong> — the bouquet is finished and waiting for the driver.</li>
-                <li class="list-group-item bg-transparent"><strong>On the way</strong> — the driver has collected the bouquet and is driving to you.</li>
-                <li class="list-group-item bg-transparent"><strong>Completed</strong> — the bouquet was delivered and you confirmed it.</li>
-            </ul>
-        </section>
-
-        <section class="bg-white rounded-3 shadow-sm p-4 mb-4">
-            <h3 class="text-primary border-bottom pb-2 mb-3">Quick actions</h3>
             <div class="d-flex flex-wrap gap-2 mb-3">
                 <a href="order.html" class="btn btn-primary">Order again</a>
                 <a href="contacts.html" class="btn btn-outline-secondary">Change address</a>
-                <a href="reviews.html" class="btn btn-outline-secondary">Leave a review</a>
-                <a href="delivery.html" class="btn btn-outline-secondary">Delivery info</a>
             </div>
             <p class="mb-0">
-                <a href="#loginView" id="logoutBtn" class="btn btn-outline-secondary">Log out</a>
+                <button type="button" id="logoutBtn" class="btn btn-outline-secondary">Log out</button>
             </p>
         </section>
     </section>
-
-    <!-- LOGIN VIEW — after the dashboard in the DOM. When #dashboardView is
-         targeted, the CSS rule #dashboardView:target ~ #loginView hides it. -->
-    <section id="loginView" class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up" aria-label="Login form">
-        <h2 class="text-primary border-bottom pb-2 mb-3">Sign in</h2>
-        <p class="text-center text-muted small">any name + password <code>flower</code></p>
-
-        <form id="loginForm" method="post" action="login" novalidate>
-            <fieldset class="border rounded-3 p-4">
-                <legend class="fs-5 text-primary float-none w-auto px-2">Your account</legend>
-
-                <p class="mb-3">
-                    <label for="loginUsername" class="form-label fw-semibold">Name or email</label><br>
-                    <input type="text" id="loginUsername" name="username" class="form-control"
-                           required autocomplete="username" placeholder="you@email.com">
-                </p>
-
-                <p class="mb-3">
-                    <label for="loginPassword" class="form-label fw-semibold">Password</label><br>
-                    <input type="password" id="loginPassword" name="password" class="form-control"
-                           required autocomplete="current-password" minlength="4" placeholder="••••••••">
-                </p>
-
-                <p class="form-check mb-3">
-                    <input type="checkbox" id="remember" name="remember" value="true" class="form-check-input" checked>
-                    <label for="remember" class="form-check-label">Remember me on this device</label>
-                </p>
-
-                <p class="d-flex flex-wrap gap-2 mb-0">
-                    <a href="#dashboardView" id="loginBtn" class="btn btn-primary">Log in (demo)</a>
-                    <button type="reset" class="btn btn-outline-secondary">Clear</button>
-                </p>
-            </fieldset>
-
-            <!-- Empty result area — JS will show login errors here -->
-            <div id="loginResult" class="result-area" role="status" aria-live="polite"></div>
-        </form>
-    </section>
-
-    <hr class="my-5">
-
-    <section class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up" aria-label="How orders work">
-        <h2 class="text-primary border-bottom pb-2 mb-3">How Your Orders Work</h2>
-        <p>
-            Every order you place at Sweet Flowers gets a unique number starting with
-            <code>SF-</code>. You can use it to track the bouquet, ask a question, or
-            request a change. Your <strong>first order</strong> of the month always
-            comes with a small surprise &mdash; a sprig of <i>gypsophila</i> tied to
-            the ribbon. Our regular customer <cite>Anna K.</cite> said in her review
-            on 14 February 2026 that <q>the little extras always make me smile</q>.
-        </p>
-
-        <h3 class="text-primary fs-5">Delivery options</h3>
-        <ul>
-            <li>Standard delivery
-                <ul>
-                    <li>Same day inside the city</li>
-                    <li>Next day outside the ring road</li>
-                </ul>
-            </li>
-            <li>Pickup from any of our five shops</li>
-            <li>Gift wrapping and a handwritten card</li>
-        </ul>
-
-        <h3 class="text-primary fs-5">Why customers stay with us</h3>
-        <ul class="mb-0">
-            <li>Fresh flowers from local growers</li>
-            <li>Free delivery for orders over 10&nbsp;000&#8372;</li>
-            <li>24/7 support by phone and WhatsApp</li>
-        </ul>
-    </section>
-
-    <section class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up">
-        <p class="mb-0">
-            Read more about us on
-            <a href="https://www.instagram.com/sweet.flowers.ast"
-               target="_blank" rel="noopener noreferrer" class="link-primary fw-bold">Instagram</a>, or jump back
-            to the <a href="#loginView" class="link-primary fw-bold">login section</a>.
-        </p>
-    </section>
-
-    <aside class="bg-light rounded-3 shadow-sm p-4 mb-4 fade-in-up">
-        <h3 class="text-primary">From the Shop</h3>
-        <blockquote class="blockquote border-start border-4 border-primary ps-3">
-            <p>
-                Flowers are the music of the ground. From earth&rsquo;s lips spoken
-                without sound.
-            </p>
-            <footer class="small text-muted">— <cite>Edwin Curran</cite></footer>
-        </blockquote>
-        <p>
-            Our 6<sup>th</sup> anniversary is coming soon, and we offer
-            <em>exclusive</em> discounts for <strong>loyal customers</strong>.
-            Use the code <code>FLOWER10</code> for 10% off.
-        </p>
-        <p class="mb-0">
-            Prefer a real conversation? Call
-            <a href="tel:+77081115757" class="link-primary">+7 (708) 111-57-57</a> or write to
-            <a href="mailto:info@sweetflowers.kz" class="link-primary">info@sweetflowers.kz</a>.
-        </p>
-    </aside>
 </main>
 
 <footer class="bg-dark text-white text-center py-4 mt-5">
     <p class="mb-1">
         Contact us:
         <a href="mailto:info@sweetflowers.kz" class="link-light">info@sweetflowers.kz</a>
-        |
-        <a href="tel:+77081115757" class="link-light">+7 (708) 111-57-57</a>
     </p>
     <p class="mb-0 small">&copy; 2026 Sweet Flowers. All rights reserved.</p>
 </footer>
-
-<a class="btn btn-primary position-fixed bottom-0 end-0 m-3 rounded-pill" href="#top" aria-label="Back to top">↑ Top</a>
 
 </body>
 </html>
