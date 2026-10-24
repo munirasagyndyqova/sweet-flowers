@@ -179,3 +179,16 @@ Re-checked after fixes: no dead links, every form has a result area, no horizont
 
 ## Freeze Tag
 The complete, JS-ready structure is frozen under the Git tag `midterm`.
+
+## Assignments 4 & 5: Functionality Plan
+
+| Page | Visitor Goal | Planned Function | Expected Result | Responsible Student |
+| :--- | :--- | :--- | :--- | :--- |
+| **Global (`main.js`)** | View consistent store data across all pages. | Shared data array (`BOUQUETS`), reusable formatting functions, and global UI state handlers. | Unified data source applied site-wide without redundant code. | **Team** |
+| **`order.html`** | Place an order and know the exact total cost. | Live calculation (quantity × price) and strict form validation (no past dates, required fields). | Real-time price updates. On valid submission, form hides and displays a dynamic success summary card. | **Nurziya Kenes** |
+| **`delivery.html`** | Check if delivery is available to their location and calculate the fee. | Delivery zone selector linked to a price calculation function. | Calculates and displays the exact delivery fee based on the selected city zone. | **Nurziya Kenes** |
+| **`flowers.html`** | Find a bouquet by specific category or budget. | Array rendering, category filtering, search input, and sorting controls. | Renders matching items dynamically. Displays exact result count or a clean "No results found" empty state. | **Munira Sagyndykova** |
+| **`index.html`** | Discover new or popular products immediately. | Generate a "Bouquet of the Day" using `Math.random()` to select from the array. | A randomly selected, in-stock bouquet is rendered in the featured section on page load. | **Munira Sagyndykova** |
+| **`reviews.html`** | Read existing feedback and leave a new review. | Render reviews from an array; form validation for new submissions with a live character counter. | New valid reviews are appended to the DOM list immediately with an auto-generated timestamp. | **Akbota Koshkinbayeva** |
+| **`my-orders.html`** | Register or log in to view order history. | Complex password validation using regular expressions. | Live visual checklist updates as the user types. Successful registration shows a demo success message. | **Akbota Koshkinbayeva** |
+Team responsibilities for JavaScript logic are distributed based on the HTML pages assigned during Assignment 1-3. Kenes Nurziya is additionally responsible for setting up the initial `main.js` shared data.*
