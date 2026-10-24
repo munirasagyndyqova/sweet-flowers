@@ -16,3 +16,17 @@ Per the course AI policy, AI was used only to explain concepts, organize work an
 | 25 September | Sagyndykova Munira | Asked how to adapt `flowers.html` to Bootstrap and make the page responsive without adding a separate `flowers.css` file | Used Bootstrap grid, cards, responsive table, list groups, buttons and utility classes. Tested the page on phone, tablet and desktop widths and checked the collapsible navbar |
 | 26 September | Koshkinbayeva Akbota | Asked how Bootstrap utility classes can replace custom CSS for spacing, alignment, borders and responsive layouts | Used the explanation to reduce custom CSS and replace repeated styling with Bootstrap utility classes such as spacing, display, flex, border and alignment utilities |
 | 26 September | Kenes Nurziya | Asked how to create a responsive Bootstrap navbar that collapses on smaller screens and expands on medium and larger screens | Used Bootstrap navbar classes, collapse component and navbar toggler to make the navigation responsive and tested it at phone, tablet and desktop widths |
+| 14 October | Sagyndykova Munira | Asked how JavaScript arrays and objects can store bouquet data | Used the explanation to understand data organization |
+| 14 October | Koshkinbayeva Akbota | Asked how addEventListener works with buttons | Used the explanation to understand event handling |
+| 14 October | Sagyndykova Munira | Asked how Math.random selects an item from an array | Used the explanation to understand random selection |
+| 15 October | Kenes Nurziya | Asked how JavaScript validates required form fields | Used the explanation to understand input validation |
+| 15 October | Koshkinbayeva Akbota | Asked how DOM methods create and update HTML elements | Used the explanation to understand dynamic content |
+| 15 October | Kenes Nurziya | Asked how conditions and functions check form input | Used the explanation to understand validation logic |
+| 21 October | Sagyndykova Munira | Asked how JavaScript functions can filter bouquet data by category | Used the explanation to understand array filtering |
+| 21 October | Koshkinbayeva Akbota | Asked how to handle user interactions using JavaScript events | Used the explanation to understand event listeners |
+| 21 October | Kenes Nurziya | Asked how to display validation messages beside form fields | Used the explanation to understand error feedback |
+| 22 October | Sagyndykova Munira | Asked how to sort bouquet objects by price using JavaScript | Used the explanation to understand array sorting |
+| 22 October | Koshkinbayeva Akbota | Asked how to create dynamic cards using createElement and appendChild | Used the explanation to understand DOM manipulation |
+| 22 October | Kenes Nurziya | Asked how to validate email and required fields in JavaScript | Used the explanation to understand form validation |
+| 24 October | Sagyndykova Munira | Asked AI to generate JavaScript for bouquet cards, search, category filters, sorting and cart buttons | Used the generated code in flowers.js and tested the functionality |
+| 24 October | Sagyndykova Munira | Asked AI to debug JavaScript syntax errors and adjust bouquet images and card layout | Applied the suggested fixes and tested the Flowers page |
