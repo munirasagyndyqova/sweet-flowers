@@ -11,6 +11,7 @@ const BOUQUETS = [
     { id: 8, name: 'Orchid Elegance', category: 'orchids', price: 18900, inStock: false }
 ];
 
+
 function formatPrice(amount) {
     return amount.toLocaleString('kk-KZ') + ' ₸';
 }
