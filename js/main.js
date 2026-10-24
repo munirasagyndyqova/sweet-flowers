@@ -1,5 +1,6 @@
 'use strict';
 
+
 const BOUQUETS = [
     { id: 1, name: 'Romantic Rose', category: 'roses', price: 12500, inStock: true },
     { id: 2, name: 'Spring Tulip', category: 'tulips', price: 9800, inStock: true },
@@ -11,19 +12,113 @@ const BOUQUETS = [
     { id: 8, name: 'Orchid Elegance', category: 'orchids', price: 18900, inStock: false }
 ];
 
-
 function formatPrice(amount) {
-    return amount.toLocaleString('kk-KZ') + ' ₸';
+    return amount.toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₸';
 }
 
+function filterBouquets(category, searchQuery) {
+    const query = searchQuery.toLowerCase().trim();
+    return BOUQUETS.filter(b => {
+        const matchCat = category === 'all' || b.category === category;
+        const matchSearch = b.name.toLowerCase().includes(query);
+        return matchCat && matchSearch;
+    });
+}
+
+function calculateTotal(cartItems) {
+    return cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+}
+
+function generateOrderRef() {
+    const rand = Math.floor(Math.random() * 90000) + 10000;
+    return 'SF-2026-' + rand;
+}
+
+function showFieldError(field, message) {
+    field.classList.add('is-error');
+    const err = document.createElement('small');
+    err.className = 'js-error text-danger d-block mt-1';
+    err.textContent = message;
+    field.insertAdjacentElement('afterend', err);
+}
+
+function clearErrors(form) {
+    form.querySelectorAll('.js-error').forEach(el => el.remove());
+    form.querySelectorAll('.is-error').forEach(el => el.classList.remove('is-error'));
+}
+
+const Cart = {
+    items: [],
+
+    add(bouquetId) {
+        const item = this.items.find(i => i.id === bouquetId);
+        if (item) {
+            item.qty += 1;
+        } else {
+            const bouquet = BOUQUETS.find(b => b.id === bouquetId);
+            if (bouquet) this.items.push({ ...bouquet, qty: 1 });
+        }
+    },
+
+    remove(bouquetId) {
+        this.items = this.items.filter(i => i.id !== bouquetId);
+    },
+
+    getTotal() {
+        return calculateTotal(this.items);
+    }
+};
+
+const Auth = {
+    login(username) {
+        localStorage.setItem('sf_session_user', username);
+    },
+    logout() {
+        localStorage.removeItem('sf_session_user');
+    },
+    getUser() {
+        return localStorage.getItem('sf_session_user');
+    }
+};
+
 const AuthUI = {
-    init: function() {
+    init() {
+        const nav = document.querySelector('header nav ul');
+        if (!nav) return;
+
+        const old = nav.querySelector('[data-auth-trigger]');
+        if (old) old.remove();
+
+        if (Auth.getUser()) {
+            return;
+        }
+
+        const li = document.createElement('li');
+        li.className = 'nav-item';
+        li.dataset.authTrigger = '1';
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'nav-link text-white bg-transparent border-0 fw-bold';
+        btn.textContent = 'Register';
+        btn.addEventListener('click', this.openDialog);
+
+        li.appendChild(btn);
+        nav.appendChild(li);
+    },
+
+    openDialog() {
         const dialog = document.createElement('dialog');
-        const title = document.createElement('h3');
-        title.textContent = 'Registration';
+        dialog.className = 'border-0 rounded-4 shadow-lg p-4';
+        dialog.style.maxWidth = '400px';
+
+        const title = document.createElement('h2');
+        title.className = 'h4 text-primary mb-3';
+        title.textContent = 'Create Account (Demo)';
 
         const info = document.createElement('p');
-        info.textContent = 'Please fill in your details.';
+        info.className = 'text-muted small mb-3';
+        info.textContent = 'Front-end demo only. Passwords are not stored.';
 
         const form = document.createElement('form');
 
@@ -45,9 +140,6 @@ const AuthUI = {
         passInp.className = 'form-control mb-3';
         passInp.required = true;
 
-        const errorMsg = document.createElement('div');
-        errorMsg.className = 'text-danger mb-2 d-none';
-
         const submitBtn = document.createElement('button');
         submitBtn.type = 'button';
         submitBtn.className = 'btn btn-primary w-100';
@@ -55,15 +147,12 @@ const AuthUI = {
 
         submitBtn.addEventListener('click', () => {
             if (userInp.value.trim().length < 3 || passInp.value.length < 8) {
-                errorMsg.textContent = 'Please enter valid username and password (min 8 chars).';
-                errorMsg.classList.remove('d-none');
-                userInp.classList.add('is-invalid');
-                passInp.classList.add('is-invalid');
+                alert('Please enter valid username and password (min 8 chars).');
                 return;
             }
 
-            errorMsg.classList.add('d-none');
 
+            Auth.login(userInp.value.trim());
             dialog.close();
             window.location.reload();
         });
@@ -71,13 +160,13 @@ const AuthUI = {
         form.appendChild(userInp);
         form.appendChild(emailInp);
         form.appendChild(passInp);
-        form.appendChild(errorMsg);
         form.appendChild(submitBtn);
 
         dialog.appendChild(title);
         dialog.appendChild(info);
         dialog.appendChild(form);
         document.body.appendChild(dialog);
+        dialog.showModal();
     }
 };
 
