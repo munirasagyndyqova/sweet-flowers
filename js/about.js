@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.bg-white.p-4.rounded.shadow-sm');
     if (sections.length < 2) return;
-
+ 
     const whyChooseUsSection = sections[1];
 
     const facts = [
