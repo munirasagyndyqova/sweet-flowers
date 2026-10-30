@@ -195,3 +195,45 @@ The complete, JS-ready structure is frozen under the Git tag `midterm`.
 | **`js/utils.js`**    | Receive consistent validation and feedback across forms.   | Shared `SiteUtils` utilities for validation, field-level errors, alerts, live validation, character counters, and demo reference-number generation.| All forms provide consistent validation and feedback without duplicating shared code.  | **Akbota Koshkinbayeva** |
 
 Team responsibilities for JavaScript logic are distributed based on the HTML pages assigned during Assignment 1-3. Kenes Nurziya is additionally responsible for setting up the initial `main.js` shared data.*
+# Sweet Flowers - Assignment 6 (jQuery Refactoring)
+
+## About the Project
+Sweet Flowers is a front-end web project for a flower delivery shop in Astana. For Assignment 6, our team completely refactored the interactive logic of the website from vanilla JavaScript to **jQuery (v3.7.1)**. 
+
+The project demonstrates the use of DOM traversal, dynamic content generation from arrays, event delegation, smooth animations, and form validation using jQuery.
+
+## Team Task Distribution
+
+The workload and commits were divided equally among the team members to ensure collaborative development:
+
+| Team Member | Responsibilities | Handled Pages & Files |
+| :--- | :--- | :--- |
+| **Nuni** | Project setup, main script structuring, form validation, and documentation. | `about.html`, `delivery.html`, `order.html`, `README.md`, `jquery/main.js` |
+| **Munira** | Refactoring dynamic catalog generation and item selection. | `index.html`, `flowers.html` |
+| **Akbota** | Refactoring secondary pages and ensuring UI consistency. | `reviews.html`, `contacts.html`, `my-orders.html` |
+
+## Implemented jQuery Features
+
+We successfully integrated all required jQuery features according to the assignment instructions:
+
+| Feature Category | Implementation Details | Key jQuery Methods Used |
+| :--- | :--- | :--- |
+| **Dynamic Generation** | The flower catalog is built dynamically from the `BOUQUETS` array. Cards are constructed in the script and inserted into the DOM without manual HTML elements. | `$.each()`, `.append()` |
+| **Event Delegation** | Click events for the "Select" buttons are bound to the parent `#flower-list` container to ensure they work perfectly on dynamically generated cards. | `.on('click', '.buy-btn', handler)` |
+| **Effects & Callbacks** | Smooth transitions were added for better UX: revealing florist tips, dropping down the delivery calculator, and hiding the order form upon successful submission. | `.fadeIn()`, `.slideDown()`, `.slideUp()` |
+| **Form Validation** | The order form intercepts the default submit action, validates name, email, and date fields individually, and dynamically displays error messages next to invalid inputs. | `e.preventDefault()`, `.insertAfter()`, `.addClass()`, `.removeClass()` |
+| **Traversal & Chaining** | Clean DOM navigation and execution of 3+ methods in a single statement to manipulate styles and content efficiently. | `.closest()`, `.find()`, `.parent()`, `.next()` |
+
+## Script Structure
+
+To comply with the assignment rules, our JavaScript files are strictly organized:
+
+| File Path | Purpose |
+| :--- | :--- |
+| `jquery/main.js` | The single active script for the entire project containing all the newly written jQuery logic. Connected to all HTML pages. |
+| `old-js-version.js` | A special archive file located in the root folder containing our old vanilla JS functions. **Not linked to any HTML page**; kept solely for side-by-side comparison during the project defense. |
+
+## How to Run
+1. Clone this repository to your local machine.
+2. Open `index.html` in any modern web browser.
+3. *Note: An active internet connection is required for the site to function properly, as the jQuery library is loaded via CDN.*
