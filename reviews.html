@@ -11,12 +11,15 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/base.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
-  <script src="old-js/main.js" defer></script>
-  <script src="old-js/utils.js" defer></script>
-
-  <script src="old-js/reviews.js" defer></script>
+  <!-- jQuery 3.7.1 (CDN): загружается ПЕРВЫМ, наши скрипты сразу вызывают $ -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="jquery/main.js" defer></script>
+  <script src="jquery/jq-common.js" defer></script>
+  <script src="jquery/jq-auth.js" defer></script>
+  <script src="jquery/jq-reviews.js" defer></script>
   <style>
-
+    /* Small correction layer — Bootstrap's .img-fluid would otherwise
+       stretch the review photos to the full card width. */
     article figure img.review-img {
       width: 240px;
       height: 170px;
