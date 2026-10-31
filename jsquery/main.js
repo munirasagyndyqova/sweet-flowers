@@ -1,17 +1,4 @@
-const BOUQUETS = [
-    { id: 1, name: 'Romantic Rose', category: 'roses', price: 12500, inStock: true },
-    { id: 2, name: 'Spring Tulip', category: 'tulips', price: 9800, inStock: true },
-    { id: 3, name: 'Summer Mix', category: 'mixed', price: 8200, inStock: true },
-    { id: 4, name: 'White Peony', category: 'peonies', price: 15000, inStock: false },
-    { id: 5, name: 'Autumn Bunch', category: 'mixed', price: 6400, inStock: true },
-    { id: 6, name: 'Pink Lilies', category: 'lilies', price: 11200, inStock: true },
-    { id: 7, name: 'Sunflower Joy', category: 'sunflowers', price: 7300, inStock: true },
-    { id: 8, name: 'Orchid Elegance', category: 'orchids', price: 18900, inStock: false }
-];
 
-function formatPrice(amount) {
-    return (typeof amount === 'number' ? amount : 0).toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₸';
-}
 
 $(function () {
     const $flowerList = $('#flower-list, #catalog');

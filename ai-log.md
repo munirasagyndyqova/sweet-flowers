@@ -30,3 +30,8 @@ Per the course AI policy, AI was used only to explain concepts, organize work an
 | 22 October | Kenes Nurziya | Asked how to validate email and required fields in JavaScript | Used the explanation to understand form validation |
 | 24 October | Sagyndykova Munira | Asked AI to generate JavaScript for bouquet cards, search, category filters, sorting and cart buttons | Used the generated code in flowers.js and tested the functionality |
 | 24 October | Sagyndykova Munira | Asked AI to debug JavaScript syntax errors and adjust bouquet images and card layout | Applied the suggested fixes and tested the Flowers page |
+| 28 October | Kenes Nurziya | Asked how to connect jQuery without removing old JavaScript | Used the explanation to keep existing features |
+| 28 October | Koshkinbayeva Akbota | Asked about jQuery selectors and DOM methods | Used the explanation to understand DOM manipulation |
+| 29 October | Kenes Nurziya | Asked how to validate forms using jQuery | Used the explanation to understand validation |
+| 29 October | Sagyndykova Munira | Asked how to avoid conflicts between JavaScript and jQuery | Used the explanation to understand duplicate handlers |
+| 30 October | Sagyndykova Munira | Asked how to fix duplicate BOUQUETS declarations and check Console errors | Applied the fixes and tested both pages |
