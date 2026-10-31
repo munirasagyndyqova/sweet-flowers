@@ -1,0 +1,20 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "demo",
+      "email": "demo@sweetflowers.kz",
+      "phone": "+7 (708) 111-57-57",
+      "salt": "a1f3c9e27b4d6058",
+      "passwordHash": "d0e8909eb8471522a90948e8b9659c4268f36809925e655b59b5985cefbfecfb",
+      "createdAt": "2026-09-01"
+    }
+  ],
+  "orders": [
+    { "id": 1051, "userId": 1, "bouquet": "Sunflower Joy",  "ordered": "2026-10-30", "delivery": "2026-11-01", "status": "active",    "total": 7300 },
+    { "id": 1049, "userId": 1, "bouquet": "Spring Tulip",   "ordered": "2026-10-28", "delivery": "2026-10-31", "status": "awaiting",  "total": 9800 },
+    { "id": 1042, "userId": 1, "bouquet": "Romantic Rose",  "ordered": "2026-10-05", "delivery": "2026-10-06", "status": "completed", "total": 12500 },
+    { "id": 1036, "userId": 1, "bouquet": "Summer Mix",     "ordered": "2026-09-18", "delivery": "2026-09-19", "status": "completed", "total": 8200 },
+    { "id": 1027, "userId": 1, "bouquet": "Pink Lilies",    "ordered": "2026-09-02", "delivery": "2026-09-03", "status": "completed", "total": 11200 }
+  ]
+}
