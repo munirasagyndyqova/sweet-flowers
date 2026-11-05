@@ -57,7 +57,6 @@ $(function() {
                 .hide()
                 .removeClass('d-none')
                 .fadeIn(400);
-
             $factButton.text('About');
 
 });
