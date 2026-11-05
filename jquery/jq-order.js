@@ -1,91 +1,102 @@
 
 'use strict';
 
-$(function() {
+$(function () {
 
-    const $form = $('form').first();
+    const $form = $('#flowers').closest('form');
 
     if (!$form.length) return;
 
     const $flowers = $('#flowers');
     const $quantity = $('#quantity');
     const $date = $('#date');
-    const $message = $('#order-message');
     const $name = $('#name');
     const $address = $('#address');
+    const $message = $('#order-message');
 
-    if (
-        !$flowers.length ||
-        !$quantity.length ||
-        !$date.length ||
-        !$message.length
-    ) return;
+    // Find existing Total blocks instead of creating new ones
+    let $totalContainer = $('#total-price');
 
-    // Create total price display
-    const $totalContainer = $('<div>', {
-        class: 'alert alert-info mt-4 fs-5 fw-bold text-center',
-        text: 'Total: 0 ₸'
-    });
-
-    const $buttonGroup = $form.find('.border-top').first();
-
-    if ($buttonGroup.length) {
-        $totalContainer.insertBefore($buttonGroup);
-    } else {
-        $form.append($totalContainer);
+    if (!$totalContainer.length) {
+        $totalContainer = $form.find('.alert-info').filter(function () {
+            return $(this).text().trim().startsWith('Total:');
+        }).first();
     }
 
-    // Calculate total price
+    // Remove duplicate Total blocks
+    $form.find('.alert-info').filter(function () {
+        return $(this).text().trim().startsWith('Total:');
+    }).not($totalContainer).remove();
+
+    // Create Total only if it does not exist
+    if (!$totalContainer.length) {
+        $totalContainer = $('<div>', {
+            id: 'total-price',
+            class: 'alert alert-info mt-4 fs-5 fw-bold text-center',
+            text: 'Total: 0 ₸'
+        });
+
+        const $buttons = $form.find('.border-top').last();
+
+        if ($buttons.length) {
+            $totalContainer.insertBefore($buttons);
+        } else {
+            $form.append($totalContainer);
+        }
+    }
+
+    // Format total price
     function updateTotal() {
 
-        const category = $flowers.val();
-        const qty = parseInt($quantity.val(), 10) || 0;
+        const selectedValue = String($flowers.val() || '').toLowerCase().trim();
+        const quantity = Number($quantity.val()) || 0;
 
-        const bouquet = BOUQUETS.find(function(item) {
-            return item.category === category;
+        const bouquet = BOUQUETS.find(function (item) {
+
+            return (
+                item.category.toLowerCase() === selectedValue ||
+                item.name.toLowerCase() === selectedValue ||
+                String(item.id) === selectedValue
+            );
         });
 
         let total = 0;
 
-        if (bouquet && qty > 0) {
-            total = bouquet.price * qty;
+        if (bouquet && quantity > 0) {
+            total = bouquet.price * quantity;
         }
 
-        $totalContainer.text(
-            'Total: ' + formatPrice(total)
-        );
+        $totalContainer.text('Total: ' + formatPrice(total));
 
         return total;
     }
 
-    // Update total when values change
+    // Recalculate when flower or quantity changes
     $flowers.on('change', updateTotal);
-    $quantity.on('input', updateTotal);
+    $quantity.on('input change', updateTotal);
 
     updateTotal();
 
-    // Show validation error
+    // Show validation errors
     function showError($input, message) {
 
         $input.addClass('is-invalid');
 
-        const $error = $('<div>', {
+        $('<div>', {
             class: 'text-danger small mt-1 error-msg',
             text: message
-        });
-
-        $input.after($error);
+        }).insertAfter($input);
     }
 
-    // Clear validation errors
+    // Remove old errors
     function clearFormErrors() {
 
         $form.find('.error-msg').remove();
         $form.find('.is-invalid').removeClass('is-invalid');
     }
 
-    // Handle order submission
-    $form.on('submit', function(event) {
+    // Submit order
+    $form.on('submit', function (event) {
 
         event.preventDefault();
 
@@ -97,6 +108,7 @@ $(function() {
         function validate($input, condition, message) {
 
             if (condition) {
+
                 showError($input, message);
 
                 if (!$firstInvalid) {
@@ -107,36 +119,41 @@ $(function() {
             }
         }
 
-        const customerName = $name.val().trim();
-        const customerAddress = $address.val().trim();
-
+        const customerName = String($name.val() || '').trim();
+        const customerAddress = String($address.val() || '').trim();
         const quantity = Number($quantity.val());
         const selectedDate = $date.val();
 
-        // Validate name
+        // Name validation
         validate(
             $name,
             customerName.length < 2,
             'Please enter a valid full name.'
         );
 
-        // Validate address
+        // Address validation
         validate(
             $address,
             customerAddress.length < 5,
             'Please enter a valid delivery address.'
         );
 
-        // Validate quantity
+        // Quantity validation
         validate(
             $quantity,
             !Number.isInteger(quantity) || quantity < 1,
             'Quantity must be at least 1.'
         );
 
-        // Validate flower selection
-        const selectedBouquet = BOUQUETS.find(function(item) {
-            return item.category === $flowers.val();
+        // Flower validation
+        const selectedValue = String($flowers.val() || '').toLowerCase().trim();
+
+        const selectedBouquet = BOUQUETS.find(function (item) {
+            return (
+                item.category.toLowerCase() === selectedValue ||
+                item.name.toLowerCase() === selectedValue ||
+                String(item.id) === selectedValue
+            );
         });
 
         validate(
@@ -145,7 +162,7 @@ $(function() {
             'Please select a valid flower.'
         );
 
-        // Validate delivery date
+        // Date validation
         if (!selectedDate) {
 
             validate(
@@ -159,7 +176,9 @@ $(function() {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            const deliveryDate = new Date(selectedDate + 'T00:00:00');
+            const deliveryDate = new Date(
+                selectedDate + 'T00:00:00'
+            );
 
             validate(
                 $date,
@@ -168,28 +187,30 @@ $(function() {
             );
         }
 
-        // Stop if form is invalid
         if (!isValid) {
-            $firstInvalid.trigger('focus');
+
+            if ($firstInvalid) {
+                $firstInvalid.trigger('focus');
+            }
+
             return;
         }
 
+        // Final price
         const total = updateTotal();
 
         const chosenFlower = $flowers
             .find('option:selected')
             .text();
 
-        // Hide form using jQuery
-        $form.fadeOut(300, function() {
+        // Hide order form
+        $form.fadeOut(300, function () {
 
-            // Create confirmation title
             const $title = $('<h4>', {
                 class: 'alert-heading fw-bold',
                 text: 'Thank you for your order, ' + customerName + '!'
             });
 
-            // Create order summary
             const $summary = $('<p>', {
                 text:
                     'You selected ' +
@@ -199,7 +220,6 @@ $(function() {
                     formatPrice(total) + '.'
             });
 
-            // Create delivery information
             const $delivery = $('<p>', {
                 text:
                     'Delivery scheduled for ' +
@@ -208,15 +228,11 @@ $(function() {
                     customerAddress + '.'
             });
 
-            // Demo warning
-            const $divider = $('<hr>');
-
             const $warning = $('<p>', {
                 class: 'mb-0 small text-muted fw-bold',
-                text: '*This is a front-end demonstration. No data was sent to a server and no real payment was processed.'
+                text: '*This is a front-end demonstration. No real payment was processed.'
             });
 
-            // Display confirmation
             $message
                 .empty()
                 .removeClass('hidden d-none')
@@ -225,14 +241,12 @@ $(function() {
                     $title,
                     $summary,
                     $delivery,
-                    $divider,
+                    $('<hr>'),
                     $warning
                 )
                 .hide()
                 .fadeIn(500);
-
         });
-
     });
 
 });
