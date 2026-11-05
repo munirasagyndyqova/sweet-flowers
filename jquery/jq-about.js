@@ -5,6 +5,8 @@ $(function() {
 
     const $sections = $('.bg-white.p-4.rounded.shadow-sm');
 
+   const $sections = $('.bg-white.p-4.rounded.shadow-sm');
+
     if ($sections.length < 2) return;
 
     const $whyChooseUs = $sections.eq(1);
@@ -49,5 +51,13 @@ $(function() {
 
         $factButton.text('Get Another Tip');
     });
+
+     $factDisplay
+                .text(We started with a small flower workshop and a simple idea: every bouquet should make someone's day special.)
+                .hide()
+                .removeClass('d-none')
+                .fadeIn(400);
+
+            $factButton.text('About');
 
 });
