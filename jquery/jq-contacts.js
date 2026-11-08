@@ -1,203 +1,241 @@
-/*
- * jq-contacts.js - Contacts page (contacts.html).
- *
- * jQuery version: 3.7.1 from code.jquery.com. That <script> line sits in <head> before this file,
- * because everything below calls $ and a library that has not loaded yet cannot be called.
- * The plain-JavaScript originals of the three rewritten features are in old-js-version.js.
- * Everything is wrapped in $(function () {...}) = $(document).ready(): it runs when the DOM is ready.
- */
-$(function () {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Sweet Flowers. Find our address, phone, email, and opening hours.">
+  <meta name="author" content="Koshkinbayeva Akbota">
+  <title>Contact Sweet Flowers</title>
 
-    /* ------------------------------------------------------------------
-     * REWRITTEN FEATURE 1 - show / hide a block (old version: old-js-version.js, oldToggleAside)
-     * Replaced: querySelector + createElement/appendChild loops + style.display = 'none' / ''
-     *           + addEventListener + a manual if/else for the button label
-     * with:     $('aside') + .wrapAll() + .slideToggle(300, callback) + .on('click').
-     * Result: shorter (14 lines of code against 22 in old-js-version.js) and clearer, and it animates
-     * for free. The callback also fixes a real problem: the label is changed only AFTER the
-     * animation has finished, so it always matches what the visitor sees.
-     * ------------------------------------------------------------------ */
-    var $aside = $('aside').first();
-    // everything in the aside except the heading goes into one wrapper, so one call can hide it all
-    var $details = $aside.children(':not(h3)').wrapAll('<div class="aside-details"></div>').parent();
+  <!-- Bootstrap 5.3.8 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/base.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
+  <!-- jQuery 3.7.1 (CDN): загружается ПЕРВЫМ, наши скрипты сразу вызывают $ -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="jquery/main.js" defer></script>
+  <script src="jquery/jq-common.js" defer></script>
+  <script src="jquery/jq-auth.js" defer></script>
+  <script src="jquery/jq-contacts.js" defer></script>
+  <!-- Author: Koshkinbayeva Akbota -->
+  <!-- I included a meta description to help users find our contact information easily in search results. -->
+</head>
+<body id="top">
 
-    /* CHAIN, link by link:
-     *  $('<button>')          - creates a new, empty <button> element in memory
-     *  .attr({...})           - sets type and aria-expanded in one go
-     *  .addClass('btn ...')   - gives it the Bootstrap look (classes that already exist)
-     *  .text('Hide details')  - sets its label (as plain text)
-     *  .insertAfter(...)      - puts it into the page, right under the <h3> */
-    var $toggleBtn = $('<button>')
-        .attr({ type: 'button', 'aria-expanded': 'true' })
-        .addClass('btn btn-sm btn-outline-primary mb-3')
-        .text('Hide details')
-        .insertAfter($aside.children('h3'));
+<header class="bg-primary text-white text-center py-4 shadow-sm">
+  <p class="fs-3 fw-bold mb-2"><strong>Sweet Flowers</strong></p>
+  <nav>
+    <ul class="nav justify-content-center gap-2 flex-wrap">
+      <li class="nav-item"><a class="nav-link text-white" href="index.html">Home</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="about.html">About</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="flowers.html">Flowers</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="delivery.html">Delivery</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="order.html">Order</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="my-orders.html">My Orders</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="reviews.html">Reviews</a></li>
+      <li class="nav-item"><a class="nav-link text-white active" aria-current="page" href="contacts.html">Contacts</a></li>
+    </ul>
+  </nav>
+</header>
 
-    $toggleBtn.on('click', function () {
-        var $btn = $(this);
-        $details.slideToggle(300, function () {          // 300 ms; the function below runs when the slide is over
-            var isOpen = $details.is(':visible');
-            $btn.text(isOpen ? 'Hide details' : 'Show details').attr('aria-expanded', isOpen);
-        });
-    });
+<main class="container py-5">
+  <h1 class="display-5 text-primary text-center mb-4 fade-in-up">Contact Sweet Flowers</h1>
 
-    /* ------------------------------------------------------------------
-     * REWRITTEN FEATURE 2 - the list built in code: filter buttons for the shops table
-     *                       (old version: old-js-version.js, oldFilterButtons)
-     * Replaced: querySelectorAll + for-loops + createElement + classList + style.display
-     *           + one addEventListener PER button
-     * with:     .find() + .each() + $.each() + .appendTo() + .siblings() + ONE delegated .on('click').
-     * Result: only a bit shorter (35 lines against 40), not dramatically. The real gain is
-     * .siblings().removeClass('active') (replaces a whole loop) and the fade effect; the part that
-     * builds the buttons is about as long as before.
-     * ------------------------------------------------------------------ */
-    var $table = $('table').first();
-    var $rows = $table.find('tbody tr');
-    var hoursList = ['All'];
+  <p class="text-center mb-4">Jump to: <a href="#main-shop" class="link-primary fw-bold">Main Shop</a> | <a href="#feedback-form" class="link-primary fw-bold">Leave Feedback</a></p>
 
-    $rows.each(function () {                              // read every row's last cell: its opening hours
-        var $row = $(this);
-        var hours = $row.children('td').last().text().trim();
-        $row.attr('data-hours', hours);
-        if (hoursList.indexOf(hours) === -1) { hoursList.push(hours); }
-    });
+  <section id="main-shop" class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up">
+    <h2 class="text-primary border-bottom pb-2 mb-3">Our Details</h2>
+    <address class="bg-light border-start border-4 border-primary p-3 rounded-3 mb-0">
+      <p><strong>Address:</strong><br>
+        <a href="https://go.2gis.com/NxOko" target="_blank" rel="noopener" class="link-primary">123 Mangilik El Street</a><br>
+        <a href="https://go.2gis.com/J1j499" target="_blank" rel="noopener" class="link-primary">9 Al Farabi Street</a><br>
+        <a href="https://go.2gis.com/gKkyl" target="_blank" rel="noopener" class="link-primary">5 Respublica street</a><br>
+        <a href="https://go.2gis.com/uLnaB" target="_blank" rel="noopener" class="link-primary">1 Sokpakbaeva street</a><br>
+        <a href="https://go.2gis.com/8KYKz" target="_blank" rel="noopener" class="link-primary">16 E-15 street</a>
+      </p>
+      <p class="mb-1"><strong>Phone:</strong> <a href="tel:+77081115757" class="link-primary">+7 (708) 111-57-57</a></p>
+      <p class="mb-0"><strong>Email:</strong> <a href="mailto:info@sweetflowers.kz" class="link-primary">info@sweetflowers.kz</a></p>
+    </address>
+  </section>
 
-    var $panel = $('<div>')
-        .addClass('btn-group mb-2')
-        .attr({ role: 'group', 'aria-label': 'Filter shops by opening hours' })
-        .insertBefore($table.closest('.table-responsive'));
-    var $count = $('<p>')
-        .addClass('small text-muted mb-3')
-        .text('Showing ' + $rows.length + ' of ' + $rows.length + ' shops')
-        .insertBefore($table.closest('.table-responsive'));
+  <section class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up">
+    <h2 class="text-primary border-bottom pb-2 mb-3">Opening Hours: <mark class="bg-primary-subtle">24/7</mark></h2>
+    <p class="mb-1">We are open <strong>24 hours</strong> a day, <em>7 days</em> a week. Our shop is rated <abbr title="Limited Liability Partnership">LLP</abbr> and operates in <abbr title="Almaty Time">ALMT</abbr>.</p>
+    <p class="small text-muted mb-0">All prices are in KZT.</p>
+  </section>
 
-    $.each(hoursList, function (index, hours) {           // the buttons come from the array, not from HTML
-        $('<button>')
-            .attr({ type: 'button', 'data-hours': hours })
-            .addClass('btn btn-outline-primary filter-btn' + (index === 0 ? ' active' : ''))
-            .text(hours === 'All' ? 'All shops' : hours)
-            .appendTo($panel);
-    });
+  <section class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up">
+    <h2 class="text-primary border-bottom pb-2 mb-3">Our Shop Locations</h2>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <caption class="text-muted">Shop Locations and Features</caption>
+        <thead>
+        <tr>
+          <th scope="col">Address</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Opening Hours</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>123 Mangilik El Street</td><td>+7 (708) 111-57-57</td><td>24/7</td></tr>
+        <tr><td>9 Al Farabi Street</td><td>+7 (708) 111-58-58</td><td>24/7</td></tr>
+        <tr><td>5 Respublica street</td><td>+7 (777) 811-90-18</td><td>9:00-24:00</td></tr>
+        <tr><td>1 Sokpakbaeva street</td><td>+7 (776) 999-19-63</td><td>9:00-24:00</td></tr>
+        <tr><td>16 E-15 street</td><td>+7 (707) 111-04-63</td><td>24/7</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-    // Delegated on the panel: one handler serves every button inside it.
-    $panel.on('click', '.filter-btn', function () {
-        var $btn = $(this);
-        var wanted = $btn.attr('data-hours');
+  <aside class="bg-light rounded-3 shadow-sm p-4 mb-4 fade-in-up">
+    <h3 class="text-primary">Why choose us?</h3>
+    <ul>
+      <li>Fresh Flowers
+        <ul>
+          <li>Local suppliers</li>
+          <li>Daily deliveries</li>
+        </ul>
+      </li>
+      <li>Fast delivery</li>
+      <li>24/7 support</li>
+    </ul>
 
-        $btn.addClass('active').siblings().removeClass('active');
+    <h4 class="text-primary fs-5 mt-3">How to order:</h4>
+    <ol type="1" start="1">
+      <li>Choose a bouquet</li>
+      <li>Call us or leave a request online</li>
+      <li>Receive your flowers and be happy :)</li>
+    </ol>
 
-        var $match = $rows.filter(function () {
-            return wanted === 'All' || $(this).attr('data-hours') === wanted;
-        });
-        $match.fadeIn(300);                               // matching shops come back...
-        $rows.not($match).fadeOut(300);                   // ...the others fade away
-        $count.text('Showing ' + $match.length + ' of ' + $rows.length + ' shops');
-    });
+    <h4 class="text-primary fs-5 mt-3">Flower Glossary:</h4>
+    <dl class="mb-0">
+      <dt><abbr title="A flower arrangement">Bouquet</abbr></dt>
+      <dd>A bunch of flowers arranged in an artistic way.</dd>
+      <dt><abbr title="The art of growing flowers">Floristry</abbr></dt>
+      <dd>The study and practice of growing and arranging flowers.</dd>
+    </dl>
+  </aside>
 
-    /* ------------------------------------------------------------------
-     * REWRITTEN FEATURE 3 - validation of the feedback form
-     *                       (old version: old-js-version.js, oldValidateContactForm)
-     * Replaced: getElementById for each field + manual .value.trim() + createElement/insertBefore for
-     *           every error + classList.add/remove + loops that delete old errors + form.reset()
-     * with:     $('#id').val() + a table of rules + SF.form.run() (in jq-common.js) + .addClass() +
-     *           .insertAfter() + .on('input change').
-     * Result: NOT really shorter. This file has 41 lines against 45 for the plain version, and the
-     * engine I moved to jq-common.js (about 60 more lines) makes the total LONGER for this one form.
-     * It only pays off because the same engine also serves the review, login and registration forms.
-     * It is clearer, though: the rules are data, so adding a field means adding one rule object.
-     * ------------------------------------------------------------------ */
-    var $form = $('#contactForm');
-    var $result = $('#contactResult');
+  <section class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up">
+    <h2 class="text-primary border-bottom pb-2 mb-3">How to contact us</h2>
+    <p>You can reach us via phone or WhatsApp. Also, follow us on social media for updates:</p>
+    <a href="https://www.instagram.com/sweet.flowers.ast" target="_blank" rel="noopener" class="btn btn-primary">Sweet Flowers on Instagram</a>
+  </section>
 
-    var rules = [
-        { field: '#contactName', check: function (v) {
-                if (v.length < 2) { return 'Please enter your name (at least 2 characters).'; }
-                if (v.length > 50) { return 'The name is too long (max 50 characters).'; }
-                return '';
-            } },
-        { field: '#contactEmail', check: function (v) {
-                return SF.valid.email(v) ? '' : 'Enter a valid email, for example name@example.com.';
-            } },
-        // The phone is optional, unless the visitor chose to be contacted by phone: then it is required.
-        { field: '#contactPhone', always: true, check: function (v) {
-                var phoneChosen = $('input[name="contact_method"]:checked').val() === 'phone';
-                if (v === '') { return phoneChosen ? 'Phone is required when you want us to call you.' : ''; }
-                return SF.valid.phone(v) ? '' : 'Use a phone like +7 (708) 111-57-57.';
-            } },
-        // min and max are read from the HTML attributes, so there is one source of truth.
-        { field: '#contactQuantity', always: true, check: function (v, $f) {
-                var min = Number($f.attr('min')), max = Number($f.attr('max')), n = Number(v);
-                if (v === '' || !Number.isInteger(n) || n < min || n > max) {
-                    return 'Choose a whole number of bouquets from ' + min + ' to ' + max + '.';
-                }
-                return '';
-            } },
-        { field: '#contactSubject', always: true, check: function (v) {
-                return v ? '' : 'Please choose a subject.';
-            } },
-        { field: '#contactDate', always: true, check: function (v, $f) {
-                if (!v) { return 'Please choose a delivery date.'; }
-                if (!SF.valid.date(v)) { return 'Enter a valid date.'; }
-                var min = $f.attr('min');
-                var max = $f.attr('max');
-                if (min && v < min) { return 'The earliest delivery date is ' + SF.fmtDate(min) + '.'; }
-                if (max && v > max) { return 'The latest delivery date is ' + SF.fmtDate(max) + '.'; }
-                if (!SF.valid.notPast(v)) { return 'The delivery date cannot be in the past.'; }
-                return '';
-            } },
-        { field: '#contactMessage', check: function (v) {
-                if (v.length < 10) { return 'Your message is too short (at least 10 characters).'; }
-                if (v.length > 1000) { return 'Your message is too long (max 1000 characters).'; }
-                return '';
-            } }
-    ];
+  <!-- I used a div here because there is no semantic HTML element specifically designed to group a gallery of figures into a single container. -->
+  <div class="gallery row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mb-4">
+    <figure class="zoom-in mb-0">
+      <img src="images/shop-photo1.jpg" class="w-100 rounded shadow-sm" alt="Photo of the Sweet Flowers shop on Mangilik El street">
+      <figcaption class="text-center small text-muted mt-2">Mangilik El st. 54</figcaption>
+    </figure>
+    <figure class="zoom-in mb-0">
+      <img src="images/shop-photo2.jpg" class="w-100 rounded shadow-sm" alt="Photo of the Sweet Flowers shop on Al Farabi street">
+      <figcaption class="text-center small text-muted mt-2">Al Farabi st. 9</figcaption>
+    </figure>
+    <figure class="zoom-in mb-0">
+      <img src="images/shop-photo3.jpg" class="w-100 rounded shadow-sm" alt="Photo of the Sweet Flowers shop on Respublica street">
+      <figcaption class="text-center small text-muted mt-2">Respublica st. 5</figcaption>
+    </figure>
+    <figure class="zoom-in mb-0">
+      <img src="images/shop-photo4.jpg" class="w-100 rounded shadow-sm" alt="Photo of the Sweet Flowers shop on Sokpakbaeva street">
+      <figcaption class="text-center small text-muted mt-2">Sokpakbaeva st. 1</figcaption>
+    </figure>
+    <figure class="zoom-in mb-0">
+      <img src="images/shop-photo5.jpg" class="w-100 rounded shadow-sm" alt="Photo of the Sweet Flowers shop on E-15 street">
+      <figcaption class="text-center small text-muted mt-2">E-15 st. 16</figcaption>
+    </figure>
+  </div>
 
-    SF.form.watch($form, rules);
+  <hr class="my-5">
 
-    $form.on('submit', function (event) {
-        // Without preventDefault() the browser would send the form (method="post" action="#") and reload
-        // the page at once: the error messages and the confirmation below would flash and vanish.
-        event.preventDefault();
+  <section id="feedback-form" class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up">
+    <h2 class="text-primary border-bottom pb-2 mb-3">Leave Feedback</h2>
+    <!-- This form does not send data to a server yet, as there is no backend in this phase.
+         When JS is added, it will validate the fields and show a message in #contactResult. -->
+    <form id="contactForm" method="post" action="#" novalidate>
+      <fieldset class="border rounded-3 p-4">
+        <legend class="fs-5 text-primary float-none w-auto px-2">Send us a message</legend>
 
-        // Browser checks (required, type="email") are only the first line of defence. They live in the
-        // visitor's browser, which the visitor controls: dev tools can remove `required`, and a script
-        // can post data without the form at all. So the SERVER must check every value again.
-        if (!SF.form.run($form, rules)) { return; }
+        <p class="mb-3">
+          <label for="contactName" class="form-label fw-semibold">Name:</label><br>
+          <input type="text" id="contactName" name="name" class="form-control" required placeholder="Your Name">
+        </p>
 
-        var name = $('#contactName').val();
-        var via = $('input[name="contact_method"]:checked').val();
+        <p class="mb-3">
+          <label for="contactEmail" class="form-label fw-semibold">Email:</label><br>
+          <input type="email" id="contactEmail" name="email" class="form-control" required placeholder="your@email.com">
+        </p>
 
-        // .html() is fine for OUR markup; the visitor's name goes in with .text(), so it can never inject HTML.
-        $result.stop(true, true)
-            .removeClass('alert-danger')
-            .addClass('alert alert-success mt-3')
-            .html('<strong class="sf-greeting"></strong> We will contact you by <span class="sf-via"></span>.');
-        $result.find('.sf-greeting').text('Thank you, ' + name + '!');
-        $result.find('.sf-via').text(via === 'phone' ? 'phone' : 'email');
-        $result.hide().fadeIn(400).delay(6000).fadeOut(600);
+        <p class="mb-3">
+          <label for="contactPhone" class="form-label fw-semibold">Phone:</label><br>
+          <input type="tel" id="contactPhone" name="phone" class="form-control" placeholder="+7 (___) ___-__-__">
+        </p>
 
-        $form[0].reset();                                 // jQuery has no .reset(): we call the native method on the raw form
-    });
+        <p class="mb-3">
+          <label for="contactQuantity" class="form-label fw-semibold">Number of bouquets:</label><br>
+          <input type="number" id="contactQuantity" name="quantity" class="form-control" min="1" max="100" value="1">
+        </p>
 
-    // The Reset button fires the form's "reset" event: clear the red errors too.
-    $form.on('reset', function () { SF.form.clearAll($form); });
+        <p class="mb-3">
+          <label for="contactDate" class="form-label fw-semibold">Preferred delivery date:</label><br>
+          <input type="date" id="contactDate" name="delivery_date" class="form-control">
+        </p>
 
-    // A different subject changes the hint inside the message box.
-    var hints = {
-        order: 'Which bouquet, how many, and for which date?',
-        feedback: 'Tell us what you liked or what we can improve.',
-        complaint: 'Describe what went wrong and add your order number if you have one.',
-        other: 'Write your message here...'
-    };
-    $form.on('change', '#contactSubject', function () {
-        $('#contactMessage').attr('placeholder', hints[$(this).val()]);
-    }).find('#contactSubject').trigger('change');
+        <p class="mb-3">
+          <label class="form-label fw-semibold">Preferred contact method:</label><br>
+          <input type="radio" id="contactPhoneR" name="contact_method" value="phone" class="form-check-input" checked>
+          <label for="contactPhoneR" class="form-check-label">Phone</label><br>
+          <input type="radio" id="contactEmailR" name="contact_method" value="email" class="form-check-input">
+          <label for="contactEmailR" class="form-check-label">Email</label>
+        </p>
 
-    // A logged-in customer gets the form pre-filled.
-    SF.auth.currentUser().then(function (user) {
-        if (!user) { return; }
-        $('#contactName').val(user.username);
-        $('#contactEmail').val(user.email);
-        $('#contactPhone').val(user.phone);
-    });
-});
+        <p class="form-check mb-3">
+          <input type="checkbox" id="contactNewsletter" name="newsletter" class="form-check-input" checked>
+          <label for="contactNewsletter" class="form-check-label">Subscribe to our newsletter</label>
+        </p>
+
+        <p class="mb-3">
+          <label for="contactSubject" class="form-label fw-semibold">Subject:</label><br>
+          <select id="contactSubject" name="subject" class="form-select">
+            <option value="order">Order Inquiry</option>
+            <option value="feedback">Feedback</option>
+            <option value="complaint">Complaint</option>
+            <option value="other">Other</option>
+          </select>
+        </p>
+
+        <p class="mb-3">
+          <label for="contactMessage" class="form-label fw-semibold">Your Message:</label><br>
+          <textarea id="contactMessage" name="message" rows="5" class="form-control" required placeholder="Write your message here..."></textarea>
+        </p>
+
+        <p class="d-flex flex-wrap gap-2 mb-0">
+          <button type="submit" id="contactSubmit" class="btn btn-primary">Send Message</button>
+          <button type="reset" class="btn btn-outline-secondary">Reset Form</button>
+        </p>
+      </fieldset>
+
+      <!-- Empty result area — JavaScript will put the confirmation or error here -->
+      <div id="contactResult" class="result-area" role="status" aria-live="polite"></div>
+    </form>
+  </section>
+
+  <p>Our 5<sup>th</sup> anniversary is coming soon! We offer <b>exclusive</b> discounts for <i>loyal customers</i>.</p>
+
+  <blockquote class="blockquote border-start border-4 border-primary ps-3 my-4">
+    <p><q>Flowers are the music of the ground. From earth's lips spoken without sound.</q></p>
+    <footer class="small text-muted">— <cite>Edwin Curran</cite></footer>
+  </blockquote>
+
+  <!-- I used a span here to highlight a specific term inline without breaking the text flow, as no semantic tag applies. -->
+  <p>We also offer <span class="bg-primary-subtle px-2 rounded">custom floral arrangements</span> for weddings and events.</p>
+</main>
+<a class="btn btn-primary position-fixed bottom-0 end-0 m-3 rounded-pill" href="#top" aria-label="Back to top">↑ Top</a>
+
+<footer class="bg-dark text-white text-center py-4 mt-5">
+  <p class="mb-1">Contact us: <a href="mailto:info@sweetflowers.kz" class="link-light">info@sweetflowers.kz</a> | <a href="tel:+77081115757" class="link-light">+7 (708) 111-57-57</a></p>
+  <p class="mb-0 small">&copy; 2026 Sweet Flowers. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
