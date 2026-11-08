@@ -1,62 +1,66 @@
 
 'use strict';
 
-$(function() {
+$(function () {
 
-    const $sections = $('.bg-white.p-4.rounded.shadow-sm');
+  // Find the Why Choose Us section
+  const $panel = $('section')
+    .find('h2')
+    .filter(function () {
+      return $(this).text().trim() === 'Why Choose Us?';
+    })
+    .first()
+    .closest('.bg-white');
 
-   const $sections = $('.bg-white.p-4.rounded.shadow-sm');
+  if (!$panel.length) {
+    return;
+  }
 
-    if ($sections.length < 2) return;
+  // Prevent duplicate buttons
+  if ($panel.find('[data-florist-tip]').length) {
+    return;
+  }
 
-    const $whyChooseUs = $sections.eq(1);
+  const tips = [
+    'Change the water in your vase every two days.',
+    'Keep bouquets away from direct sunlight.',
+    'Trim the stems at an angle before placing flowers in water.',
+    'Remove leaves that would sit below the waterline.'
+  ];
 
-    const facts = [
-        'Did you know? Peonies can live up to 100 years!',
-        'Florist tip: Change the water in your vase every 2 days.',
-        'Secret: Tulips continue to grow even after being cut.',
-        'Fun fact: Roses are one of the oldest flowers, dating back 35 million years.',
-        'Tip: Keep your bouquet away from direct sunlight and fresh fruit.'
-    ];
+  // Create button using jQuery
+  const $button = $('<button>', {
+    type: 'button',
+    class: 'btn btn-outline-primary w-100 mt-3',
+    text: 'Get a Florist Tip'
+  });
 
-    // Create button using jQuery
-    const $factButton = $('<button>', {
-        type: 'button',
-        class: 'btn btn-outline-primary w-100 mt-3',
-        text: 'Get a Secret Florist Tip'
-    });
+  $button.attr('data-florist-tip', '1');
 
-    // Create fact display
-    const $factDisplay = $('<div>', {
-        class: 'alert alert-info mt-3 d-none mb-0 fst-italic text-center'
-    });
+  // Create result container
+  const $result = $('<div>', {
+    class: 'alert alert-info mt-3 mb-0 text-center'
+  }).hide();
 
-    // Add elements to section
-    $whyChooseUs.append($factButton, $factDisplay);
+  // Add elements to the page
+  $panel.append($button, $result);
 
-    // Click event
-    $factButton.on('click', function() {
+  // Show a new tip on click
+  $button.on('click', function () {
 
-        const randomIndex = Math.floor(
-            Math.random() * facts.length
-        );
+    const randomIndex = Math.floor(
+      Math.random() * tips.length
+    );
 
-        const randomFact = facts[randomIndex];
+    const tip = tips[randomIndex];
 
-        $factDisplay
-            .text(randomFact)
-            .hide()
-            .removeClass('d-none')
-            .fadeIn(400);
+    $result
+      .stop(true, true)
+      .hide()
+      .text(tip)
+      .fadeIn(350);
 
-        $factButton.text('Get Another Tip');
-    });
-
-     $factDisplay
-                .text(We started with a small flower workshop and a simple idea: every bouquet should make someone's day special.)
-                .hide()
-                .removeClass('d-none')
-                .fadeIn(400);
-            $factButton.text('About');
+    $(this).text('Another Tip');
+  });
 
 });

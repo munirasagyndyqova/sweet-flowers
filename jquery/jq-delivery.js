@@ -1,92 +1,127 @@
 
 'use strict';
 
-$(function() {
+$(function () {
 
-    const $table = $('.table-bordered').first();
+  const $table = $('main .table-bordered').first();
 
-    if (!$table.length) return;
+  if (!$table.length) {
+    return;
+  }
 
-    const $container = $table.parent();
+  const $container = $table.parent();
 
-    const deliveryZones = [
-        { id: 'esil', name: 'Esil District', price: 1500 },
-        { id: 'almaty', name: 'Almaty District', price: 1200 },
-        { id: 'saryarka', name: 'Saryarka District', price: 1000 },
-        { id: 'baikonyr', name: 'Baikonyr District', price: 1300 },
-        { id: 'nura', name: 'Nura District', price: 1800 }
-    ];
+  // Prevent duplicate delivery calculators
+  if ($container.find('#delivery-calculator').length) {
+    return;
+  }
 
-    // Create calculator container
-    const $calculator = $('<div>', {
-        class: 'mt-4 border-top pt-3'
-    });
+  // Estimated demo delivery prices
+  const zones = [
+    {
+      id: 'esil',
+      name: 'Esil District',
+      price: 1500
+    },
+    {
+      id: 'almaty',
+      name: 'Almaty District',
+      price: 1200
+    },
+    {
+      id: 'saryarka',
+      name: 'Saryarka District',
+      price: 1000
+    },
+    {
+      id: 'baikonyr',
+      name: 'Baikonyr District',
+      price: 1300
+    },
+    {
+      id: 'nura',
+      name: 'Nura District',
+      price: 1800
+    }
+  ];
 
-    // Create label
-    const $label = $('<label>', {
-        class: 'form-label fw-bold text-primary',
-        text: 'Calculate Delivery to Your District:'
-    });
+  // Calculator wrapper
+  const $wrapper = $('<div>', {
+    id: 'delivery-calculator',
+    class: 'mt-4 border-top pt-3'
+  });
 
-    // Create select
-    const $select = $('<select>', {
-        class: 'form-select mb-3'
-    });
+  // Label
+  const $label = $('<label>', {
+    for: 'delivery-district',
+    class: 'form-label fw-bold text-primary',
+    text: 'Estimate Delivery to Your District:'
+  });
 
-    // Add default option
+  // Dropdown
+  const $select = $('<select>', {
+    id: 'delivery-district',
+    class: 'form-select mb-3'
+  });
+
+  // Output
+  const $output = $('<div>', {
+    class: 'alert alert-success fw-bold text-center'
+  }).hide();
+
+  // Default option
+  $select.append(
+    $('<option>', {
+      value: '',
+      text: 'Select district...'
+    })
+  );
+
+  // Generate options using jQuery
+  $.each(zones, function (index, zone) {
+
     $select.append(
-        $('<option>', {
-            value: '',
-            text: 'Select district...'
-        })
+      $('<option>', {
+        value: zone.id,
+        text: zone.name
+      })
     );
 
-    // Add district options
-    $.each(deliveryZones, function(index, zone) {
+  });
 
-        const $option = $('<option>', {
-            value: zone.id,
-            text: zone.name
-        });
+  // Insert elements
+  $wrapper
+    .append($label, $select, $output)
+    .appendTo($container);
 
-        $select.append($option);
+  // Calculate delivery fee
+  $select.on('change', function () {
+
+    const selectedId = $(this).val();
+
+    const zone = zones.find(function (item) {
+      return item.id === selectedId;
     });
 
-    // Create result element
-    const $result = $('<div>', {
-        class: 'alert alert-success fw-bold text-center d-none mb-0'
-    });
+    if (!zone) {
 
-    // Add elements to calculator
-    $calculator.append(
-        $label,
-        $select,
-        $result
-    );
+      $output
+        .stop(true, true)
+        .slideUp(180);
 
-    $container.append($calculator);
+      return;
+    }
 
-    // Handle district selection
-    $select.on('change', function() {
+    $output
+      .stop(true, true)
+      .hide()
+      .text(
+        'Estimated delivery fee: ' +
+        formatPrice(zone.price) +
+        ' (not a Yandex quote)'
+      )
+      .slideDown(250);
 
-        const selectedId = $(this).val();
-
-        if (!selectedId) {
-            $result.addClass('d-none');
-            return;
-        }
-
-        const zone = deliveryZones.find(function(item) {
-            return item.id === selectedId;
-        });
-
-        if (zone) {
-            $result
-                .text('Delivery Fee: ' + formatPrice(zone.price))
-                .hide()
-                .removeClass('d-none')
-                .fadeIn(400);
-        }
-    });
+  });
 
 });

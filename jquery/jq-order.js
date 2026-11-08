@@ -10,243 +10,492 @@ $(function () {
     const $flowers = $('#flowers');
     const $quantity = $('#quantity');
     const $date = $('#date');
+    const $time = $('#time');
     const $name = $('#name');
+    const $phone = $('#phone');
+    const $email = $('#email');
     const $address = $('#address');
     const $message = $('#order-message');
+    const $promoButton = $('#promo-btn');
 
-    // Find existing Total blocks instead of creating new ones
-    let $totalContainer = $('#total-price');
+    const $buttons = $form.find('button[type="submit"]')
+        .closest('.border-top');
 
-    if (!$totalContainer.length) {
-        $totalContainer = $form.find('.alert-info').filter(function () {
-            return $(this).text().trim().startsWith('Total:');
-        }).first();
+    // -----------------------------
+    // 1. BOUQUET DATA
+    // -----------------------------
+
+    const prices = {
+        roses: 12500,
+        tulips: 9500,
+        peonies: 16500,
+        mixed: 14500
+    };
+
+    function formatMoney(amount) {
+        return new Intl.NumberFormat('ru-RU').format(amount) + ' ₸';
     }
 
-    // Remove duplicate Total blocks
+    // -----------------------------
+    // 2. REMOVE DUPLICATE TOTALS
+    // -----------------------------
+
+    // Remove old Total blocks
     $form.find('.alert-info').filter(function () {
         return $(this).text().trim().startsWith('Total:');
-    }).not($totalContainer).remove();
+    }).remove();
 
-    // Create Total only if it does not exist
-    if (!$totalContainer.length) {
-        $totalContainer = $('<div>', {
-            id: 'total-price',
-            class: 'alert alert-info mt-4 fs-5 fw-bold text-center',
-            text: 'Total: 0 ₸'
-        });
+    $form.find('#total-price').remove();
 
-        const $buttons = $form.find('.border-top').last();
+    // Create ONLY ONE Total
+    const $total = $('<div>', {
+        id: 'total-price',
+        class: 'alert alert-info mt-4 fs-5 fw-bold text-center'
+    });
 
-        if ($buttons.length) {
-            $totalContainer.insertBefore($buttons);
-        } else {
-            $form.append($totalContainer);
-        }
-    }
+    $total.insertBefore($buttons);
 
-    // Format total price
-    function updateTotal() {
+    // -----------------------------
+    // 3. PROMO CODES
+    // -----------------------------
 
-        const selectedValue = String($flowers.val() || '').toLowerCase().trim();
-        const quantity = Number($quantity.val()) || 0;
+    const promoCodes = {
+        SWEET10: 10,
+        FLOWERS20: 20
+    };
 
-        const bouquet = BOUQUETS.find(function (item) {
+    let activeDiscount = 0;
+    let appliedCode = '';
 
-            return (
-                item.category.toLowerCase() === selectedValue ||
-                item.name.toLowerCase() === selectedValue ||
-                String(item.id) === selectedValue
+    const $promoInput = $('<input>', {
+        type: 'text',
+        id: 'promo-code',
+        class: 'form-control mt-3',
+        placeholder: 'Enter promo code'
+    }).hide();
+
+    const $promoResult = $('<div>', {
+        class: 'small mt-2'
+    }).hide();
+
+    $buttons.before($promoInput, $promoResult);
+
+    // -----------------------------
+    // 4. CALCULATE TOTAL
+    // -----------------------------
+
+    function calculateTotal() {
+
+        const flower = String($flowers.val() || '');
+        const quantity = Number($quantity.val());
+
+        const price = prices[flower] || 0;
+
+        const validQuantity =
+            Number.isInteger(quantity) &&
+            quantity >= 1 &&
+            quantity <= 20;
+
+        const subtotal = validQuantity
+            ? price * quantity
+            : 0;
+
+        const discountAmount = Math.round(
+            subtotal * activeDiscount / 100
+        );
+
+        const total = subtotal - discountAmount;
+
+        if (activeDiscount > 0) {
+
+            $total.text(
+                'Subtotal: ' + formatMoney(subtotal) +
+                ' | Discount: -' + formatMoney(discountAmount) +
+                ' | Total: ' + formatMoney(total)
             );
-        });
 
-        let total = 0;
+        } else {
 
-        if (bouquet && quantity > 0) {
-            total = bouquet.price * quantity;
+            $total.text(
+                'Total: ' + formatMoney(total)
+            );
         }
-
-        $totalContainer.text('Total: ' + formatPrice(total));
 
         return total;
     }
 
-    // Recalculate when flower or quantity changes
-    $flowers.on('change', updateTotal);
-    $quantity.on('input change', updateTotal);
+    // Update price when bouquet or quantity changes
+    $flowers.on('change', calculateTotal);
 
-    updateTotal();
+    $quantity.on('input change', calculateTotal);
 
-    // Show validation errors
-    function showError($input, message) {
+    // Select bouquet from catalog link
+    const requestedFlower = new URLSearchParams(
+        window.location.search
+    ).get('flower');
+
+    if (
+        requestedFlower &&
+        Object.prototype.hasOwnProperty.call(prices, requestedFlower)
+    ) {
+        $flowers.val(requestedFlower);
+    }
+
+    calculateTotal();
+
+    // -----------------------------
+    // 5. APPLY PROMO CODE
+    // -----------------------------
+
+    $promoButton.on('click', function () {
+
+        if (!$promoInput.is(':visible')) {
+
+            $promoInput.slideDown(250);
+            $promoButton.text('Apply Code');
+            return;
+        }
+
+        const code = String($promoInput.val() || '')
+            .trim()
+            .toUpperCase();
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                promoCodes,
+                code
+            )
+        ) {
+
+            activeDiscount = promoCodes[code];
+            appliedCode = code;
+
+            $promoResult
+                .removeClass('text-danger')
+                .addClass('text-success')
+                .text(
+                    'Promo applied! ' +
+                    activeDiscount + '% discount.'
+                )
+                .stop(true, true)
+                .hide()
+                .fadeIn(300);
+
+            $promoButton.text('Promo Applied');
+
+        } else {
+
+            activeDiscount = 0;
+            appliedCode = '';
+
+            $promoResult
+                .removeClass('text-success')
+                .addClass('text-danger')
+                .text('Invalid promo code.')
+                .stop(true, true)
+                .hide()
+                .fadeIn(300);
+
+            $promoButton.text('Apply Code');
+        }
+
+        calculateTotal();
+    });
+
+    // Remove discount if promo text changes
+    $promoInput.on('input', function () {
+
+        activeDiscount = 0;
+        appliedCode = '';
+
+        $promoResult.hide();
+        $promoButton.text('Apply Code');
+
+        calculateTotal();
+    });
+
+    // -----------------------------
+    // 6. FORM VALIDATION
+    // -----------------------------
+
+    function showError($input, text) {
 
         $input.addClass('is-invalid');
 
         $('<div>', {
             class: 'text-danger small mt-1 error-msg',
-            text: message
+            text: text
         }).insertAfter($input);
     }
 
-    // Remove old errors
-    function clearFormErrors() {
+    function clearErrors() {
 
         $form.find('.error-msg').remove();
-        $form.find('.is-invalid').removeClass('is-invalid');
+
+        $form.find('.is-invalid')
+            .removeClass('is-invalid');
     }
 
-    // Submit order
-    $form.on('submit', function (event) {
+    // Clear field error when user edits it
+    $form.on('input change', 'input, select, textarea', function () {
 
-        event.preventDefault();
+        $(this).removeClass('is-invalid');
 
-        clearFormErrors();
+        $(this).siblings('.error-msg').remove();
+    });
 
-        let isValid = true;
+    function validateForm() {
+
+        clearErrors();
+
+        let valid = true;
         let $firstInvalid = null;
 
-        function validate($input, condition, message) {
+        function check($input, condition, errorText) {
 
             if (condition) {
 
-                showError($input, message);
+                showError($input, errorText);
 
                 if (!$firstInvalid) {
                     $firstInvalid = $input;
                 }
 
-                isValid = false;
+                valid = false;
             }
         }
 
-        const customerName = String($name.val() || '').trim();
-        const customerAddress = String($address.val() || '').trim();
+        const name = String($name.val() || '').trim();
+        const phone = String($phone.val() || '').trim();
+        const email = String($email.val() || '').trim();
+        const address = String($address.val() || '').trim();
+
         const quantity = Number($quantity.val());
-        const selectedDate = $date.val();
+        const flower = String($flowers.val() || '');
 
-        // Name validation
-        validate(
+        const digits = phone.replace(/\D/g, '');
+
+        // Name
+        check(
             $name,
-            customerName.length < 2,
-            'Please enter a valid full name.'
+            name.length < 2,
+            'Enter your full name.'
         );
 
-        // Address validation
-        validate(
-            $address,
-            customerAddress.length < 5,
-            'Please enter a valid delivery address.'
+        // Phone
+        check(
+            $phone,
+            !/^\+?[\d\s()-]{10,20}$/.test(phone) ||
+            digits.length < 10 ||
+            digits.length > 15,
+            'Enter a valid phone number.'
         );
 
-        // Quantity validation
-        validate(
-            $quantity,
-            !Number.isInteger(quantity) || quantity < 1,
-            'Quantity must be at least 1.'
+        // Email (optional, but must be valid if provided)
+        check(
+            $email,
+            email !== '' &&
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
+            'Enter a valid email address.'
         );
 
-        // Flower validation
-        const selectedValue = String($flowers.val() || '').toLowerCase().trim();
-
-        const selectedBouquet = BOUQUETS.find(function (item) {
-            return (
-                item.category.toLowerCase() === selectedValue ||
-                item.name.toLowerCase() === selectedValue ||
-                String(item.id) === selectedValue
-            );
-        });
-
-        validate(
+        // Bouquet
+        check(
             $flowers,
-            !selectedBouquet,
-            'Please select a valid flower.'
+            !Object.prototype.hasOwnProperty.call(
+                prices,
+                flower
+            ),
+            'Select a valid bouquet.'
         );
 
-        // Date validation
-        if (!selectedDate) {
+        // Quantity
+        check(
+            $quantity,
+            !Number.isInteger(quantity) ||
+            quantity < 1 ||
+            quantity > 20,
+            'Quantity must be between 1 and 20.'
+        );
 
-            validate(
-                $date,
-                true,
-                'Please select a delivery date.'
-            );
+        // Address
+        check(
+            $address,
+            address.length < 5,
+            'Enter a valid delivery address.'
+        );
 
-        } else {
+        // Date
+        const now = new Date();
 
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+        const today = [
+            now.getFullYear(),
+            String(now.getMonth() + 1).padStart(2, '0'),
+            String(now.getDate()).padStart(2, '0')
+        ].join('-');
 
-            const deliveryDate = new Date(
-                selectedDate + 'T00:00:00'
-            );
+        check(
+            $date,
+            !$date.val() || $date.val() < today,
+            'Select today or a future delivery date.'
+        );
 
-            validate(
-                $date,
-                deliveryDate < today,
-                'Delivery date cannot be in the past.'
-            );
+        // Time
+        check(
+            $time,
+            !/^\d{2}:\d{2}$/.test(String($time.val() || '')),
+            'Select a delivery time.'
+        );
+
+        if (!valid && $firstInvalid) {
+            $firstInvalid.trigger('focus');
         }
 
-        if (!isValid) {
+        return valid;
+    }
 
-            if ($firstInvalid) {
-                $firstInvalid.trigger('focus');
-            }
+    // -----------------------------
+    // 7. RESET FORM
+    // -----------------------------
 
+    $form.on('reset', function () {
+
+        window.setTimeout(function () {
+
+            clearErrors();
+
+            activeDiscount = 0;
+            appliedCode = '';
+
+            $promoInput.val('').hide();
+            $promoResult.hide();
+
+            $promoButton.text('Apply Promo');
+
+            $message.empty().addClass('hidden');
+
+            calculateTotal();
+
+        }, 0);
+    });
+
+    // -----------------------------
+    // 8. SUBMIT ORDER
+    // -----------------------------
+
+    $form.on('submit', function (event) {
+
+        event.preventDefault();
+
+        if (!validateForm()) {
             return;
         }
 
-        // Final price
-        const total = updateTotal();
+        const flower = String($flowers.val());
+        const quantity = Number($quantity.val());
 
-        const chosenFlower = $flowers
-            .find('option:selected')
-            .text();
+        const total = calculateTotal();
 
-        // Hide order form
-        $form.fadeOut(300, function () {
+        const order = {
+            id: 'SF-' + Date.now(),
+            name: String($name.val()).trim(),
+            phone: String($phone.val()).trim(),
+            email: String($email.val()).trim(),
+            flower: flower,
+            quantity: quantity,
+            total: total,
+            promoCode: appliedCode,
+            address: String($address.val()).trim(),
+            date: String($date.val()),
+            time: String($time.val()),
+            payment: String(
+                $form.find('input[name="payment"]:checked').val()
+            ),
+            note: String($('#message').val() || '').trim()
+        };
 
-            const $title = $('<h4>', {
-                class: 'alert-heading fw-bold',
-                text: 'Thank you for your order, ' + customerName + '!'
-            });
+        // Save demo order
+        try {
 
-            const $summary = $('<p>', {
-                text:
-                    'You selected ' +
-                    quantity + 'x ' +
-                    chosenFlower +
-                    '. Total price: ' +
-                    formatPrice(total) + '.'
-            });
+            const saved = JSON.parse(
+                localStorage.getItem('sf_orders') || '[]'
+            );
 
-            const $delivery = $('<p>', {
-                text:
-                    'Delivery scheduled for ' +
-                    selectedDate +
-                    ' to: ' +
-                    customerAddress + '.'
-            });
+            const orders = Array.isArray(saved)
+                ? saved
+                : [];
 
-            const $warning = $('<p>', {
-                class: 'mb-0 small text-muted fw-bold',
-                text: '*This is a front-end demonstration. No real payment was processed.'
-            });
+            orders.push(order);
 
-            $message
-                .empty()
-                .removeClass('hidden d-none')
-                .addClass('alert-success d-block')
-                .append(
-                    $title,
-                    $summary,
-                    $delivery,
-                    $('<hr>'),
-                    $warning
-                )
-                .hide()
-                .fadeIn(500);
+            localStorage.setItem(
+                'sf_orders',
+                JSON.stringify(orders)
+            );
+
+        } catch (error) {
+            // Order confirmation works without storage
+        }
+
+        // Create confirmation
+        const $confirmation = $('<div>', {
+            class: 'alert alert-success'
         });
+
+        $('<h4>', {
+            class: 'fw-bold',
+            text: 'Order placed successfully!'
+        }).appendTo($confirmation);
+
+        $('<p>', {
+            text: 'Order ID: ' + order.id
+        }).appendTo($confirmation);
+
+        $('<p>', {
+            text:
+                quantity + ' × ' + flower +
+                ' — ' + formatMoney(total)
+        }).appendTo($confirmation);
+
+        if (activeDiscount > 0) {
+
+            $('<p>', {
+                text:
+                    'Promo code: ' +
+                    appliedCode +
+                    ' (' + activeDiscount + '% off)'
+            }).appendTo($confirmation);
+        }
+
+        $('<p>', {
+            text:
+                'Delivery: ' +
+                order.date + ' at ' +
+                order.time + ', ' +
+                order.address
+        }).appendTo($confirmation);
+
+        $('<p>', {
+            class: 'small mb-0',
+            text:
+                'Demo order only. No real payment or delivery was processed.'
+        }).appendTo($confirmation);
+
+        // Show result without hiding its parent form
+        $message
+            .empty()
+            .removeClass('hidden d-none')
+            .append($confirmation)
+            .hide()
+            .fadeIn(350);
+
+        $form.children('fieldset').slideUp(300);
+
+        $total.slideUp(300);
+
+        $promoInput.slideUp(300);
+        $promoResult.slideUp(300);
+        $buttons.slideUp(300);
+
     });
 
 });
