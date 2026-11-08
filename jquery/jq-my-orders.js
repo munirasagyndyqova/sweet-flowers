@@ -3,7 +3,7 @@
  *
  * jQuery version: 3.7.1 from code.jquery.com, linked in <head> before this file. It is needed because
  * everything below calls $; a library that has not loaded yet cannot be called.
- * Needs jq-common.js (SF.form), jq-auth.js (SF.auth) and main.js (formatPrice) loaded before it.
+ * Needs jq-common.js (SF.form, SF.formatPrice) and jq-auth.js (SF.auth) loaded before it.
  * The data comes from data/db.json through SF.auth (AJAX); the table rows are built here from an array.
  */
 $(function () {
@@ -17,8 +17,6 @@ $(function () {
     var $loginForm = $('#loginForm');
     var $loginResult = $('#loginResult');
     var $dashboard = $('#dashboardView');
-
-    /* ---------------- login view: two extra buttons / hints built in code ---------------- */
 
     // The "Log in" button is type="button", so Enter in the password box did nothing.
     // Making it a submit button lets the form's own submit event handle both click and Enter.
@@ -58,7 +56,7 @@ $(function () {
     });
 
     function showProblem(err) {
-        $loginView.removeClass('is-hidden');
+        $loginView.removeClass('hidden');
         $loginResult.addClass('alert alert-danger mt-3').text(err.message);
     }
 
@@ -99,7 +97,7 @@ $(function () {
             $('<td>').text(SF.fmtDate(o.ordered)).appendTo($row);
             $('<td>').text(SF.fmtDate(o.delivery)).appendTo($row);
             $('<td>').append($('<span>').addClass('badge ' + st.badge).text(st.label)).appendTo($row);
-            $('<td>').addClass('text-end fw-semibold').text(formatPrice(o.total)).appendTo($row);
+            $('<td>').addClass('text-end fw-semibold').text(SF.formatPrice(o.total)).appendTo($row);
 
             /* CHAIN, link by link (rows appear one after another):
              *  $row.hide()          - hides the finished row so it can fade in
@@ -112,12 +110,14 @@ $(function () {
 
     function revealDashboard() {
         // CHAIN: remove the class that hides the section -> hide it for the animation -> fade it in.
-        $dashboard.removeClass('is-hidden').hide().fadeIn(500);
+        $dashboard.removeClass('hidden').hide().fadeIn(500);
     }
 
     function showDashboard(user) {
         SF.auth.getOrders(user.id).then(function (orders) {
             $('#customerName').text(user.username);   // .text(): a name must never be parsed as HTML
+            // The menu link was drawn as "Register" when the page opened: it now greets the logged-in user.
+            $('[data-auth-trigger] a').text('Hi, ' + user.username).attr('href', 'my-orders.html');
             renderOrders(orders);
             renderSummary(orders);
             if ($loginView.is(':visible')) {
@@ -146,9 +146,22 @@ $(function () {
 
         var $rows = $('#ordersTbody tr[data-status]');
         var $show = wasOn ? $rows : $rows.filter('[data-status="' + status + '"]');
+        $rows.stop(true, true);
         $show.fadeIn(200);
         $rows.not($show).fadeOut(200);
+
+        // A filter that finds nothing must say so instead of showing an empty table.
+        $('#ordersTbody .no-match').remove();
+        if ($rows.length && !$show.length) {
+            var $cell = $('<td>').attr('colspan', 6).addClass('text-center text-muted py-4')
+                .text('You have no "' + STATUS[status].label + '" orders. Click the card again to see all orders.');
+            $('<tr>').addClass('no-match').append($cell).hide().appendTo('#ordersTbody').fadeIn(200);
+        }
     });
+
+    // "Change address" used to open a page with no address form. The contact form is the place for it,
+    // so the link goes straight to that form with the subject already set.
+    $('#dashboardView a[href="contacts.html"]').attr('href', 'contacts.html?topic=address#feedback-form');
 
     /* ---------------- logout ---------------- */
 
@@ -161,7 +174,7 @@ $(function () {
     /* ---------------- on page load: is somebody already logged in? ---------------- */
 
     if (SF.auth.sessionName()) {
-        $loginView.addClass('is-hidden');             // no flash of the login form while the data loads
+        $loginView.addClass('hidden');             // no flash of the login form while the data loads
         SF.auth.currentUser().then(function (user) {
             if (user) {
                 showDashboard(user);
