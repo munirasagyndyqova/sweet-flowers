@@ -42,6 +42,13 @@ $(function () {
     // Saved reviews come back from the array when the page opens.
     $.each(reviews, function (_, r) { buildReview(r).appendTo($list); });
 
+    // The empty case: with no visitor reviews the list says so instead of being a blank area.
+    var $emptyNote = $('<p>').addClass('text-muted fst-italic mb-0').text('No reviews from visitors yet. Yours can be the first!');
+    function syncEmptyNote() {
+        if ($list.children('article').length) { $emptyNote.detach(); } else { $emptyNote.appendTo($list); }
+    }
+    syncEmptyNote();
+
     /* ------------------------------------------------------------------
      * DELEGATED HANDLER
      * Why NOT $('.review-delete').on('click', ...): that line runs once, when the page opens. jQuery
@@ -57,7 +64,7 @@ $(function () {
         var id = Number($card.attr('data-id'));
         reviews = reviews.filter(function (r) { return r.id !== id; });
         saveAll(reviews);
-        $card.slideUp(300, function () { $(this).remove(); });   // remove from the page only AFTER the slide ends
+        $card.slideUp(300, function () { $(this).remove(); syncEmptyNote(); });   // remove from the page only AFTER the slide ends
     });
 
     /* ------------------------------------------------------------------
@@ -104,6 +111,21 @@ $(function () {
     ];
     SF.form.watch($form, rules);
 
+    // A visit cannot be in the future: the date picker itself stops at today.
+    $('#reviewDate').attr('max', SF.todayIso());
+
+    // The third button at the top used to open this same page. It now takes the visitor to the form.
+    $('.review-actions a').last()
+        .removeAttr('target rel')
+        .attr('href', '#reviewForm')
+        .text('Write a review')
+        .on('click', function (event) {
+            event.preventDefault();
+            $('html, body').animate({ scrollTop: $form.offset().top - 100 }, 500, function () {
+                $('#reviewName').trigger('focus');        // callback: focus only when the scroll is over
+            });
+        });
+
     $form.on('submit', function (event) {
         // Without preventDefault() the browser would submit the form and reload the page,
         // and the new review would never be shown.
@@ -128,6 +150,7 @@ $(function () {
 
         // CHAIN: build the card -> hide it -> put it at the top of the list -> slide it open.
         buildReview(review).hide().prependTo($list).slideDown(400);
+        syncEmptyNote();
 
         $result.stop(true, true)
             .removeClass('alert-danger')
@@ -152,12 +175,6 @@ $(function () {
             .toggleClass('text-muted', length < 10);
     });
 
-    // Hover on any review card (old ones from the HTML and new ones from the form): shadow-sm <-> shadow.
-    // Delegated on <main>, so cards created later also react.
-    $('main').on('mouseenter mouseleave', 'article', function () {
-        $(this).toggleClass('shadow shadow-sm');
-    });
-
     // A logged-in customer gets the form pre-filled.
     SF.auth.currentUser().then(function (user) {
         if (!user) { return; }
@@ -165,4 +182,5 @@ $(function () {
         $('#reviewEmail').val(user.email);
         $('#reviewPhone').val(user.phone);
     });
+
 });
