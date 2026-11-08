@@ -237,3 +237,127 @@ To comply with the assignment rules, our JavaScript files are strictly organized
 1. Clone this repository to your local machine.
 2. Open `index.html` in any modern web browser.
 3. *Note: An active internet connection is required for the site to function properly, as the jQuery library is loaded via CDN.*
+
+# Sweet Flowers — Endterm Project
+
+## Project Overview
+
+Sweet Flowers is a responsive flower shop website developed for the Introduction to Web Technologies course.
+
+The website allows visitors to explore flower bouquets, view delivery information, place orders, contact the flower shop, and interact with different website features.
+
+The Endterm Project focuses on adding functionality using plain JavaScript and jQuery while preserving the original HTML and CSS design from the Midterm Project.
+
+## Team Contributions
+
+### Munira
+**Pages:**
+- Home (`index.html`)
+- Flowers (`flowers.html`)
+
+**Responsibilities:**
+- Home page functionality
+- Flower catalog functionality
+- JavaScript interactions for assigned pages
+- AI Log documentation
+
+### Akbota
+**Pages and features:**
+- Register
+- Contacts (`contacts.html`)
+- Reviews (`reviews.html`)
+- My Orders (`my-orders.html`)
+
+**Responsibilities:**
+- Registration functionality
+- Contact page interactions
+- Reviews functionality
+- My Orders functionality
+
+### Nurziya
+**Pages:**
+- About (`about.html`)
+- Delivery (`delivery.html`)
+- Order (`order.html`)
+
+**Responsibilities:**
+- Interactive florist tips
+- Delivery district calculator
+- Bouquet price calculation
+- Order form validation
+- Order confirmation
+- jQuery animations and effects
+
+## Technologies Used
+
+- HTML5
+- CSS3
+- Bootstrap 5.3.2
+- JavaScript
+- jQuery 3.7.1
+- Browser localStorage
+- Git and GitHub
+
+## JavaScript Features
+
+- Arrays and objects for bouquet data
+- Functions with parameters and return values
+- Loops for generating content
+- Conditions for calculating prices
+- DOM manipulation
+- Event listeners
+- Event delegation
+- Dynamic content generation
+
+## jQuery Features
+
+- jQuery selectors
+- DOM traversal using `.find()`, `.closest()` and `.siblings()`
+- Method chaining
+- Dynamic element creation
+- Click, input, change and submit events
+- Form validation
+- Animation effects including `.fadeIn()` and `.slideDown()`
+
+## Endterm Improvements
+
+### About Page
+- Added an interactive florist tips feature
+- Added dynamic content using jQuery
+- Added animation when displaying tips
+
+### Delivery Page
+- Added a district-based delivery calculator
+- Generated district options dynamically
+- Added an estimated delivery fee display
+- Removed duplicate calculator elements
+
+### Order Page
+- Added automatic bouquet price calculation
+- Added quantity-based total calculation
+- Added field-by-field form validation
+- Added error messages beside invalid fields
+- Added an order confirmation message
+- Added demo order storage using localStorage
+- Removed duplicate Total elements
+
+## Data Storage
+
+The project uses browser localStorage for demonstration purposes. There is no backend server or database.
+
+Order confirmations are demonstrations only. The website does not process real payments or book actual deliveries.
+
+## Running the Website
+
+1. Clone or download the repository.
+2. Open the project in a code editor.
+3. Open `index.html` in a browser.
+4. Navigate between the pages.
+5. Test the interactive features.
+
+
+## Academic Project
+
+This website was created for the Introduction to Web Technologies Endterm Project.
+
+All ordering, registration and payment features are for educational demonstration purposes.
