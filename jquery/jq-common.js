@@ -33,6 +33,11 @@
 
     SF.fmtDate = function (iso) { return iso ? iso.split('-').reverse().join('.') : ''; };
 
+    // 12500 -> "12 500 ₸". Lives here (not in main.js) because main.js is plain JavaScript: the two parts stay separate.
+    SF.formatPrice = function (amount) {
+        return (typeof amount === 'number' ? amount : 0).toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₸';
+    };
+
 
     SF.form = {};
 
