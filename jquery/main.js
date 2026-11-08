@@ -1,280 +1,278 @@
 
+'use strict';
 
-$(function () {
-    const $flowerList = $('#flower-list, #catalog');
+// Shared bouquet data
+const BOUQUETS = [
+  {
+    id: 1,
+    name: 'Romantic Rose',
+    category: 'roses',
+    price: 12500,
+    inStock: true
+  },
+  {
+    id: 2,
+    name: 'Spring Tulips',
+    category: 'tulips',
+    price: 9500,
+    inStock: true
+  },
+  {
+    id: 3,
+    name: 'Soft Peonies',
+    category: 'peonies',
+    price: 16500,
+    inStock: true
+  },
+  {
+    id: 4,
+    name: 'Mixed Bouquet',
+    category: 'mixed',
+    price: 14500,
+    inStock: true
+  }
+];
 
-    if ($flowerList.length) {
-        $.each(BOUQUETS, function (_, flower) {
-            const statusClass = flower.inStock ? 'badge bg-success' : 'badge bg-secondary';
-            const statusText = flower.inStock ? 'In Stock' : 'Out of Stock';
+// Format numbers as Kazakhstan tenge
+function formatPrice(amount) {
+  return new Intl.NumberFormat('ru-RU', {
+    maximumFractionDigits: 0
+  }).format(amount) + ' ₸';
+}
 
-            const $card = $('<div>').addClass('col-md-4 mb-4').html(`
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body d-flex flex-column">
-                        <span class="${statusClass} align-self-start mb-2">${statusText}</span>
-                        <h5 class="card-title fw-bold text-primary">${flower.name}</h5>
-                        <p class="card-text text-muted mb-4">Category: ${flower.category}</p>
-                        <div class="mt-auto d-flex justify-content-between align-items-center">
-                            <span class="fs-5 fw-bold">${formatPrice(flower.price)}</span>
-                            <button type="button" class="btn btn-outline-primary buy-btn" data-id="${flower.id}" ${!flower.inStock ? 'disabled' : ''}>
-                                Select
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `);
+// Find bouquet using its category
+function findBouquet(category) {
+  return BOUQUETS.find(function (bouquet) {
+    return bouquet.category === category;
+  }) || null;
+}
 
-            $flowerList.append($card);
-        });
+// Calculate bouquet total
+function calculateBouquetPrice(category, quantity) {
+  const bouquet = findBouquet(category);
 
-        $flowerList.on('click', '.buy-btn', function () {
-            const flowerId = $(this).attr('data-id');
-            const selectedFlower = BOUQUETS.find(b => b.id == flowerId);
+  if (!bouquet || !bouquet.inStock) {
+    return 0;
+  }
 
-            if (selectedFlower && $('#flowers').length) {
-                $('#flowers')
-                    .val(selectedFlower.category)
-                    .trigger('change')
-                    .closest('.card, form')
-                    .addClass('border-primary');
-            }
-        });
+  if (!Number.isInteger(quantity) || quantity < 1) {
+    return 0;
+  }
+
+  return bouquet.price * quantity;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Build catalog cards using plain JavaScript
+  const catalog = document.querySelector(
+    '#flower-list, #catalog'
+  );
+
+  if (
+    catalog &&
+    !catalog.dataset.sfRendered &&
+    !catalog.querySelector('[data-sf-product]')
+  ) {
+    catalog.dataset.sfRendered = '1';
+
+    const fragment = document.createDocumentFragment();
+
+    for (const bouquet of BOUQUETS) {
+
+      const column = document.createElement('div');
+      column.className = 'col-md-4 mb-4';
+      column.dataset.sfProduct = String(bouquet.id);
+
+      const card = document.createElement('div');
+      card.className = 'card h-100 shadow-sm border-0';
+
+      const body = document.createElement('div');
+      body.className = 'card-body d-flex flex-column';
+
+      const status = document.createElement('span');
+
+      status.className = bouquet.inStock
+        ? 'badge bg-success align-self-start mb-2'
+        : 'badge bg-secondary align-self-start mb-2';
+
+      status.textContent = bouquet.inStock
+        ? 'In Stock'
+        : 'Out of Stock';
+
+      const title = document.createElement('h3');
+      title.className = 'h5 fw-bold text-primary';
+      title.textContent = bouquet.name;
+
+      const category = document.createElement('p');
+      category.className = 'text-muted mb-4';
+      category.textContent = 'Category: ' + bouquet.category;
+
+      const price = document.createElement('strong');
+      price.className = 'fs-5 mt-auto';
+      price.textContent = formatPrice(bouquet.price);
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'btn btn-outline-primary mt-2 buy-btn';
+      button.dataset.id = String(bouquet.id);
+      button.textContent = 'Select';
+      button.disabled = !bouquet.inStock;
+
+      body.append(
+        status,
+        title,
+        category,
+        price,
+        button
+      );
+
+      card.append(body);
+      column.append(card);
+      fragment.append(column);
     }
 
-    const $aboutSections = $('.bg-white.p-4.rounded.shadow-sm');
+    catalog.append(fragment);
+  }
 
-    if ($aboutSections.length >= 2) {
-        const $targetSection = $aboutSections.eq(1);
+  // Event delegation for dynamically created cards
+  if (catalog) {
+    catalog.addEventListener('click', function (event) {
 
-        const facts = [
-            "Did you know? Peonies can live up to 100 years!",
-            "Florist tip: Change the water in your vase every 2 days.",
-            "Secret: Tulips continue to grow even after being cut.",
-            "Fun fact: Roses are one of the oldest flowers, dating back 35 million years.",
-            "Tip: Keep your bouquet away from direct sunlight and fresh fruit."
-        ];
+      const button = event.target.closest('.buy-btn');
 
-        const $factBtn = $('<button>')
-            .addClass('btn btn-outline-primary w-100 mt-3')
-            .text('Get a Secret Florist Tip');
+      if (!button || !catalog.contains(button)) {
+        return;
+      }
 
-        const $factDisplay = $('<div>')
-            .addClass('alert alert-info mt-3 mb-0 fst-italic text-center')
-            .hide();
+      const bouquet = BOUQUETS.find(function (item) {
+        return String(item.id) === button.dataset.id;
+      });
 
-        $targetSection.append($factBtn, $factDisplay);
+      if (bouquet) {
+        window.location.href =
+          'order.html?flower=' +
+          encodeURIComponent(bouquet.category);
+      }
+    });
+  }
 
-        $factBtn.on('click', function () {
-            const randomIndex = Math.floor(Math.random() * facts.length);
+  // Client-side registration demo
+  const navigation = document.querySelector('header nav ul');
 
-            $factDisplay
-                .text(facts[randomIndex])
-                .stop(true, true)
-                .fadeIn(300);
+  if (
+    navigation &&
+    !navigation.querySelector('[data-auth-trigger]')
+  ) {
 
-            $(this).text('Get Another Tip');
-        });
-    }
+    const item = document.createElement('li');
+    item.className = 'nav-item';
+    item.dataset.authTrigger = '1';
 
-    const $table = $('.table-bordered');
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className =
+      'nav-link text-white bg-transparent border-0 fw-bold';
 
-    if ($table.length) {
-        const $container = $table.parent();
+    const currentUser = localStorage.getItem(
+      'sf_session_user'
+    );
 
-        const deliveryZones = [
-            { id: 'esil', name: 'Esil District', price: 1500 },
-            { id: 'almaty', name: 'Almaty District', price: 1200 },
-            { id: 'saryarka', name: 'Saryarka District', price: 1000 },
-            { id: 'baikonyr', name: 'Baikonyr District', price: 1300 },
-            { id: 'nura', name: 'Nura District', price: 1800 }
-        ];
+    trigger.textContent = currentUser
+      ? 'Log out'
+      : 'Register';
 
-        const $calcWrapper = $('<div>').addClass('mt-4 border-top pt-3');
-        const $label = $('<label>').addClass('form-label fw-bold text-primary').text('Calculate Delivery to Your District:');
-        const $select = $('<select>').addClass('form-select mb-3').append($('<option>').val('').text('Select district...'));
+    item.append(trigger);
+    navigation.append(item);
 
-        $.each(deliveryZones, function (_, zone) {
-            $select.append($('<option>').attr('value', zone.id).text(zone.name));
-        });
+    trigger.addEventListener('click', function () {
 
-        const $resultDisplay = $('<div>').addClass('alert alert-success fw-bold text-center mb-0').hide();
+      if (localStorage.getItem('sf_session_user')) {
+        localStorage.removeItem('sf_session_user');
+        window.location.reload();
+        return;
+      }
 
-        $calcWrapper.append($label, $select, $resultDisplay).appendTo($container);
+      const dialog = document.createElement('dialog');
+      dialog.className =
+        'border-0 rounded-4 shadow-lg p-4';
 
-        $select.on('change', function () {
-            const selectedId = $(this).val();
+      const title = document.createElement('h2');
+      title.className = 'h4 text-primary';
+      title.textContent = 'Create Account (Demo)';
 
-            if (!selectedId) {
-                $resultDisplay.slideUp(200);
-                return;
-            }
+      const form = document.createElement('form');
 
-            const zone = deliveryZones.find(z => z.id === selectedId);
-            if (zone) {
-                $resultDisplay.text(`Delivery Fee: ${formatPrice(zone.price)}`).slideDown(200);
-            }
-        });
-    }
+      const username = document.createElement('input');
+      const email = document.createElement('input');
+      const password = document.createElement('input');
 
-    const $orderForm = $('form');
+      const fields = [
+        [username, 'text', 'Username'],
+        [email, 'email', 'Email'],
+        [password, 'password', 'Password (min 8 characters)']
+      ];
 
-    if ($orderForm.length && $('#flowers').length) {
-        const $flowerSelect = $('#flowers');
-        const $quantityInput = $('#quantity');
-        const $dateInput = $('#date');
-        const $orderMessage = $('#order-message');
+      for (const [field, type, placeholder] of fields) {
 
-        const $totalContainer = $('<div>')
-            .addClass('alert alert-info mt-4 fs-5 fw-bold text-center')
-            .text('Total: 0 ₸');
+        field.type = type;
+        field.placeholder = placeholder;
+        field.className = 'form-control mb-2';
+        field.required = true;
 
-        $orderForm.find('.border-top, button[type="submit"]').first().before($totalContainer);
+        form.append(field);
+      }
 
-        function calculateTotal() {
-            const selectedCategory = $flowerSelect.val();
-            const qty = parseInt($quantityInput.val(), 10) || 1;
-            const bouquet = BOUQUETS.find(b => b.category === selectedCategory);
-            const total = bouquet ? bouquet.price * qty : 0;
+      const error = document.createElement('p');
+      error.className = 'text-danger small';
 
-            $totalContainer.text(`Total: ${formatPrice(total)}`);
-            return total;
+      const submit = document.createElement('button');
+      submit.type = 'submit';
+      submit.className = 'btn btn-primary';
+      submit.textContent = 'Register';
+
+      const close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'btn btn-outline-secondary ms-2';
+      close.textContent = 'Cancel';
+
+      close.addEventListener('click', function () {
+        dialog.close();
+      });
+
+      form.append(error, submit, close);
+      dialog.append(title, form);
+      document.body.append(dialog);
+
+      dialog.addEventListener('close', function () {
+        dialog.remove();
+      });
+
+      form.addEventListener('submit', function (event) {
+
+        event.preventDefault();
+
+        if (
+          username.value.trim().length < 3 ||
+          password.value.length < 8 ||
+          !email.validity.valid
+        ) {
+          error.textContent =
+            'Enter a username (3+), valid email and password (8+).';
+          return;
         }
 
-        $flowerSelect.on('change', calculateTotal);
-        $quantityInput.on('input keyup', calculateTotal);
-        calculateTotal();
+        // Do not store passwords in localStorage
+        localStorage.setItem(
+          'sf_session_user',
+          username.value.trim()
+        );
 
-        $orderForm.on('input change', 'input, select', function () {
-            $(this).removeClass('is-invalid');
-            $(this).next('.error-msg').remove();
-        });
+        dialog.close();
+        window.location.reload();
+      });
 
-        $orderForm.on('submit', function (e) {
-            e.preventDefault();
-
-            $('.error-msg').remove();
-            $orderForm.find('.is-invalid').removeClass('is-invalid');
-
-            let isValid = true;
-            let $firstInvalid = null;
-
-            function showError($input, message) {
-                isValid = false;
-                $input.addClass('is-invalid');
-                $('<div>').addClass('text-danger small mt-1 error-msg').text(message).insertAfter($input);
-                if (!$firstInvalid) $firstInvalid = $input;
-            }
-
-            const $nameInput = $('#name');
-            if ($nameInput.length && $nameInput.val().trim().length < 2) {
-                showError($nameInput, 'Please enter a valid full name (min 2 characters).');
-            }
-
-            const $emailInput = $('#email');
-            if ($emailInput.length) {
-                const emailVal = $emailInput.val().trim();
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(emailVal)) {
-                    showError($emailInput, 'Please enter a valid email address.');
-                }
-            }
-
-            if ($dateInput.length) {
-                const dateVal = $dateInput.val();
-                if (dateVal) {
-                    const selectedDate = new Date(dateVal);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    if (selectedDate < today) {
-                        showError($dateInput, 'Delivery date cannot be in the past.');
-                    }
-                } else {
-                    showError($dateInput, 'Please select a delivery date.');
-                }
-            }
-
-            if (!isValid) {
-                $firstInvalid.focus();
-                return;
-            }
-
-            const totalSum = calculateTotal();
-            const chosenFlowerText = $flowerSelect.find('option:selected').text();
-            const nameVal = $nameInput.length ? $nameInput.val().trim() : 'Customer';
-            const addressText = $('#address').length ? $('#address').val().trim() : 'Address not specified';
-
-            $orderForm.slideUp(400, function () {
-                $orderMessage
-                    .removeClass('hidden d-none')
-                    .addClass('alert-success d-block')
-                    .html(`
-                        <h4 class="alert-heading fw-bold">Thank you for your order, ${nameVal}!</h4>
-                        <p>You selected ${$quantityInput.val()}x ${chosenFlowerText}. Total price: ${formatPrice(totalSum)}.</p>
-                        <p>Delivery scheduled for ${$dateInput.val()} to: ${addressText}.</p>
-                        <hr>
-                        <p class="mb-0 small text-muted fw-bold">*This is a front-end demonstration. No data was sent to a server.</p>
-                    `)
-                    .fadeIn(300);
-            });
-        });
-    }
-
-    const AuthUI = {
-        init() {
-            const $nav = $('header nav ul');
-            if (!$nav.length || localStorage.getItem('sf_session_user')) return;
-
-            $nav.find('[data-auth-trigger]').remove();
-
-            const $btn = $('<button>')
-                .attr('type', 'button')
-                .addClass('nav-link text-white bg-transparent border-0 fw-bold')
-                .text('Register')
-                .on('click', () => this.openDialog());
-
-            $('<li>')
-                .addClass('nav-item')
-                .attr('data-auth-trigger', '1')
-                .append($btn)
-                .appendTo($nav);
-        },
-
-        openDialog() {
-            $('#demo-auth-dialog').remove();
-
-            const $dialog = $('<dialog>')
-                .attr('id', 'demo-auth-dialog')
-                .addClass('border-0 rounded-4 shadow-lg p-4')
-                .css('max-width', '400px');
-
-            const $title = $('<h2>').addClass('h4 text-primary mb-3').text('Create Account (Demo)');
-            const $info = $('<p>').addClass('text-muted small mb-3').text('Front-end demo only.');
-
-            const $userInp = $('<input>').attr({ type: 'text', placeholder: 'Username', required: true }).addClass('form-control mb-2');
-            const $emailInp = $('<input>').attr({ type: 'email', placeholder: 'Email', required: true }).addClass('form-control mb-3');
-            const $passInp = $('<input>').attr({ type: 'password', placeholder: 'Password (min 8 chars)', required: true }).addClass('form-control mb-3');
-            const $submitBtn = $('<button>').attr('type', 'button').addClass('btn btn-primary w-100').text('Register');
-
-            const $form = $('<form>').append($userInp, $emailInp, $passInp, $submitBtn);
-
-            $dialog.append($title, $info, $form).appendTo('body');
-            $dialog[0].showModal();
-
-            $submitBtn.on('click', function () {
-                const username = $userInp.val().trim();
-                const password = $passInp.val();
-
-                if (username.length < 3 || password.length < 8) {
-                    alert('Please enter valid username and password (min 8 chars).');
-                    return;
-                }
-
-                localStorage.setItem('sf_session_user', username);
-                $dialog[0].close();
-                window.location.reload();
-            });
-        }
-    };
-
-    AuthUI.init();
+      dialog.showModal();
+    });
+  }
 });
