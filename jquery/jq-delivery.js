@@ -4,6 +4,13 @@
 $(function () {
 
   const $table = $('main .table-bordered').first();
+  
+  // Remove the duplicate delivery calculator
+  $('#delivery-calculator').remove();
+
+  // The first calculator already exists, so stop here
+  return;
+
 
   if (!$table.length) {
     return;
