@@ -1,187 +1,141 @@
-/*
- * jq-my-orders.js - My Orders page (my-orders.html): login, dashboard, orders table.
- *
- * jQuery version: 3.7.1 from code.jquery.com, linked in <head> before this file. It is needed because
- * everything below calls $; a library that has not loaded yet cannot be called.
- * Needs jq-common.js (SF.form, SF.formatPrice) and jq-auth.js (SF.auth) loaded before it.
- * The data comes from data/db.json through SF.auth (AJAX); the table rows are built here from an array.
- */
-$(function () {
-    var STATUS = {
-        active:    { label: 'In progress',       badge: 'bg-primary' },
-        awaiting:  { label: 'Awaiting delivery', badge: 'bg-warning text-dark' },
-        completed: { label: 'Delivered',         badge: 'bg-success' }
-    };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Log in to your Sweet Flowers account and see your current and past orders.">
+    <meta name="author" content="Koshkinbayeva Akbota">
+    <title>My Orders — Sweet Flowers</title>
 
-    var $loginView = $('#loginView');
-    var $loginForm = $('#loginForm');
-    var $loginResult = $('#loginResult');
-    var $dashboard = $('#dashboardView');
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/base.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="jquery/main.js" defer></script>
+    <script src="jquery/jq-common.js" defer></script>
+    <script src="jquery/jq-auth.js" defer></script>
+    <script src="jquery/jq-my-orders.js" defer></script>
+    <!-- Author: Koshkinbayeva Akbota -->
 
-    // The "Log in" button is type="button", so Enter in the password box did nothing.
-    // Making it a submit button lets the form's own submit event handle both click and Enter.
-    $('#loginBtn').prop('type', 'submit');
+</head>
+<body id="top">
 
-    $('<button>').attr('type', 'button').addClass('btn btn-outline-primary').text('Create account')
-        .insertAfter('#loginBtn')
-        .on('click', function () { SF.auth.openRegisterDialog(); });
+<header class="bg-primary text-white text-center py-4 shadow-sm">
+    <p class="fs-3 fw-bold mb-2"><strong>Sweet Flowers</strong></p>
+    <nav aria-label="Main navigation">
+        <ul class="nav justify-content-center gap-2 flex-wrap">
+            <li class="nav-item"><a class="nav-link text-white" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="about.html">About</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="flowers.html">Flowers</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="delivery.html">Delivery</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="order.html">Order</a></li>
+            <li class="nav-item"><a class="nav-link text-white active" href="my-orders.html">My Orders</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="reviews.html">Reviews</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="contacts.html">Contacts</a></li>
+        </ul>
+    </nav>
+</header>
 
-    $('<p>').addClass('text-center text-muted small mt-3 mb-0')
-        .html('Demo account: <code>demo</code> / <code>Demo1234</code>')   // .html(): this is our own markup
-        .appendTo($loginView);
+<main class="container py-5">
+    <h1 class="display-5 text-primary text-center mb-4 fade-in-up">My Orders</h1>
 
-    /* ---------------- login ---------------- */
+    <!-- LOGIN VIEW -->
+    <section id="loginView" class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up mx-auto" style="max-width: 600px;">
+        <h2 class="text-primary border-bottom pb-2 mb-3">Sign in</h2>
+        <p class="text-center text-muted small">Use the "Register" button in the top menu if you don't have an account.</p>
 
-    var loginRules = [
-        { field: '#loginUsername' },              // required comes from the HTML attribute
-        { field: '#loginPassword', raw: true }    // raw: a password is never trimmed
-    ];
-    SF.form.watch($loginForm, loginRules);
+        <form id="loginForm" novalidate>
+            <fieldset class="border rounded-3 p-4">
+                <legend class="fs-5 text-primary float-none w-auto px-2">Your account</legend>
 
-    $loginForm.on('submit', function (event) {
-        event.preventDefault();       // otherwise the page reloads before the login result can be shown
-        $loginResult.empty().removeClass('alert alert-danger mt-3');
-        if (!SF.form.run($loginForm, loginRules)) { return; }
+                <div class="mb-3">
+                    <label for="loginUsername" class="form-label fw-semibold">Name or email</label>
+                    <input type="text" id="loginUsername" class="form-control" required autocomplete="username">
+                </div>
 
-        var $btn = $('#loginBtn').prop('disabled', true);
-        SF.auth.login($('#loginUsername').val(), $('#loginPassword').val()).then(function (user) {
-            showDashboard(user);
-        }, function (err) {
-            if (err.code === 'credentials') {
-                SF.form.setError($('#loginPassword'), err.message);
-            } else {
-                showProblem(err);
-            }
-        }).always(function () { $btn.prop('disabled', false); });
-    });
+                <div class="mb-3">
+                    <label for="loginPassword" class="form-label fw-semibold">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" required autocomplete="current-password">
+                </div>
 
-    function showProblem(err) {
-        $loginView.removeClass('hidden');
-        $loginResult.addClass('alert alert-danger mt-3').text(err.message);
-    }
+                <div class="d-flex flex-wrap gap-2 mb-0">
+                    <button type="button" id="loginBtn" class="btn btn-primary">Log in</button>
+                </div>
+            </fieldset>
+            <div id="loginResult" class="result-area" role="status" aria-live="polite"></div>
+        </form>
+    </section>
 
-    /* ---------------- dashboard ---------------- */
+    <!-- DASHBOARD VIEW (Data from DB) -->
+    <section id="dashboardView" class="hidden" aria-label="My orders">
+        <h2 class="text-primary border-bottom pb-2 mb-3">Welcome back, <span id="customerName">User</span></h2>
+        <p class="text-muted mb-4">
+            Here is a summary of your orders. We update this table every morning.
+        </p>
 
-    // Numbers count up from 0: .animate() on a plain object, .text() written on every step.
-    function countUp($el, target) {
-        $({ n: 0 }).animate({ n: target }, {
-            duration: 700,
-            step: function (now) { $el.text(Math.ceil(now)); },
-            complete: function () { $el.text(target); }
-        });
-    }
+        <!-- Variables instead of hardcoded numbers -->
+        <div class="status-summary d-flex flex-wrap gap-3 mb-4">
+            <article class="bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-primary flex-fill">
+                <h3 class="text-muted fs-6 mb-2">Active</h3>
+                <p class="display-6 fw-bold text-primary mb-1" id="activeCount">-</p>
+                <p class="small text-muted mb-0">Orders in progress right now.</p>
+            </article>
 
-    function renderSummary(orders) {
-        $.each({ active: '#activeCount', awaiting: '#awaitingCount', completed: '#completedCount' }, function (status, selector) {
-            var total = orders.filter(function (o) { return o.status === status; }).length;
-            countUp($(selector), total);
-        });
-    }
+            <article class="bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-warning flex-fill">
+                <h3 class="text-muted fs-6 mb-2">Awaiting delivery</h3>
+                <p class="display-6 fw-bold text-warning mb-1" id="awaitingCount">-</p>
+                <p class="small text-muted mb-0">Waiting for the driver.</p>
+            </article>
 
-    // The whole table body is built from the array: the HTML only has a "Loading orders..." row.
-    function renderOrders(orders) {
-        var $tbody = $('#ordersTbody').empty();
+            <article class="bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-danger flex-fill">
+                <h3 class="text-muted fs-6 mb-2">Completed</h3>
+                <p class="display-6 fw-bold text-danger mb-1" id="completedCount">-</p>
+                <p class="small text-muted mb-0">Delivered and confirmed.</p>
+            </article>
+        </div>
 
-        if (!orders.length) {
-            var $cell = $('<td>').attr('colspan', 6).addClass('text-center text-muted py-4').text('You have no orders yet. ');
-            $('<a>').attr('href', 'order.html').addClass('link-primary fw-bold').text('Order your first bouquet').appendTo($cell);
-            $('<tr>').append($cell).appendTo($tbody);
-            return;
-        }
+        <section class="bg-white rounded-3 shadow-sm p-4 mb-4">
+            <h3 class="text-primary border-bottom pb-2 mb-3">Order history</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <caption class="text-muted">My Sweet Flowers orders</caption>
+                    <thead>
+                    <tr>
+                        <th scope="col">Order #</th>
+                        <th scope="col">Bouquet</th>
+                        <th scope="col">Ordered</th>
+                        <th scope="col">Delivery</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" class="text-end">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody id="ordersTbody">
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Loading orders...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-        $.each(orders, function (i, o) {
-            var st = STATUS[o.status] || { label: o.status, badge: 'bg-secondary' };
-            var $row = $('<tr>').attr('data-status', o.status);
-            $('<td>').addClass('fw-semibold').text('#' + o.id).appendTo($row);
-            $('<td>').text(o.bouquet).appendTo($row);
-            $('<td>').text(SF.fmtDate(o.ordered)).appendTo($row);
-            $('<td>').text(SF.fmtDate(o.delivery)).appendTo($row);
-            $('<td>').append($('<span>').addClass('badge ' + st.badge).text(st.label)).appendTo($row);
-            $('<td>').addClass('text-end fw-semibold').text(SF.formatPrice(o.total)).appendTo($row);
+        <section class="bg-white rounded-3 shadow-sm p-4 mb-4">
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <a href="order.html" class="btn btn-primary">Order again</a>
+                <a href="contacts.html" class="btn btn-outline-secondary">Change address</a>
+            </div>
+            <p class="mb-0">
+                <button type="button" id="logoutBtn" class="btn btn-outline-secondary">Log out</button>
+            </p>
+        </section>
+    </section>
+</main>
 
-            /* CHAIN, link by link (rows appear one after another):
-             *  $row.hide()          - hides the finished row so it can fade in
-             *  .appendTo($tbody)    - puts it into the table
-             *  .delay(i * 80)       - waits a little longer for each next row
-             *  .fadeIn(300)         - shows it with a 300 ms fade */
-            $row.hide().appendTo($tbody).delay(i * 80).fadeIn(300);
-        });
-    }
+<footer class="bg-dark text-white text-center py-4 mt-5">
+    <p class="mb-1">
+        Contact us:
+        <a href="mailto:info@sweetflowers.kz" class="link-light">info@sweetflowers.kz</a>
+    </p>
+    <p class="mb-0 small">&copy; 2026 Sweet Flowers. All rights reserved.</p>
+</footer>
 
-    function revealDashboard() {
-        // CHAIN: remove the class that hides the section -> hide it for the animation -> fade it in.
-        $dashboard.removeClass('hidden').hide().fadeIn(500);
-    }
-
-    function showDashboard(user) {
-        SF.auth.getOrders(user.id).then(function (orders) {
-            $('#customerName').text(user.username);   // .text(): a name must never be parsed as HTML
-            // The menu link was drawn as "Register" when the page opened: it now greets the logged-in user.
-            $('[data-auth-trigger] a').text('Hi, ' + user.username).attr('href', 'my-orders.html');
-            renderOrders(orders);
-            renderSummary(orders);
-            if ($loginView.is(':visible')) {
-                $loginView.slideUp(300, revealDashboard);   // callback: the dashboard appears when the form has gone
-            } else {
-                revealDashboard();
-            }
-        }, showProblem);
-    }
-
-    /* ---------------- clickable status cards = filter for the table ---------------- */
-
-    $('<p>').addClass('small text-muted mb-3').text('Tip: click a status card to filter your orders.')
-        .insertAfter('.status-summary');
-    $('.status-summary article').attr({ role: 'button', tabindex: 0, title: 'Click to filter the table' });
-
-    $dashboard.on('click keyup', '.status-summary article', function (event) {
-        if (event.type === 'keyup' && event.key !== 'Enter') { return; }
-
-        var $card = $(this);
-        var status = $card.find('[id$="Count"]').attr('id').replace('Count', '');   // 'activeCount' -> 'active'
-        var wasOn = $card.hasClass('bg-primary-subtle');
-
-        $card.siblings().removeClass('bg-primary-subtle').addClass('bg-white');
-        $card.toggleClass('bg-white bg-primary-subtle');   // swap white <-> highlighted
-
-        var $rows = $('#ordersTbody tr[data-status]');
-        var $show = wasOn ? $rows : $rows.filter('[data-status="' + status + '"]');
-        $rows.stop(true, true);
-        $show.fadeIn(200);
-        $rows.not($show).fadeOut(200);
-
-        // A filter that finds nothing must say so instead of showing an empty table.
-        $('#ordersTbody .no-match').remove();
-        if ($rows.length && !$show.length) {
-            var $cell = $('<td>').attr('colspan', 6).addClass('text-center text-muted py-4')
-                .text('You have no "' + STATUS[status].label + '" orders. Click the card again to see all orders.');
-            $('<tr>').addClass('no-match').append($cell).hide().appendTo('#ordersTbody').fadeIn(200);
-        }
-    });
-
-    // "Change address" used to open a page with no address form. The contact form is the place for it,
-    // so the link goes straight to that form with the subject already set.
-    $('#dashboardView a[href="contacts.html"]').attr('href', 'contacts.html?topic=address#feedback-form');
-
-    /* ---------------- logout ---------------- */
-
-    $('#logoutBtn').on('click', function () {
-        SF.auth.logout();
-        // After the fade we reload, so main.js (which we do not edit) draws its Register button again.
-        $dashboard.fadeOut(300, function () { window.location.reload(); });
-    });
-
-    /* ---------------- on page load: is somebody already logged in? ---------------- */
-
-    if (SF.auth.sessionName()) {
-        $loginView.addClass('hidden');             // no flash of the login form while the data loads
-        SF.auth.currentUser().then(function (user) {
-            if (user) {
-                showDashboard(user);
-            } else {                                  // a session of a user that is not in the database
-                SF.auth.logout();
-                window.location.reload();
-            }
-        }, showProblem);
-    }
-});
+</body>
+</html>
