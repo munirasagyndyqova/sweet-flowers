@@ -7,7 +7,7 @@ $(function () {
         2: 'images/тулипдж.jpg',
         3: 'images/4дж.jpg',
         6: 'images/лилиидж.jpg',
-        8: 'images/5дж.jpg'
+        8: 'images/орхидея.jpg'
     };
 
     const existingBouquets = [
@@ -517,6 +517,7 @@ $(function () {
                     );
                 }
             });
+            
         }
 
         createFilters($resultsWrapper, renderBouquets);

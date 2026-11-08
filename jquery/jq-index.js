@@ -242,7 +242,12 @@ $(function () {
                 $results.append($column);
             });
         });
-
+            $('article h2').on('click', function () {
+                $(this).siblings('p').slideToggle();
+            });
+            $('h2').on('click', function () {
+                $(this).siblings('p').slideToggle();
+            });
         $input.on('input', function () {
             $error.text('');
             $input.removeClass('is-invalid');

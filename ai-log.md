@@ -35,3 +35,9 @@ Per the course AI policy, AI was used only to explain concepts, organize work an
 | 29 October | Kenes Nurziya | Asked how to validate forms using jQuery | Used the explanation to understand validation |
 | 29 October | Sagyndykova Munira | Asked how to avoid conflicts between JavaScript and jQuery | Used the explanation to understand duplicate handlers |
 | 30 October | Sagyndykova Munira | Asked how to fix duplicate BOUQUETS declarations and check Console errors | Applied the fixes and tested both pages |
+| 4 November | Sagyndykova Munira | Asked about jQuery event handlers | Used the explanation to review button actions |
+| 5 November | Koshkinbayeva Akbota | Asked about Bootstrap navigation classes | Used the explanation to compare page headers |
+| 6 November | Kenes Nurziya | Asked how to show form validation messages | Used the explanation to review form feedback |
+| 7 November | Sagyndykova Munira | Asked how to avoid duplicate click handlers | Used the explanation to review JavaScript and jQuery scripts |
+| 8 November | Sagyndykova Munira | Asked AI to match the Home, About and Flowers headers to Contacts | Applied the generated header markup to the three pages |
+| 8 November | Kenes Nurziya | Asked AI to match the Delivery and Order headers to Contacts | Applied the generated header markup to both pages |
