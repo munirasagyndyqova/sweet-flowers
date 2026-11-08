@@ -3,10 +3,13 @@
  *
  * jQuery version: 3.7.1 (CDN, linked in <head> BEFORE this file). It is needed here for
  * $.getJSON (AJAX), the Deferred promises and for building the registration dialog in code.
- * Needs jq-common.js (SF.form) and main.js (its "Register" button, which we take over).
+ * Needs jq-common.js (SF.form). main.js (plain JavaScript) puts a "Register" link into the menu; this file opens
+ * the dialog when that link is clicked, and also when a page is opened as my-orders.html#register.
  *
  * HOW THE DATABASE WORKS
  *  - data/db.json is the database file: users and orders. It is read with $.getJSON().
+ *  - Orders placed on order.html are saved by main.js in localStorage ('sf_orders') and merged into the
+ *    logged-in user's list here, so a new order appears in "My Orders" at once.
  *  - A browser cannot write to a file on disk, so users who register on the site are saved
  *    in localStorage ('sf_users') and merged with the users from db.json on every read.
  *    To make registration write into db.json for real you need a server (Node/Express, PHP...).
@@ -21,6 +24,7 @@
     var SF = window.SF = window.SF || {};
     var SESSION_KEY = 'sf_session_user';
     var USERS_KEY = 'sf_users';
+    var ORDERS_KEY = 'sf_orders';
     var dbPromise = null;
 
     /* ======================= database layer ======================= */
@@ -39,8 +43,17 @@
         return dbPromise;
     }
 
+    // Only complete accounts count: entries from an older, simpler registration form (no salt/hash/id) are ignored.
     function readLocalUsers() {
-        try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; } catch (e) { return []; }
+        try {
+            return (JSON.parse(localStorage.getItem(USERS_KEY)) || []).filter(function (u) {
+                return u && u.salt && u.passwordHash && typeof u.id === 'number';
+            });
+        } catch (e) { return []; }
+    }
+
+    function readLocalOrders() {
+        try { return JSON.parse(localStorage.getItem(ORDERS_KEY)) || []; } catch (e) { return []; }
     }
 
     function writeLocalUsers(users) {
@@ -134,10 +147,13 @@
         });
     }
 
+    // Orders from data/db.json plus the orders this browser's logged-in user placed on order.html.
     function getOrders(userId) {
+        var name = sessionName();
         return loadDb().then(function (db) {
-            return (db.orders || [])
-                .filter(function (o) { return o.userId === userId; })
+            var fromDb = (db.orders || []).filter(function (o) { return o.userId === userId; });
+            var placed = readLocalOrders().filter(function (o) { return o.username === name; });
+            return fromDb.concat(placed)
                 .sort(function (a, b) { return b.ordered.localeCompare(a.ordered) || b.id - a.id; });
         });
     }
@@ -290,34 +306,30 @@
 
         $dialog.on('click', '.btn-close', function () { $dialog[0].close(); });
         $dialog.on('click', function (event) { if (event.target === this) { this.close(); } });   // click on the dark backdrop
-        $dialog.on('close', function () { $dialog.remove(); });
+        $dialog.on('close', function () {
+            $dialog.remove();
+            if (window.location.hash === '#register') {      // do not reopen the dialog on the next reload
+                window.history.replaceState(null, '', window.location.pathname + window.location.search);
+            }
+        });
 
         $dialog.appendTo('body');
         $dialog[0].showModal();                  // <dialog> has no jQuery equivalent: we call the native method on the raw element
         $form.find('#regUsername').trigger('focus');
     }
 
-    /* ======================= the nav button ======================= */
+    /* ======================= the menu link ======================= */
+
+    // The link itself is made by main.js. DELEGATED on document, so it does not matter which script
+    // runs first: the click is caught whenever the link exists.
+    $(document).on('click', '[data-auth-trigger] a[href$="#register"]', function (event) {
+        event.preventDefault();          // stay on the page and open the dialog instead of leaving it
+        openRegisterDialog();
+    });
 
     $(function () {
-        var $nav = $('header nav ul');
-        var name = sessionName();
-
-        if (name) {
-            $('<li>').addClass('nav-item').append(
-                $('<a>').attr('href', 'my-orders.html')
-                    .addClass('btn btn-light btn-sm rounded-pill px-3 fw-bold text-primary')
-                    .text('Hi, ' + name)
-            ).appendTo($nav);
-            return;
-        }
-
-        // We keep the button, replace its handler with ours and restyle it with existing classes.
-        $nav.find('[data-auth-trigger] button')
-            .off('click')
-            .on('click', openRegisterDialog)
-            .removeClass('nav-link text-white bg-transparent border-0')
-            .addClass('btn btn-light btn-sm rounded-pill px-3 fw-bold text-primary');
+        // Pages that do not load this file send the visitor to my-orders.html#register.
+        if (window.location.hash === '#register' && !sessionName()) { openRegisterDialog(); }
     });
 
     SF.auth = {
