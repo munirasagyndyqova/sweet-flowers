@@ -1,11 +1,11 @@
 
 'use strict';
 
-// ==========================================
+// =====================================
 // SWEET FLOWERS - MAIN JAVASCRIPT
-// ==========================================
+// =====================================
 
-// Shared data for flowers.js and other pages
+// Shared bouquet data
 const BOUQUETS = [
     { id: 1, name: 'Romantic Rose', category: 'roses', price: 12500, inStock: true },
     { id: 2, name: 'Spring Tulip', category: 'tulips', price: 9800, inStock: true },
@@ -28,9 +28,11 @@ const DELIVERY_ZONES = [
 ];
 
 const PICKUP_BRANCHES = [
-    'Sweet Flowers 1 — Al-Farabi Avenue, 9',
-    'Sweet Flowers 2 — B. Sokpakbaev St, 1',
-    'Sweet Flowers 3 — E-15 Street, 16'
+    '123 Mangilik El Street, Astana',
+    '9 Al Farabi Street, Astana',
+    '5 Respublika Street, Astana',
+    '1 Sokpakbaeva Street, Astana',
+    '16 E-15 Street, Astana'
 ];
 
 const PROMO_CODES = {
@@ -44,16 +46,14 @@ const ORDERS_KEY = 'sf_orders';
 const PICK_KEY = 'sf_pick';
 const DELIVERY_KEY = 'sf_delivery_choice';
 
-// Make shared data available to other scripts
+// Shared functions and data for jQuery scripts
 window.BOUQUETS = BOUQUETS;
 window.DELIVERY_ZONES = DELIVERY_ZONES;
-
-// The main file is the only owner of the Order form
 window.SF_MAIN_OWNS_ORDER = true;
 
-// ==========================================
+// =====================================
 // COMMON FUNCTIONS
-// ==========================================
+// =====================================
 
 function formatPrice(amount) {
     return new Intl.NumberFormat('ru-RU').format(
@@ -66,9 +66,7 @@ window.formatPrice = formatPrice;
 function createEl(tag, className, text) {
     const element = document.createElement(tag);
 
-    if (className) {
-        element.className = className;
-    }
+    if (className) element.className = className;
 
     if (text !== undefined) {
         element.textContent = text;
@@ -98,20 +96,8 @@ function removeStorage(key) {
     try {
         localStorage.removeItem(key);
     } catch (error) {
-        // Storage is unavailable
+        // Storage unavailable
     }
-}
-
-function findBouquet(id) {
-    return BOUQUETS.find(function (bouquet) {
-        return bouquet.id === Number(id);
-    }) || null;
-}
-
-function findDistrict(id) {
-    return DELIVERY_ZONES.find(function (zone) {
-        return zone.id === id;
-    }) || null;
 }
 
 function todayISO() {
@@ -122,6 +108,18 @@ function todayISO() {
         String(date.getMonth() + 1).padStart(2, '0'),
         String(date.getDate()).padStart(2, '0')
     ].join('-');
+}
+
+function findBouquet(id) {
+    return BOUQUETS.find(function (item) {
+        return item.id === Number(id);
+    }) || null;
+}
+
+function findDistrict(id) {
+    return DELIVERY_ZONES.find(function (item) {
+        return item.id === id;
+    }) || null;
 }
 
 function isValidPhone(value) {
@@ -138,13 +136,13 @@ function showError(field, message) {
     field.classList.add('is-invalid');
     field.setAttribute('aria-invalid', 'true');
 
-    const note = createEl(
+    const error = createEl(
         'div',
         'text-danger small mt-1 sf-error',
         message
     );
 
-    field.insertAdjacentElement('afterend', note);
+    field.insertAdjacentElement('afterend', error);
 }
 
 function clearError(field) {
@@ -160,7 +158,7 @@ function clearError(field) {
     }
 }
 
-function calculatePrice(bouquet, quantity, rate, fee) {
+function calculatePrice(bouquet, quantity, rate, deliveryFee) {
     const subtotal = bouquet
         ? bouquet.price * quantity
         : 0;
@@ -170,80 +168,91 @@ function calculatePrice(bouquet, quantity, rate, fee) {
     return {
         subtotal: subtotal,
         discount: discount,
-        deliveryFee: fee,
-        total: subtotal - discount + fee
+        deliveryFee: deliveryFee,
+        total: subtotal - discount + deliveryFee
     };
 }
 
-// ==========================================
+// =====================================
 // 1. ACTIVE NAVIGATION
-// ==========================================
+// =====================================
 
 function initNavigation() {
     const nav = document.querySelector('header nav ul');
 
     if (!nav) return;
 
-    const username = readStorage(SESSION_KEY);
+    const currentPage =
+        window.location.pathname.split('/').pop() || 'index.html';
 
-    let accountLink = nav.querySelector(
-        '[data-auth-trigger] a'
-    );
+    let accountItem = nav.querySelector('[data-auth-trigger]');
 
-    if (!accountLink) {
-        accountLink = Array.from(
+    if (!accountItem) {
+        const existing = Array.from(
             nav.querySelectorAll('a')
         ).find(function (link) {
-            const text = link.textContent.trim().toLowerCase();
+            const name = link.textContent.trim().toLowerCase();
 
-            return text === 'register' ||
-                text.startsWith('hi,');
+            return name === 'register' ||
+                name.startsWith('hi,');
         });
+
+        if (existing) {
+            accountItem = existing.closest('li');
+
+            if (accountItem) {
+                accountItem.dataset.authTrigger = '1';
+            }
+        }
     }
 
-    if (!accountLink) {
-        const item = createEl('li', 'nav-item');
+    if (!accountItem) {
+        accountItem = createEl('li', 'nav-item');
+        accountItem.dataset.authTrigger = '1';
 
-        item.setAttribute('data-auth-trigger', '1');
-
-        accountLink = createEl(
+        const link = createEl(
             'a',
             'nav-link text-white fw-bold',
             'Register'
         );
 
-        item.appendChild(accountLink);
-        nav.appendChild(item);
+        accountItem.appendChild(link);
+        nav.appendChild(accountItem);
     }
 
-    // Ensure jq-auth.js can identify the account link
-    accountLink.parentElement.setAttribute(
-        'data-auth-trigger',
-        '1'
-    );
+    const accountLink = accountItem.querySelector('a');
 
-    accountLink.textContent = username
-        ? 'Hi, ' + username
-        : 'Register';
+    const username = readStorage(SESSION_KEY);
 
-    accountLink.href = username
-        ? 'my-orders.html'
-        : 'my-orders.html#register';
+    if (accountLink) {
+        accountLink.textContent = username
+            ? 'Hi, ' + username
+            : 'Register';
 
-    const currentPage =
-        location.pathname.split('/').pop() || 'index.html';
+        accountLink.href = username
+            ? 'my-orders.html'
+            : 'my-orders.html#register';
+    }
 
     nav.querySelectorAll('a').forEach(function (link) {
-        const target = new URL(link.href, location.href);
+        const href = link.getAttribute('href') || '';
 
-        const targetPage =
-            target.pathname.split('/').pop() || 'index.html';
+        let targetPage = '';
 
-        const active = (
-            link !== accountLink &&
-            !target.hash &&
-            targetPage === currentPage
-        );
+        try {
+            const url = new URL(href, location.href);
+
+            targetPage =
+                url.pathname.split('/').pop() || 'index.html';
+        } catch (error) {
+            return;
+        }
+
+        const isAccount = link === accountLink;
+
+        const isActive = !isAccount &&
+            !href.startsWith('#') &&
+            targetPage === currentPage;
 
         link.classList.remove(
             'active',
@@ -256,7 +265,7 @@ function initNavigation() {
         link.classList.add('text-white');
         link.removeAttribute('aria-current');
 
-        if (active) {
+        if (isActive) {
             link.classList.remove('text-white');
 
             link.classList.add(
@@ -271,11 +280,13 @@ function initNavigation() {
     });
 }
 
-// ==========================================
+// =====================================
 // 2. PHONE VALIDATION
-// ==========================================
+// =====================================
 
 function initPhoneValidation() {
+    const PREFIX = '+77';
+    const MAX_LENGTH = 12; // + and 11 digits
 
     function preparePhone(field) {
         if (field.dataset.sfPhoneReady === '1') return;
@@ -284,32 +295,40 @@ function initPhoneValidation() {
 
         field.placeholder = '+77081115757';
         field.autocomplete = 'tel';
+        field.inputMode = 'numeric';
+        field.maxLength = MAX_LENGTH;
 
         // Registration phone remains optional
-        const optional = field.id === 'regPhone' ||
-            !field.required && field.id !== 'phone';
+        const optional = field.id === 'regPhone';
 
-        if (!optional && !field.value.trim()) {
-            field.value = '+77';
+        function normalizePhone(value) {
+            const raw = String(value || '');
+
+            let digits = raw.replace(/\D/g, '');
+
+            if (digits.startsWith('77')) {
+                digits = digits.slice(2);
+            } else if (digits.startsWith('7')) {
+                digits = digits.slice(1);
+            }
+
+            return PREFIX + digits.slice(0, 9);
         }
 
-        function validate(displayError) {
+        function validate(showMessage = true) {
             const value = field.value.trim();
-            let message = '';
 
-            if (optional && !value) {
-                message = '';
-            } else if (!value.startsWith('+77')) {
-                message = 'Phone must start with +77.';
-            } else if (!/^\+\d+$/.test(value)) {
-                message = 'Only numbers are allowed.';
-            } else if (!isValidPhone(value)) {
-                message = 'Enter exactly 11 digits after +, starting with 77.';
-            }
+            const valid = optional && value === PREFIX
+                ? true
+                : isValidPhone(value);
+
+            const message = valid
+                ? ''
+                : 'Enter +77 followed by exactly 9 digits.';
 
             field.setCustomValidity(message);
 
-            if (displayError) {
+            if (showMessage) {
                 if (message) {
                     showError(field, message);
                 } else {
@@ -317,11 +336,63 @@ function initPhoneValidation() {
                 }
             }
 
-            return message === '';
+            return valid;
         }
 
+        field.value = normalizePhone(field.value);
+
+        field.addEventListener('keydown', function (event) {
+            const start = field.selectionStart;
+            const end = field.selectionEnd;
+
+            if (
+                event.key === 'Backspace' &&
+                start === end &&
+                start <= PREFIX.length
+            ) {
+                event.preventDefault();
+            }
+
+            if (
+                event.key === 'Delete' &&
+                start < PREFIX.length
+            ) {
+                event.preventDefault();
+            }
+        });
+
         field.addEventListener('input', function () {
-            validate(true);
+            const raw = field.value;
+
+            const hasLetters = /[A-Za-zА-Яа-яЁё]/.test(raw);
+
+            const digitCount =
+                raw.replace(/\D/g, '').length;
+
+            field.value = normalizePhone(raw);
+
+            // Keep cursor after the fixed prefix
+            try {
+                const position = field.value.length;
+
+                field.setSelectionRange(position, position);
+            } catch (error) {
+                // Ignore unsupported selection APIs
+            }
+
+            if (hasLetters) {
+                showError(field, 'Letters are not allowed.');
+            } else if (digitCount > 11) {
+                showError(field, 'Maximum 11 digits allowed.');
+            } else {
+                validate(true);
+            }
+        });
+
+        field.addEventListener('focus', function () {
+            if (!field.value.startsWith(PREFIX)) {
+                field.value = PREFIX;
+            }
         });
 
         field.addEventListener('blur', function () {
@@ -334,13 +405,13 @@ function initPhoneValidation() {
 
     function scanPhones() {
         document.querySelectorAll(
-            'input[type="tel"], input[name="phone"], #phone'
+            'input[type="tel"], #phone, #regPhone'
         ).forEach(preparePhone);
     }
 
     scanPhones();
 
-    // Catch registration inputs created by jQuery
+    // Catch phone fields added by Register dialog
     const observer = new MutationObserver(scanPhones);
 
     observer.observe(document.body, {
@@ -348,10 +419,9 @@ function initPhoneValidation() {
         subtree: true
     });
 
-    // Block invalid phone numbers before submit handlers
     document.addEventListener('submit', function (event) {
         const phone = event.target.querySelector(
-            'input[type="tel"], input[name="phone"], #phone'
+            'input[type="tel"], #phone, #regPhone'
         );
 
         if (
@@ -366,39 +436,63 @@ function initPhoneValidation() {
     }, true);
 }
 
-// ==========================================
-// 3. FLOWERS PAGE INTEGRATION
-// ==========================================
+// =====================================
+// 3. FLOWERS -> ORDER
+// =====================================
 
 function initFlowersIntegration() {
-    const catalog = document.querySelector(
-        '#flower-list, #catalog'
-    );
+    // flowers.js already creates the catalog and its cart.
+    // We only remember the latest selected bouquet.
+    const isFlowersPage =
+        location.pathname.split('/').pop() === 'flowers.html';
 
-    if (!catalog) return;
+    if (!isFlowersPage) return;
 
-    // Existing flowers.js owns catalog rendering and cart.
-    // This handler only supports explicit Select buttons.
-    catalog.addEventListener('click', function (event) {
-        const button = event.target.closest(
-            '.buy-btn[data-id]'
+    document.addEventListener('click', function (event) {
+        const button = event.target.closest('button');
+
+        if (!button) return;
+
+        const buttonText = button.textContent
+            .trim()
+            .toLowerCase();
+
+        const isSelect =
+            buttonText === 'select' ||
+            buttonText === 'add to cart';
+
+        if (!isSelect || button.disabled) return;
+
+        const card = button.closest('.card');
+
+        if (!card) return;
+
+        const title = card.querySelector(
+            '.card-title, h3, h4, h5'
         );
 
-        if (!button || !catalog.contains(button)) return;
+        if (!title) return;
 
-        const bouquet = findBouquet(button.dataset.id);
+        const bouquet = BOUQUETS.find(function (item) {
+            return item.name.toLowerCase() ===
+                title.textContent.trim().toLowerCase();
+        });
 
         if (!bouquet || !bouquet.inStock) return;
 
         writeStorage(PICK_KEY, String(bouquet.id));
 
-        location.href = 'order.html';
-    });
+        // Select opens Order; Add to Cart keeps its own behavior
+        if (buttonText === 'select') {
+            event.preventDefault();
+            location.href = 'order.html';
+        }
+    }, true);
 }
 
-// ==========================================
-// 4. DELIVERY PAGE
-// ==========================================
+// =====================================
+// 4. DELIVERY CALCULATOR
+// =====================================
 
 function initDeliveryCalculator() {
     const table = document.querySelector(
@@ -407,7 +501,6 @@ function initDeliveryCalculator() {
 
     if (!table) return;
 
-    // Do not create two calculators
     if (document.getElementById('zoneSelect')) return;
 
     const wrapper = createEl(
@@ -443,7 +536,6 @@ function initDeliveryCalculator() {
         const option = createEl('option', '', zone.name);
 
         option.value = zone.id;
-
         select.appendChild(option);
     });
 
@@ -482,9 +574,9 @@ function initDeliveryCalculator() {
     }
 }
 
-// ==========================================
+// =====================================
 // 5. ORDER PAGE
-// ==========================================
+// =====================================
 
 function initOrderForm() {
     const flowerSelect = document.getElementById('flowers');
@@ -517,9 +609,9 @@ function initOrderForm() {
         dateInput.min = todayISO();
     }
 
-    // --------------------------------------
-    // AVAILABLE BOUQUETS
-    // --------------------------------------
+    // ---------------------------------
+    // 5.1 AVAILABLE BOUQUETS
+    // ---------------------------------
 
     flowerSelect.textContent = '';
 
@@ -535,6 +627,7 @@ function initOrderForm() {
         );
 
         option.value = String(bouquet.id);
+
         flowerSelect.appendChild(option);
     });
 
@@ -551,17 +644,17 @@ function initOrderForm() {
 
     const savedPick = Number(readStorage(PICK_KEY));
 
-    if (available.some(function (b) {
-        return b.id === savedPick;
+    if (available.some(function (bouquet) {
+        return bouquet.id === savedPick;
     })) {
         flowerSelect.value = String(savedPick);
     }
 
     removeStorage(PICK_KEY);
 
-    // --------------------------------------
-    // DELIVERY AND PICKUP
-    // --------------------------------------
+    // ---------------------------------
+    // 5.2 DELIVERY / PICKUP
+    // ---------------------------------
 
     const deliveryGroup = createEl('div', 'mb-4');
 
@@ -666,11 +759,10 @@ function initOrderForm() {
         form.prepend(deliveryGroup);
     }
 
-    // --------------------------------------
-    // PROMO AND TOTAL
-    // --------------------------------------
+    // ---------------------------------
+    // 5.3 PROMO CODE AND TOTAL
+    // ---------------------------------
 
-    // Remove any previously created Total blocks
     form.querySelectorAll('.alert-info').forEach(function (item) {
         if (/^Total:/.test(item.textContent.trim())) {
             item.remove();
@@ -684,9 +776,9 @@ function initOrderForm() {
     const oldPromo = form.querySelector('#promoCode');
 
     if (oldPromo) {
-        const oldGroup = oldPromo.closest('.mb-3');
+        const group = oldPromo.closest('.mb-3');
 
-        if (oldGroup) oldGroup.remove();
+        if (group) group.remove();
     }
 
     const promoGroup = createEl('div', 'mb-3');
@@ -744,9 +836,9 @@ function initOrderForm() {
 
     let activePromo = '';
 
-    // --------------------------------------
-    // DELIVERY CALCULATION
-    // --------------------------------------
+    // ---------------------------------
+    // 5.4 TOTAL CALCULATION
+    // ---------------------------------
 
     function selectedDelivery() {
         if (methodSelect.value === 'pickup') {
@@ -824,9 +916,7 @@ function initOrderForm() {
         if (addressInput) {
             addressInput.required = !pickup;
 
-            if (pickup) {
-                clearError(addressInput);
-            }
+            if (pickup) clearError(addressInput);
         }
 
         calculateTotal();
@@ -845,19 +935,21 @@ function initOrderForm() {
     flowerSelect.addEventListener('change', calculateTotal);
     quantityInput.addEventListener('input', calculateTotal);
 
-    // --------------------------------------
-    // PROMO CODES
-    // --------------------------------------
+    // ---------------------------------
+    // 5.5 PROMO CODE
+    // ---------------------------------
 
     const promoButton = form.querySelector('#promo-btn');
 
     function applyPromo() {
         const code = promoInput.value.trim().toUpperCase();
 
-        if (Object.prototype.hasOwnProperty.call(
-            PROMO_CODES,
-            code
-        )) {
+        if (
+            Object.prototype.hasOwnProperty.call(
+                PROMO_CODES,
+                code
+            )
+        ) {
             activePromo = code;
 
             promoResult.className =
@@ -873,8 +965,7 @@ function initOrderForm() {
             promoResult.className =
                 'small mt-2 text-danger';
 
-            promoResult.textContent =
-                'Invalid promo code.';
+            promoResult.textContent = 'Invalid promo code.';
         }
 
         calculateTotal();
@@ -892,14 +983,15 @@ function initOrderForm() {
 
     updateDeliveryMode();
 
-    // --------------------------------------
-    // FORM VALIDATION
-    // --------------------------------------
+    // ---------------------------------
+    // 5.6 FORM VALIDATION
+    // ---------------------------------
 
     function validateField(field) {
         if (!field) return true;
 
         const value = String(field.value || '').trim();
+
         let message = '';
 
         switch (field.id) {
@@ -912,7 +1004,7 @@ function initOrderForm() {
             case 'phone':
                 if (!isValidPhone(value)) {
                     message =
-                        'Use +77 and exactly 11 digits, e.g. +77081115757.';
+                        'Use +77 and exactly 11 digits: +77081115757.';
                 }
                 break;
 
@@ -922,15 +1014,16 @@ function initOrderForm() {
                 }
                 break;
 
-            case 'flowers':
+            case 'flowers': {
                 const bouquet = findBouquet(value);
 
                 if (!bouquet || !bouquet.inStock) {
                     message = 'Choose an available bouquet.';
                 }
                 break;
+            }
 
-            case 'quantity':
+            case 'quantity': {
                 const quantity = Number(value);
 
                 if (
@@ -942,6 +1035,7 @@ function initOrderForm() {
                     message = 'Choose 1 to 20 bouquets.';
                 }
                 break;
+            }
 
             case 'address':
                 if (
@@ -954,8 +1048,7 @@ function initOrderForm() {
 
             case 'date':
                 if (!value || value < todayISO()) {
-                    message =
-                        'Select today or a future date.';
+                    message = 'Select today or a future date.';
                 }
                 break;
 
@@ -986,6 +1079,7 @@ function initOrderForm() {
         timeInput
     ].filter(Boolean);
 
+    // Delegated validation
     form.addEventListener('input', function (event) {
         if (fields.includes(event.target)) {
             validateField(event.target);
@@ -998,20 +1092,16 @@ function initOrderForm() {
         }
     });
 
-    // --------------------------------------
-    // RESET FORM
-    // --------------------------------------
+    // ---------------------------------
+    // 5.7 CLEAR BUTTON
+    // ---------------------------------
 
     form.addEventListener('reset', function () {
         setTimeout(function () {
             activePromo = '';
+
             promoInput.value = '';
             promoResult.textContent = '';
-
-            form.querySelectorAll('.sf-error')
-                .forEach(function (item) {
-                    item.remove();
-                });
 
             fields.forEach(clearError);
 
@@ -1024,9 +1114,9 @@ function initOrderForm() {
         }, 0);
     });
 
-    // --------------------------------------
-    // SUBMIT ORDER
-    // --------------------------------------
+    // ---------------------------------
+    // 5.8 SUBMIT ORDER
+    // ---------------------------------
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -1075,7 +1165,7 @@ function initOrderForm() {
             promoCode: activePromo
         };
 
-        // Compatible with My Orders
+        // My Orders uses this storage structure
         if (username) {
             let orders = [];
 
@@ -1099,9 +1189,9 @@ function initOrderForm() {
             );
         }
 
-        // --------------------------------------
-        // CONFIRMATION
-        // --------------------------------------
+        // ---------------------------------
+        // 5.9 CONFIRMATION
+        // ---------------------------------
 
         let messageBox = document.getElementById(
             'order-message'
@@ -1111,7 +1201,7 @@ function initOrderForm() {
             messageBox = createEl('div');
         }
 
-        // Move outside form so it remains visible
+        // Move outside the form before hiding it
         form.insertAdjacentElement(
             'afterend',
             messageBox
@@ -1180,7 +1270,6 @@ function initOrderForm() {
             );
 
             ordersLink.href = 'my-orders.html';
-
             messageBox.appendChild(ordersLink);
         }
 
@@ -1191,7 +1280,6 @@ function initOrderForm() {
         );
 
         again.type = 'button';
-
         messageBox.appendChild(again);
 
         again.addEventListener('click', function () {
@@ -1207,7 +1295,11 @@ function initOrderForm() {
         });
 
         form.classList.add('d-none');
-        messageBox.classList.remove('hidden', 'd-none');
+
+        messageBox.classList.remove(
+            'hidden',
+            'd-none'
+        );
 
         messageBox.scrollIntoView({
             behavior: 'smooth'
@@ -1215,9 +1307,9 @@ function initOrderForm() {
     });
 }
 
-// ==========================================
+// =====================================
 // INITIALIZATION
-// ==========================================
+// =====================================
 
 function init() {
     initNavigation();
