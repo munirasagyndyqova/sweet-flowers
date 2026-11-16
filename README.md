@@ -361,3 +361,241 @@ Order confirmations are demonstrations only. The website does not process real p
 This website was created for the Introduction to Web Technologies Endterm Project.
 
 All ordering, registration and payment features are for educational demonstration purposes.
+
+
+# Sweet Flowers — Web Technologies Final Project
+
+## 1. Project Overview
+
+Sweet Flowers is a responsive flower shop website developed as part of the Introduction to Web Technologies course.
+
+The website allows customers to browse flower bouquets, check prices and availability, choose delivery or pickup, place orders, register an account, and view their orders.
+
+The project was developed using HTML, CSS, Bootstrap, JavaScript, and jQuery.
+
+Our main goal was to create a functional, responsive, and user-friendly flower shop website.
+
+## 2. Team Members and Responsibilities
+
+### Munira
+**Responsible for:**
+- Home (`index.html`)
+- Flowers (`flowers.html`)
+- AI Log (`ai-log.md`)
+
+**Main tasks:**
+- Home page functionality
+- Flower catalog and product cards
+- Flower search and filtering
+- Bouquet sorting
+- Shopping cart interactions
+- Maintaining the AI usage log
+
+### Akbota
+**Responsible for:**
+- Register functionality
+- My Orders (`my-orders.html`)
+- Reviews (`reviews.html`)
+- Contacts (`contacts.html`)
+
+**Main tasks:**
+- User registration and login
+- Form validation
+- User session management
+- Displaying order history
+- Reviews page interactions
+- Contact information and page functionality
+
+### Nurziya
+**Responsible for:**
+- About (`about.html`)
+- Delivery (`delivery.html`)
+- Order (`order.html`)
+- README (`README.md`)
+
+**Main tasks:**
+- Interactive About page
+- Florist tips
+- Delivery district calculator
+- Delivery and self-pickup selection
+- Bouquet selection and price calculation
+- Promo code functionality
+- Order form validation
+- Order confirmation
+- Integration between Flowers, Delivery, and Order
+- Project documentation
+
+## 3. Technologies Used
+
+- **HTML5** — website structure
+- **CSS3** — website styling
+- **Bootstrap 5** — responsive layout and UI components
+- **Plain JavaScript** — data processing, calculations, DOM manipulation, and events
+- **jQuery** — interactive elements, DOM traversal, and animation effects
+- **JSON** — demonstration data
+- **localStorage** — browser-side storage for sessions and orders
+- **Git and GitHub** — version control and collaboration
+
+## 4. Website Pages
+
+### Home
+The main page introduces Sweet Flowers and helps visitors navigate the website.
+
+### Flowers
+Customers can browse available bouquets, view prices, search for flowers, filter categories, sort products, and interact with the shopping cart.
+
+### About
+The About page introduces the flower shop and includes an interactive florist tips feature.
+
+### Delivery
+Customers can view delivery information, select a district, and see the estimated delivery fee.
+
+### Order
+Customers can:
+- Select available bouquets
+- Choose the quantity
+- View the automatically calculated total
+- Apply promotional codes
+- Choose home delivery or self-pickup
+- Select a delivery district or pickup branch
+- Enter contact and delivery information
+- Submit the order form
+- Receive an order confirmation
+
+### Register
+Visitors can create an account and log in using the demonstration authentication system.
+
+### My Orders
+Registered users can view their order history.
+
+### Reviews
+Visitors can interact with the reviews section.
+
+### Contacts
+Visitors can find contact information and flower shop locations.
+
+## 5. JavaScript Functionality
+
+The project demonstrates the following JavaScript concepts:
+
+- Variables and data types
+- Arrays and objects
+- Loops and conditions
+- Functions with parameters and return values
+- DOM manipulation
+- Event listeners
+- Event delegation
+- Dynamic content generation
+- Price calculations
+- Form validation
+- Browser localStorage
+
+Examples include dynamically generated bouquet information, delivery calculations, and order form processing.
+
+## 6. jQuery Functionality
+
+The project also uses jQuery for interactive website features.
+
+Implemented concepts include:
+
+- jQuery selectors
+- DOM traversal
+- `.find()`, `.closest()`, and `.siblings()`
+- Method chaining
+- Dynamic element creation
+- Event handling
+- Form interactions
+- Animation effects such as `.fadeIn()` and `.slideDown()`
+
+Plain JavaScript and jQuery are organized into separate files and features.
+
+## 7. Order and Delivery System
+
+The ordering process connects bouquet information, delivery options, and price calculations.
+
+**Order total:**
+
+Total = Bouquet Price × Quantity − Discount + Delivery Fee
+
+Customers can select home delivery or free self-pickup.
+
+Delivery fees depend on the selected district. Promotional codes apply discounts to the bouquet subtotal.
+
+Orders placed while logged in are saved in browser localStorage for the My Orders feature.
+
+This is a demonstration system. No real payments or deliveries are processed.
+
+## 8. Form Validation
+
+The website uses JavaScript to validate user input.
+
+Validation includes:
+- Required fields
+- Customer name
+- Phone number format
+- Email format
+- Bouquet availability
+- Quantity limits
+- Delivery address
+- Delivery date and time
+
+Error messages are shown when invalid information is entered.
+
+## 9. Endterm and Final Improvements
+
+During the Endterm and Final stages, the team focused on completing and improving the existing website.
+
+Improvements included:
+- Connecting bouquet selection to the order process
+- Automatically calculating order totals
+- Integrating delivery fees into order calculations
+- Adding self-pickup options
+- Improving phone number validation
+- Adding active navigation highlighting
+- Fixing duplicate Total and delivery calculator elements
+- Improving order confirmation
+- Checking existing interactive features
+
+The Final Project focuses on fixing defects, improving code quality, testing responsiveness, and preparing the website for individual defense.
+
+## 10. Project Structure
+
+The project contains:
+
+- HTML pages for the website
+- `css/` — stylesheets
+- `jquery/` — JavaScript and jQuery files
+- `images/` — website images
+- `data/` — demonstration JSON data
+- `README.md` — project documentation
+- `ai-log.md` — AI usage documentation
+
+## 11. How to Run
+
+1. Clone or download the repository.
+2. Open the project in a code editor.
+3. Start a local development server.
+4. Open `index.html` in the browser.
+5. Navigate through the website and test its features.
+
+A local server is recommended because some functionality loads JSON data using AJAX.
+
+## 12. AI Usage
+
+AI assistance is documented separately in `ai-log.md`.
+
+**AI Log maintained by:** Munira.
+
+## 13. Version Control
+
+The project is maintained in the same GitHub repository throughout the semester.
+
+Each team member is responsible for committing their own work from their own GitHub account.
+
+The final version is marked with the Git tag `final`.
+
+## 14. Project Status
+
+Sweet Flowers is an educational frontend project.
+
+Registration, orders, and payment-related interactions are demonstrations and do not represent a production-ready online store.
