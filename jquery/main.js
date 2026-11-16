@@ -52,6 +52,10 @@ window.DELIVERY_ZONES = DELIVERY_ZONES;
 
 window.Cart = window.Cart || {
     items: [],
+    save: function () {
+        writeStorage('sf_cart', JSON.stringify(this.items));
+        window.dispatchEvent(new Event('sf-cart-change'));
+    },
 
     getTotal: function () {
         return this.items.reduce(function (total, item) {
@@ -59,6 +63,32 @@ window.Cart = window.Cart || {
         }, 0);
     }
 };
+
+try {
+    const saved = JSON.parse(readStorage('sf_cart') || '[]');
+    Cart.items = Array.isArray(saved) ? saved.flatMap(function (item) {
+        const bouquet = item && findBouquet(item.id);
+        return bouquet && bouquet.inStock && Number.isInteger(item.qty) && item.qty > 0
+            ? [{ ...bouquet, qty: Math.min(item.qty, 20) }] : [];
+    }) : [];
+} catch (error) { Cart.items = []; }
+
+function initCart() {
+    const nav = document.querySelector('header nav ul');
+    if (!nav) return;
+    const li = createEl('li', 'nav-item');
+    const link = createEl('a', 'nav-link text-white');
+    link.href = 'order.html#cart';
+    li.appendChild(link); nav.appendChild(li);
+    function update() {
+        const count = Cart.items.reduce((sum, item) => sum + item.qty, 0);
+        link.textContent = '\uD83D\uDED2 Cart (' + count + ')';
+        link.setAttribute('aria-label', 'Cart: ' + count + ' items');
+    }
+    link.setAttribute('aria-live', 'polite');
+    window.addEventListener('sf-cart-change', update);
+    update();
+}
 
 window.SF_MAIN_OWNS_ORDER = true;
 
@@ -662,6 +692,43 @@ function initOrderForm() {
     }
 
     removeStorage(PICK_KEY);
+    const cartSection = createEl('section', 'border rounded p-3 mb-4');
+    cartSection.id = 'cart';
+    form.prepend(cartSection);
+    const bouquetFields = flowerSelect.closest('fieldset');
+    function renderCart() {
+        cartSection.replaceChildren(createEl('h3', 'h5 text-primary', 'Your Cart'));
+        const hasItems = Cart.items.length > 0;
+        bouquetFields.classList.toggle('d-none', hasItems);
+        flowerSelect.disabled = hasItems;
+        quantityInput.disabled = hasItems;
+        if (!hasItems) cartSection.appendChild(createEl('p', 'text-muted', 'Your cart is empty. Choose a bouquet below or add flowers from the catalog.'));
+        Cart.items.forEach(function (item) {
+            const row = createEl('div', 'd-flex flex-wrap align-items-center gap-3 border-bottom py-3');
+            row.appendChild(createEl('span', 'flex-grow-1', item.name + ' — ' + formatPrice(item.price)));
+            const qty = createEl('input', 'form-control');
+            qty.type = 'number'; qty.min = '1'; qty.max = '20'; qty.value = item.qty;
+            qty.style.width = '5rem';
+            qty.setAttribute('aria-label', 'Quantity for ' + item.name);
+            qty.addEventListener('change', function () {
+                const value = Number(qty.value);
+                if (!Number.isInteger(value) || value < 1 || value > 20) { qty.value = item.qty; return; }
+                item.qty = value; Cart.save();
+            });
+            const remove = createEl('button', 'btn btn-outline-danger btn-sm', 'Remove');
+            remove.type = 'button';
+            remove.setAttribute('aria-label', 'Remove ' + item.name);
+            remove.addEventListener('click', function () {
+                Cart.items = Cart.items.filter(entry => entry.id !== item.id); Cart.save();
+            });
+            row.append(qty, createEl('span', 'fw-bold', formatPrice(item.price * item.qty)), remove);
+            cartSection.appendChild(row);
+        });
+        const browse = createEl('a', 'btn btn-outline-primary btn-sm mt-3', 'Add more flowers');
+        browse.href = 'flowers.html'; cartSection.appendChild(browse);
+    }
+    window.addEventListener('sf-cart-change', function () { renderCart(); calculateTotal(); });
+    renderCart();
 
     // ---------------------------------
     // 5.2 DELIVERY / PICKUP
@@ -887,8 +954,8 @@ function initOrderForm() {
         const rate = PROMO_CODES[activePromo] || 0;
 
         const sums = calculatePrice(
-            bouquet,
-            count,
+            Cart.items.length ? { price: Cart.getTotal() } : bouquet,
+            Cart.items.length ? 1 : count,
             rate,
             delivery.fee
         );
@@ -1135,7 +1202,7 @@ function initOrderForm() {
         let firstInvalid = null;
 
         fields.forEach(function (field) {
-            if (!validateField(field) && !firstInvalid) {
+            if (!field.disabled && !validateField(field) && !firstInvalid) {
                 firstInvalid = field;
             }
         });
@@ -1153,13 +1220,13 @@ function initOrderForm() {
         const delivery = result.delivery;
         const username = readStorage(SESSION_KEY);
 
+        const orderedItems = Cart.items.length ? Cart.items.map(item => ({ ...item })) : [{ ...bouquet, qty: result.quantity }];
+        const description = orderedItems.map(item => item.qty + ' × ' + item.name).join(', ');
         const order = {
+            items: orderedItems,
             id: Number(String(Date.now()).slice(-6)),
             username: username,
-            bouquet: bouquet.name +
-                (result.quantity > 1
-                    ? ' × ' + result.quantity
-                    : ''),
+            bouquet: description,
             ordered: todayISO(),
             delivery: dateInput.value,
             time: timeInput.value,
@@ -1204,6 +1271,9 @@ function initOrderForm() {
         // 5.9 CONFIRMATION
         // ---------------------------------
 
+        Cart.items = [];
+        Cart.save();
+
         let messageBox = document.getElementById(
             'order-message'
         );
@@ -1234,7 +1304,7 @@ function initOrderForm() {
             createEl(
                 'p',
                 '',
-                result.quantity + ' × ' + bouquet.name
+                description
             )
         );
 
@@ -1327,6 +1397,7 @@ function init() {
     initPhoneValidation();
     initFlowersIntegration();
     initDeliveryCalculator();
+    initCart();
     initOrderForm();
 }
 

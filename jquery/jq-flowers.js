@@ -87,17 +87,26 @@ $(function () {
         return filtered;
     }
 
-    // Add bouquet to cart
+    function updateCartButton(bouquet, $button) {
+        if (!bouquet.inStock) return;
+        const inCart = Cart.items.some(function (item) { return item.id === bouquet.id; });
+        $button.text(inCart ? 'Added to Cart \u2713' : 'Add to Cart');
+        $button.attr('aria-pressed', String(inCart));
+    }
+
+    // Toggle bouquet in cart
     function addBouquetToCart(bouquet, $button) {
         if (!bouquet.inStock) return;
-        localStorage.setItem('sf_pick', String(bouquet.id));
+
 
         const existingItem = Cart.items.find(function (item) {
             return item.id === bouquet.id;
         });
 
         if (existingItem) {
-            existingItem.qty += 1;
+            Cart.items = Cart.items.filter(function (item) {
+                return item.id !== bouquet.id;
+            });
         } else {
             Cart.items.push({
                 ...bouquet,
@@ -105,7 +114,8 @@ $(function () {
             });
         }
 
-        $button.text('Added to Cart ✓');
+        Cart.save();
+        updateCartButton(bouquet, $button);
         updateCartSummary();
     }
 
@@ -165,6 +175,8 @@ $(function () {
             'btn btn-primary w-100 mt-auto',
             'Add to Cart'
         ).attr('type', 'button');
+
+        updateCartButton(bouquet, $button);
 
         if (!bouquet.inStock) {
             $button.prop('disabled', true);
@@ -465,6 +477,8 @@ $(function () {
                         'btn btn-primary w-100 mt-auto'
                     );
 
+                updateCartButton(bouquet, $button);
+
                 $button.on('click', function (event) {
                     event.preventDefault();
                     addBouquetToCart(bouquet, $button);
@@ -482,7 +496,7 @@ $(function () {
 
         // Render bouquets
         function renderBouquets() {
-            $container.empty();
+            $container.children().detach();
 
             const filtered = getFilteredBouquets();
 

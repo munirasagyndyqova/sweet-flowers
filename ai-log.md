@@ -1,6 +1,6 @@
 # AI Usage Log Sweet Flowers
 
-Per the course AI policy, AI was used only to explain concepts, organize work and check structure never to write our page text, report, or images. All site text, data and photos are our own.
+AI was used to explain concepts, organize work, review structure, and generate or debug HTML, JavaScript and jQuery code, as recorded below. Site text, data and photos were provided by the team.
 
 | Date | Student | Question asked to AI | How the answer was used |
 |---|---|---|---|
@@ -41,3 +41,6 @@ Per the course AI policy, AI was used only to explain concepts, organize work an
 | 7 November | Sagyndykova Munira | Asked how to avoid duplicate click handlers | Used the explanation to review JavaScript and jQuery scripts |
 | 8 November | Sagyndykova Munira | Asked AI to match the Home, About and Flowers headers to Contacts | Applied the generated header markup to the three pages |
 | 8 November | Kenes Nurziya | Asked AI to match the Delivery and Order headers to Contacts | Applied the generated header markup to both pages |
+| 13 November | Sagyndykova Munira | Asked AI to connect the Flowers catalog to a persistent shopping cart and add a cart icon with an item counter | Applied AI-generated changes to `jquery/main.js` and `jquery/jq-flowers.js` to save cart items in localStorage and open the cart on `order.html` |
+| 14 November | Koshkinbayeva Akbota | Asked AI to display cart items on the Order page and support quantity changes, removal and total calculation | Applied AI-generated cart controls and checkout integration, including totals for multiple bouquets, promo discounts and clearing the cart after checkout |
+| 15 November | Kenes Nurziya | Asked AI to make the Add to Cart button remove a bouquet on a second click and fix an incorrect Added to Cart label | Applied the toggle behavior and button-state fix in `jquery/jq-flowers.js`; automated checks covered adding, removing and updating the button label |
