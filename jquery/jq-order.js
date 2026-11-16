@@ -2,6 +2,10 @@
 'use strict';
 
 $(function () {
+    // main.js already handles this order form
+    if (window.SF_MAIN_OWNS_ORDER) {
+        return;
+    }
 
     const $form = $('#flowers').closest('form');
 

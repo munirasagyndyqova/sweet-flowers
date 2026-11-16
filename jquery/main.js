@@ -1,630 +1,1234 @@
+
 'use strict';
 
-/*
- * main.js - PLAIN JavaScript (weeks 6-8). There is NO jQuery in this file.
- *
- * Plain JavaScript features (jQuery lives only in the jq-*.js files):
- *   1. Account link in the menu ("Register" / "Hi, name")
- *   2. Bouquet catalog (flowers page): built from the BOUQUETS array + filter + "Select" button
- *   3. Delivery fee calculator (delivery page): built from the DELIVERY_ZONES array
- *   4. Florist tips (about page)
- *   5. Order form (order page): live total, promo code, full validation, confirmation,
- *      and the order is saved so it shows up in "My Orders"
- *
- * The real data of the project sits in arrays/objects at the top; the markup for the bouquets,
- * the districts and the tips exists nowhere in the HTML - it is built from these arrays with loops.
- */
-(function () {
+// ==========================================
+// SWEET FLOWERS - MAIN JAVASCRIPT
+// ==========================================
 
-    /* ============================ DATA ============================ */
+// Shared data for flowers.js and other pages
+const BOUQUETS = [
+    { id: 1, name: 'Romantic Rose', category: 'roses', price: 12500, inStock: true },
+    { id: 2, name: 'Spring Tulip', category: 'tulips', price: 9800, inStock: true },
+    { id: 3, name: 'Summer Mix', category: 'mixed', price: 8200, inStock: true },
+    { id: 4, name: 'White Peony', category: 'peonies', price: 15000, inStock: false },
+    { id: 5, name: 'Autumn Bunch', category: 'mixed', price: 6400, inStock: true },
+    { id: 6, name: 'Pink Lilies', category: 'lilies', price: 11200, inStock: true },
+    { id: 7, name: 'Sunflower Joy', category: 'sunflowers', price: 7300, inStock: true },
+    { id: 8, name: 'Orchid Elegance', category: 'orchids', price: 18900, inStock: false },
+    { id: 9, name: 'Pink Delight', category: 'roses', price: 20000, inStock: true },
+    { id: 10, name: 'Mixed Bouquet', category: 'mixed', price: 25000, inStock: true }
+];
 
-    const SESSION_KEY = 'sf_session_user';   // same key jq-auth.js writes
-    const ORDERS_KEY = 'sf_orders';          // jq-auth.js reads it to fill "My Orders"
-    const PICK_KEY = 'sf_pick';              // bouquet chosen on the catalog page, used on the order page
+const DELIVERY_ZONES = [
+    { id: 'esil', name: 'Esil District', price: 1500 },
+    { id: 'almaty', name: 'Almaty District', price: 1200 },
+    { id: 'saryarka', name: 'Saryarka District', price: 1000 },
+    { id: 'baikonyr', name: 'Baikonyr District', price: 1300 },
+    { id: 'nura', name: 'Nura District', price: 1800 }
+];
 
-    const BOUQUETS = [
-        { id: 1, name: 'Romantic Rose', category: 'roses', price: 12500, inStock: true },
-        { id: 2, name: 'Spring Tulip', category: 'tulips', price: 9800, inStock: true },
-        { id: 3, name: 'Summer Mix', category: 'mixed', price: 8200, inStock: true },
-        { id: 4, name: 'White Peony', category: 'peonies', price: 15000, inStock: false },
-        { id: 5, name: 'Autumn Bunch', category: 'mixed', price: 6400, inStock: true },
-        { id: 6, name: 'Pink Lilies', category: 'lilies', price: 11200, inStock: true },
-        { id: 7, name: 'Sunflower Joy', category: 'sunflowers', price: 7300, inStock: true },
-        { id: 8, name: 'Orchid Elegance', category: 'orchids', price: 18900, inStock: false }
-    ];
+const PICKUP_BRANCHES = [
+    'Sweet Flowers 1 — Al-Farabi Avenue, 9',
+    'Sweet Flowers 2 — B. Sokpakbaev St, 1',
+    'Sweet Flowers 3 — E-15 Street, 16'
+];
 
-    const DELIVERY_ZONES = [
-        { id: 'esil', name: 'Esil District', price: 1500 },
-        { id: 'almaty', name: 'Almaty District', price: 1200 },
-        { id: 'saryarka', name: 'Saryarka District', price: 1000 },
-        { id: 'baikonyr', name: 'Baikonyr District', price: 1300 },
-        { id: 'nura', name: 'Nura District', price: 1800 }
-    ];
+const PROMO_CODES = {
+    FLOWER10: 0.10,
+    SWEET10: 0.10,
+    FLOWERS20: 0.20
+};
 
-    const FLORIST_TIPS = [
-        'Did you know? Peonies can live up to 100 years!',
-        'Florist tip: Change the water in your vase every 2 days.',
-        'Secret: Tulips continue to grow even after being cut.',
-        'Fun fact: Roses are one of the oldest flowers, dating back 35 million years.',
-        'Tip: Keep your bouquet away from direct sunlight and fresh fruit.'
-    ];
+const SESSION_KEY = 'sf_session_user';
+const ORDERS_KEY = 'sf_orders';
+const PICK_KEY = 'sf_pick';
+const DELIVERY_KEY = 'sf_delivery_choice';
 
-    // The code advertised on the Reviews page: "FLOWER10 for a 10% discount".
-    const PROMO_CODES = { FLOWER10: 0.10 };
+// Make shared data available to other scripts
+window.BOUQUETS = BOUQUETS;
+window.DELIVERY_ZONES = DELIVERY_ZONES;
 
-    // Which bouquet the visitor clicked "Select" on (a category can hold several bouquets).
-    let pickedId = null;
-    // The order form replaces this with its real "recalculate the total" function.
-    let refreshTotal = function () {};
+// The main file is the only owner of the Order form
+window.SF_MAIN_OWNS_ORDER = true;
 
-    /* ======================== SMALL HELPERS ======================== */
-    /* Each helper takes parameters, returns a value and is called from several places. */
+// ==========================================
+// COMMON FUNCTIONS
+// ==========================================
 
-    function createEl(tag, className, text) {
-        const el = document.createElement(tag);
-        if (className) { el.className = className; }
-        if (text !== undefined) { el.textContent = text; }   // textContent: text is never parsed as HTML
-        return el;
+function formatPrice(amount) {
+    return new Intl.NumberFormat('ru-RU').format(
+        Number(amount) || 0
+    ) + ' ₸';
+}
+
+window.formatPrice = formatPrice;
+
+function createEl(tag, className, text) {
+    const element = document.createElement(tag);
+
+    if (className) {
+        element.className = className;
     }
 
-    function formatPrice(amount) {
-        return (typeof amount === 'number' ? amount : 0).toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₸';
+    if (text !== undefined) {
+        element.textContent = text;
     }
 
-    function capitalize(word) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-    }
+    return element;
+}
 
-    function todayIso() {
-        const d = new Date();
-        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+function readStorage(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch (error) {
+        return null;
     }
+}
 
-    function readStorage(key) {
-        try { return localStorage.getItem(key); } catch (e) { return null; }
+function writeStorage(key, value) {
+    try {
+        localStorage.setItem(key, value);
+        return true;
+    } catch (error) {
+        return false;
     }
+}
 
-    function writeStorage(key, value) {
-        try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
+function removeStorage(key) {
+    try {
+        localStorage.removeItem(key);
+    } catch (error) {
+        // Storage is unavailable
     }
+}
 
-    function removeStorage(key) {
-        try { localStorage.removeItem(key); } catch (e) { /* storage disabled: nothing to remove */ }
+function findBouquet(id) {
+    return BOUQUETS.find(function (bouquet) {
+        return bouquet.id === Number(id);
+    }) || null;
+}
+
+function findDistrict(id) {
+    return DELIVERY_ZONES.find(function (zone) {
+        return zone.id === id;
+    }) || null;
+}
+
+function todayISO() {
+    const date = new Date();
+
+    return [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, '0'),
+        String(date.getDate()).padStart(2, '0')
+    ].join('-');
+}
+
+function isValidPhone(value) {
+    return /^\+77\d{9}$/.test(String(value || '').trim());
+}
+
+function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function showError(field, message) {
+    clearError(field);
+
+    field.classList.add('is-invalid');
+    field.setAttribute('aria-invalid', 'true');
+
+    const note = createEl(
+        'div',
+        'text-danger small mt-1 sf-error',
+        message
+    );
+
+    field.insertAdjacentElement('afterend', note);
+}
+
+function clearError(field) {
+    if (!field) return;
+
+    field.classList.remove('is-invalid');
+    field.removeAttribute('aria-invalid');
+
+    const next = field.nextElementSibling;
+
+    if (next && next.classList.contains('sf-error')) {
+        next.remove();
     }
+}
 
-    function isValidEmail(value) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
-    }
+function calculatePrice(bouquet, quantity, rate, fee) {
+    const subtotal = bouquet
+        ? bouquet.price * quantity
+        : 0;
 
-    function isValidPhone(value) {
-        const digits = value.replace(/\D/g, '');
-        return /^\+?[\d\s().-]+$/.test(value) && digits.length >= 10 && digits.length <= 12;
-    }
+    const discount = Math.round(subtotal * rate);
 
-    function findBouquetById(id) {
-        return BOUQUETS.find(function (b) { return b.id === id; });
-    }
+    return {
+        subtotal: subtotal,
+        discount: discount,
+        deliveryFee: fee,
+        total: subtotal - discount + fee
+    };
+}
 
-    function findBouquetByCategory(category) {
-        return BOUQUETS.find(function (b) { return b.category === category; });
-    }
+// ==========================================
+// 1. ACTIVE NAVIGATION
+// ==========================================
 
-    // The bouquet the visitor really means: the clicked one if it fits the chosen category, else the first of it.
-    function currentBouquet(category) {
-        const picked = findBouquetById(pickedId);
-        return picked && picked.category === category ? picked : findBouquetByCategory(category);
-    }
+function initNavigation() {
+    const nav = document.querySelector('header nav ul');
 
-    // 0 when the code is empty or unknown.
-    function getDiscountRate(code) {
-        const key = code.trim().toUpperCase();
-        return Object.prototype.hasOwnProperty.call(PROMO_CODES, key) ? PROMO_CODES[key] : 0;
-    }
+    if (!nav) return;
 
-    // THE calculated numbers of the project: subtotal, discount and the final total.
-    function calcOrderTotal(bouquet, quantity, discountRate) {
-        const subtotal = bouquet ? bouquet.price * quantity : 0;
-        const discount = Math.round(subtotal * discountRate);
-        return { subtotal: subtotal, discount: discount, total: subtotal - discount };
-    }
+    const username = readStorage(SESSION_KEY);
 
-    function filterBouquets(category, inStockOnly) {
-        return BOUQUETS.filter(function (b) {
-            return (category === '' || b.category === category) && (!inStockOnly || b.inStock);
+    let accountLink = nav.querySelector(
+        '[data-auth-trigger] a'
+    );
+
+    if (!accountLink) {
+        accountLink = Array.from(
+            nav.querySelectorAll('a')
+        ).find(function (link) {
+            const text = link.textContent.trim().toLowerCase();
+
+            return text === 'register' ||
+                text.startsWith('hi,');
         });
     }
 
-    // Picks a tip different from the last one shown.
-    function pickTipIndex(previousIndex) {
-        let index = Math.floor(Math.random() * FLORIST_TIPS.length);
-        if (index === previousIndex) { index = (index + 1) % FLORIST_TIPS.length; }
-        return index;
-    }
-
-    /* Show / hide a block with the Bootstrap classes that already exist (d-none, fade, show). */
-    function showBlock(el) {
-        el.classList.remove('d-none', 'hidden');
-        el.classList.add('fade');
-        el.classList.remove('show');
-        void el.offsetWidth;                       // restart the transition
-        el.classList.add('show');
-    }
-
-    function hideBlock(el) {
-        el.classList.remove('show');
-        el.classList.add('d-none');
-    }
-
-    /* Error messages: one next to each wrong field. */
-    function showError(field, message) {
-        clearError(field);
-        field.classList.add('is-invalid');
-        field.setAttribute('aria-invalid', 'true');
-        const note = createEl('div', 'text-danger small mt-1 error-msg', message);
-        note.setAttribute('role', 'alert');
-        field.insertAdjacentElement('afterend', note);
-    }
-
-    function clearError(field) {
-        field.classList.remove('is-invalid');
-        field.removeAttribute('aria-invalid');
-        const next = field.nextElementSibling;
-        if (next && next.classList.contains('error-msg')) { next.remove(); }
-    }
-
-    /* ===================== 1. ACCOUNT LINK IN THE MENU ===================== */
-
-    function initAccountLink() {
-        const navList = document.querySelector('header nav ul');
-        if (!navList || navList.querySelector('[data-auth-trigger]')) { return; }
-
-        const username = readStorage(SESSION_KEY);
+    if (!accountLink) {
         const item = createEl('li', 'nav-item');
+
         item.setAttribute('data-auth-trigger', '1');
 
-        // A plain link: it works on every page. On pages that load jq-auth.js the registration dialog
-        // opens on top of the page; on the other pages the link opens My Orders, which opens it.
-        const link = createEl('a', 'btn btn-light btn-sm rounded-pill px-3 fw-bold text-primary',
-            username ? 'Hi, ' + username : 'Register');
-        link.href = username ? 'my-orders.html' : 'my-orders.html#register';
+        accountLink = createEl(
+            'a',
+            'nav-link text-white fw-bold',
+            'Register'
+        );
 
-        item.appendChild(link);
-        navList.appendChild(item);
+        item.appendChild(accountLink);
+        nav.appendChild(item);
     }
 
-    /* ========================= 2. BOUQUET CATALOG ========================= */
+    // Ensure jq-auth.js can identify the account link
+    accountLink.parentElement.setAttribute(
+        'data-auth-trigger',
+        '1'
+    );
 
-    function buildCard(flower) {
-        const col = createEl('div', 'col-md-4 mb-4');
-        const card = createEl('div', 'card h-100 shadow-sm border-0');
-        const body = createEl('div', 'card-body d-flex flex-column');
+    accountLink.textContent = username
+        ? 'Hi, ' + username
+        : 'Register';
 
-        body.appendChild(createEl('span',
-            (flower.inStock ? 'badge bg-success' : 'badge bg-secondary') + ' align-self-start mb-2',
-            flower.inStock ? 'In Stock' : 'Out of Stock'));
-        body.appendChild(createEl('h5', 'card-title fw-bold text-primary', flower.name));
-        body.appendChild(createEl('p', 'card-text text-muted mb-4', 'Category: ' + capitalize(flower.category)));
+    accountLink.href = username
+        ? 'my-orders.html'
+        : 'my-orders.html#register';
 
-        const footer = createEl('div', 'mt-auto d-flex justify-content-between align-items-center');
-        footer.appendChild(createEl('span', 'fs-5 fw-bold', formatPrice(flower.price)));
-        const button = createEl('button', 'btn btn-outline-primary buy-btn', 'Select');
-        button.type = 'button';
-        button.dataset.id = flower.id;
-        button.disabled = !flower.inStock;
-        footer.appendChild(button);
+    const currentPage =
+        location.pathname.split('/').pop() || 'index.html';
 
-        body.appendChild(footer);
-        card.appendChild(body);
-        col.appendChild(card);
-        return col;
-    }
+    nav.querySelectorAll('a').forEach(function (link) {
+        const target = new URL(link.href, location.href);
 
-    function renderCatalog(listEl, items) {
-        listEl.textContent = '';
-        if (items.length === 0) {                                  // the empty case says so
-            const col = createEl('div', 'col-12');
-            col.appendChild(createEl('div', 'alert alert-secondary text-center mb-0',
-                'No bouquets match these filters. Try another category or untick "In stock only".'));
-            listEl.appendChild(col);
-            return;
+        const targetPage =
+            target.pathname.split('/').pop() || 'index.html';
+
+        const active = (
+            link !== accountLink &&
+            !target.hash &&
+            targetPage === currentPage
+        );
+
+        link.classList.remove(
+            'active',
+            'bg-white',
+            'btn-light',
+            'text-primary',
+            'rounded-pill'
+        );
+
+        link.classList.add('text-white');
+        link.removeAttribute('aria-current');
+
+        if (active) {
+            link.classList.remove('text-white');
+
+            link.classList.add(
+                'active',
+                'bg-white',
+                'text-primary',
+                'rounded-pill'
+            );
+
+            link.setAttribute('aria-current', 'page');
         }
-        items.forEach(function (flower) { listEl.appendChild(buildCard(flower)); });
-    }
+    });
+}
 
-    // The filter panel is built in code too; its categories come from the BOUQUETS array.
-    function buildCatalogControls(listEl) {
-        const categories = [];
-        BOUQUETS.forEach(function (b) {
-            if (!categories.includes(b.category)) { categories.push(b.category); }
-        });
+// ==========================================
+// 2. PHONE VALIDATION
+// ==========================================
 
-        const panel = createEl('div', 'd-flex flex-wrap align-items-center gap-3 mb-3');
+function initPhoneValidation() {
 
-        const select = createEl('select', 'form-select w-auto');
-        select.id = 'catalogCategory';
-        select.setAttribute('aria-label', 'Filter bouquets by category');
-        const all = createEl('option', '', 'All categories');
-        all.value = '';
-        select.appendChild(all);
-        categories.forEach(function (category) {
-            const option = createEl('option', '', capitalize(category));
-            option.value = category;
-            select.appendChild(option);
-        });
+    function preparePhone(field) {
+        if (field.dataset.sfPhoneReady === '1') return;
 
-        const stockWrap = createEl('div', 'form-check mb-0');
-        const stockBox = createEl('input', 'form-check-input');
-        stockBox.type = 'checkbox';
-        stockBox.id = 'catalogStock';
-        const stockLabel = createEl('label', 'form-check-label', 'In stock only');
-        stockLabel.htmlFor = 'catalogStock';
-        stockWrap.append(stockBox, stockLabel);
+        field.dataset.sfPhoneReady = '1';
 
-        const resetBtn = createEl('button', 'btn btn-outline-secondary btn-sm', 'Reset filters');
-        resetBtn.type = 'button';
+        field.placeholder = '+77081115757';
+        field.autocomplete = 'tel';
 
-        const count = createEl('span', 'small text-muted ms-auto');
-        count.setAttribute('role', 'status');
+        // Registration phone remains optional
+        const optional = field.id === 'regPhone' ||
+            !field.required && field.id !== 'phone';
 
-        panel.append(select, stockWrap, resetBtn, count);
-        listEl.parentNode.insertBefore(panel, listEl);
-        return { select: select, stockBox: stockBox, resetBtn: resetBtn, count: count };
-    }
-
-    // "Select": on the order page it fills the form; on the catalog page it opens the order page with the choice.
-    function applyPick(flower) {
-        const select = document.getElementById('flowers');
-        if (!select) { return false; }
-        select.value = flower.category;
-        pickedId = flower.id;
-        const form = select.closest('form');
-        if (form) { form.classList.add('border-primary'); }
-        clearError(select);
-        refreshTotal();
-        return true;
-    }
-
-    function selectBouquet(flower) {
-        if (applyPick(flower)) {
-            document.getElementById('flowers').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else {
-            writeStorage(PICK_KEY, String(flower.id));
-            window.location.href = 'order.html';
-        }
-    }
-
-    function initCatalog() {
-        const listEl = document.querySelector('#flower-list, #catalog');
-        if (!listEl) { return; }
-
-        const controls = buildCatalogControls(listEl);
-
-        function update() {
-            const items = filterBouquets(controls.select.value, controls.stockBox.checked);
-            renderCatalog(listEl, items);
-            controls.count.textContent = 'Showing ' + items.length + ' of ' + BOUQUETS.length + ' bouquets';
+        if (!optional && !field.value.trim()) {
+            field.value = '+77';
         }
 
-        controls.select.addEventListener('change', update);                 // event type 1: change
-        controls.stockBox.addEventListener('change', update);
-        controls.resetBtn.addEventListener('click', function () {           // event type 2: click
-            controls.select.value = '';
-            controls.stockBox.checked = false;
-            update();
-        });
-
-        // DELEGATED: one handler on the list. The cards are thrown away and rebuilt on every filter change,
-        // so a handler on each button would be lost; this one still catches the new buttons.
-        listEl.addEventListener('click', function (event) {
-            const button = event.target.closest('.buy-btn');                // the element the visitor really clicked
-            if (!button || !listEl.contains(button)) { return; }
-            const flower = findBouquetById(Number(button.dataset.id));
-            if (flower) { selectBouquet(flower); }
-        });
-
-        update();
-    }
-
-    /* ====================== 3. DELIVERY FEE CALCULATOR ====================== */
-
-    function initDeliveryCalculator() {
-        const table = document.querySelector('.table-bordered');
-        if (!table) { return; }
-
-        const wrapper = createEl('div', 'mt-4 border-top pt-3');
-        const label = createEl('label', 'form-label fw-bold text-primary', 'Calculate Delivery to Your District:');
-        label.htmlFor = 'zoneSelect';
-        const select = createEl('select', 'form-select mb-3');
-        select.id = 'zoneSelect';
-        const placeholder = createEl('option', '', 'Select district...');
-        placeholder.value = '';
-        select.appendChild(placeholder);
-        DELIVERY_ZONES.forEach(function (zone) {
-            const option = createEl('option', '', zone.name);
-            option.value = zone.id;
-            select.appendChild(option);
-        });
-        const result = createEl('div', 'alert alert-success fw-bold text-center mb-0 d-none');
-        result.setAttribute('role', 'status');
-
-        wrapper.append(label, select, result);
-        table.parentNode.appendChild(wrapper);
-
-        select.addEventListener('change', function () {
-            const zone = DELIVERY_ZONES.find(function (z) { return z.id === select.value; });
-            if (!zone) { hideBlock(result); return; }
-            result.textContent = 'Delivery Fee: ' + formatPrice(zone.price);
-            showBlock(result);
-        });
-    }
-
-    /* ========================== 4. FLORIST TIPS ========================== */
-
-    function initFloristTips() {
-        const sections = document.querySelectorAll('.bg-white.p-4.rounded.shadow-sm');
-        if (sections.length < 2) { return; }
-        const target = sections[1];
-
-        const button = createEl('button', 'btn btn-outline-primary w-100 mt-3', 'Get a Secret Florist Tip');
-        button.type = 'button';
-        const display = createEl('div', 'alert alert-info mt-3 mb-0 fst-italic text-center d-none');
-        display.setAttribute('role', 'status');
-        target.append(button, display);
-
-        let last = -1;
-        button.addEventListener('click', function () {
-            last = pickTipIndex(last);
-            display.textContent = FLORIST_TIPS[last];
-            showBlock(display);
-            button.textContent = 'Get Another Tip';
-        });
-    }
-
-    /* ============================ 5. ORDER FORM ============================ */
-
-    function saveOrder(order) {
-        let orders = [];
-        try { orders = JSON.parse(readStorage(ORDERS_KEY)) || []; } catch (e) { orders = []; }
-        orders.push(order);
-        return writeStorage(ORDERS_KEY, JSON.stringify(orders));
-    }
-
-    function initOrderForm() {
-        const flowerSelect = document.getElementById('flowers');
-        if (!flowerSelect) { return; }
-        const form = flowerSelect.closest('form') || document.querySelector('form');
-        if (!form) { return; }
-
-        form.noValidate = true;    // our own messages (one per field) replace the browser's bubbles
-
-        const quantityInput = document.getElementById('quantity');
-        const dateInput = document.getElementById('date');
-        const addressInput = document.getElementById('address');
-        if (dateInput) { dateInput.min = todayIso(); }
-
-        // ---- promo code field and live total: built in code ----
-        const promoGroup = createEl('div', 'mb-3');
-        const promoLabel = createEl('label', 'form-label fw-semibold', 'Promo code (optional)');
-        promoLabel.htmlFor = 'promoCode';
-        const promoInput = createEl('input', 'form-control');
-        promoInput.type = 'text';
-        promoInput.id = 'promoCode';
-        promoInput.name = 'promo';
-        promoInput.placeholder = 'e.g. FLOWER10';
-        promoInput.autocomplete = 'off';
-        promoGroup.append(promoLabel, promoInput);
-
-        const totalBox = createEl('div', 'alert alert-info mt-4 fs-5 fw-bold text-center');
-        totalBox.setAttribute('role', 'status');
-        const totalLine = createEl('div');
-        const detailLine = createEl('div', 'fs-6 fw-normal');
-        totalBox.append(totalLine, detailLine);
-
-        const anchor = form.querySelector('.border-top, button[type="submit"]');
-        const place = anchor ? (anchor.closest('.order-buttons') || anchor) : null;
-        if (place) {
-            place.parentNode.insertBefore(promoGroup, place);
-            place.parentNode.insertBefore(totalBox, place);
-        } else {
-            form.append(promoGroup, totalBox);
-        }
-
-        // ---- result box ----
-        let messageBox = document.getElementById('order-message');
-        if (!messageBox) {
-            messageBox = createEl('div', 'alert alert-success d-none');
-            form.insertAdjacentElement('afterend', messageBox);
-        }
-
-        function readQuantity() {
-            const parsed = parseInt(quantityInput ? quantityInput.value : '1', 10);
-            return Math.max(1, parsed || 1);
-        }
-
-        refreshTotal = function () {
-            const bouquet = currentBouquet(flowerSelect.value);
-            const rate = getDiscountRate(promoInput.value);
-            const sums = calcOrderTotal(bouquet, readQuantity(), rate);
-            totalLine.textContent = 'Total: ' + formatPrice(sums.total);
-            detailLine.textContent = rate > 0
-                ? 'Subtotal ' + formatPrice(sums.subtotal) + ', promo discount −' + formatPrice(sums.discount)
-                : '';
-            return sums;
-        };
-
-        // The user changes the category by hand: forget the clicked bouquet.
-        flowerSelect.addEventListener('change', function () { pickedId = null; refreshTotal(); });   // event: change
-        if (quantityInput) { quantityInput.addEventListener('input', refreshTotal); }                // event: input
-        promoInput.addEventListener('input', refreshTotal);
-
-        // ---- validation rules: DATA, one object per field ----
-        const RULES = [
-            { id: 'name', required: true, check: function (v) {
-                if (v.length < 2) { return 'Please enter your full name (at least 2 characters).'; }
-                return v.length > 50 ? 'The name is too long (max 50 characters).' : '';
-            } },
-            { id: 'email', required: true, check: function (v) {
-                return isValidEmail(v) ? '' : 'Enter a valid email, for example name@example.com.';
-            } },
-            { id: 'phone', check: function (v) {
-                return isValidPhone(v) ? '' : 'Use a phone like +7 (708) 111-57-57.';
-            } },
-            { id: 'address', check: function (v) {
-                return v.length < 5 ? 'Please enter the full delivery address (at least 5 characters).' : '';
-            } },
-            { id: 'flowers', required: true, requiredMsg: 'Please choose a bouquet.', check: function (v) {
-                const bouquet = currentBouquet(v);
-                if (!bouquet) { return 'We cannot price this bouquet yet. Please choose another one.'; }
-                return bouquet.inStock ? '' : bouquet.name + ' is out of stock right now. Please choose another bouquet.';
-            } },
-            { id: 'quantity', required: true, check: function (v, field) {
-                const n = Number(v);
-                const min = field.min !== '' ? Number(field.min) : 1;
-                const max = field.max !== '' ? Number(field.max) : 100;
-                return !Number.isInteger(n) || n < min || n > max
-                    ? 'Choose a whole number of bouquets from ' + min + ' to ' + max + '.' : '';
-            } },
-            { id: 'date', required: true, requiredMsg: 'Please select a delivery date.', check: function (v, field) {
-                if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) { return 'Enter a valid date.'; }
-                if (field.min && v < field.min) { return 'The earliest delivery date is ' + field.min.split('-').reverse().join('.') + '.'; }
-                return v < todayIso() ? 'Delivery date cannot be in the past.' : '';
-            } },
-            { id: 'promoCode', check: function (v) {
-                return getDiscountRate(v) > 0 ? '' : 'This promo code is not valid.';
-            } }
-        ];
-
-        // '' means the field is fine.
-        function messageFor(rule, field) {
+        function validate(displayError) {
             const value = field.value.trim();
-            if (value === '') {
-                return rule.required || field.required ? (rule.requiredMsg || 'This field is required.') : '';
+            let message = '';
+
+            if (optional && !value) {
+                message = '';
+            } else if (!value.startsWith('+77')) {
+                message = 'Phone must start with +77.';
+            } else if (!/^\+\d+$/.test(value)) {
+                message = 'Only numbers are allowed.';
+            } else if (!isValidPhone(value)) {
+                message = 'Enter exactly 11 digits after +, starting with 77.';
             }
-            return rule.check(value, field);
-        }
 
-        // The error disappears AS SOON AS the visitor fixes the field (delegated: one handler for the whole form).
-        function recheck(event) {
-            const field = event.target;
-            if (!field.classList || !field.classList.contains('is-invalid')) { return; }
-            const rule = RULES.find(function (r) { return r.id === field.id; });
-            if (rule && messageFor(rule, field) === '') { clearError(field); }
-        }
-        form.addEventListener('input', recheck);
-        form.addEventListener('change', recheck);
+            field.setCustomValidity(message);
 
-        // Preselect a bouquet chosen on the catalog page.
-        const pending = findBouquetById(Number(readStorage(PICK_KEY)));
-        if (pending) { applyPick(pending); }
-        removeStorage(PICK_KEY);
-        refreshTotal();
-
-        form.addEventListener('submit', function (event) {                  // event: submit
-            event.preventDefault();                                          // no page reload: we show the answer ourselves
-
-            let firstBad = null;
-            RULES.forEach(function (rule) {
-                const field = document.getElementById(rule.id);
-                if (!field) { return; }                                      // this field is not on the page
-                field.value = field.value.trim();                            // trimmed value goes back into the field
-                const message = messageFor(rule, field);
+            if (displayError) {
                 if (message) {
                     showError(field, message);
-                    if (!firstBad) { firstBad = field; }
                 } else {
                     clearError(field);
                 }
-            });
-            if (firstBad) { firstBad.focus(); return; }
+            }
 
-            // ---- every check passed: total it, save it, confirm it ----
-            const bouquet = currentBouquet(flowerSelect.value);
-            const quantity = readQuantity();
-            const sums = refreshTotal();
-            const username = readStorage(SESSION_KEY);
-            const nameField = document.getElementById('name');
-            const customer = nameField ? nameField.value : 'Customer';
-            const deliveryDate = dateInput ? dateInput.value : todayIso();
-            const address = addressInput ? addressInput.value : 'Address not specified';
+            return message === '';
+        }
 
-            const order = {
-                id: Number(String(Date.now()).slice(-6)),
-                username: username,
-                bouquet: bouquet.name + (quantity > 1 ? ' × ' + quantity : ''),
-                ordered: todayIso(),
-                delivery: deliveryDate,
-                status: 'awaiting',
-                total: sums.total
-            };
-            if (username) { saveOrder(order); }
-
-            showConfirmation(customer, order, bouquet, quantity, sums, address, Boolean(username));
+        field.addEventListener('input', function () {
+            validate(true);
         });
 
-        function showConfirmation(customer, order, bouquet, quantity, sums, address, loggedIn) {
-            messageBox.textContent = '';
-            messageBox.classList.add('alert', 'alert-success');
+        field.addEventListener('blur', function () {
+            validate(true);
+        });
 
-            messageBox.appendChild(createEl('h4', 'alert-heading fw-bold', 'Thank you for your order, ' + customer + '!'));
-            messageBox.appendChild(createEl('p', 'mb-1', 'Order #' + order.id + ': ' + quantity + '× ' + bouquet.name + '.'));
-            const money = sums.discount > 0
-                ? 'Total price: ' + formatPrice(sums.total) + ' (promo discount ' + formatPrice(sums.discount) + ' already taken off).'
-                : 'Total price: ' + formatPrice(sums.total) + '.';
-            messageBox.appendChild(createEl('p', 'mb-1', money));
-            messageBox.appendChild(createEl('p', 'mb-1', 'Delivery scheduled for ' + order.delivery.split('-').reverse().join('.') + ' to: ' + address + '.'));
+        field.sfValidatePhone = validate;
+        validate(false);
+    }
 
-            const next = createEl('p', 'mb-2');
-            if (loggedIn) {
-                next.append('This order was added to your history. ');
-                const link = createEl('a', 'link-primary fw-bold', 'Open My Orders');
-                link.href = 'my-orders.html';
-                next.appendChild(link);
-            } else {
-                next.append('Want to follow this order? Use the Register button in the menu, then place your next order while logged in.');
-            }
-            messageBox.appendChild(next);
+    function scanPhones() {
+        document.querySelectorAll(
+            'input[type="tel"], input[name="phone"], #phone'
+        ).forEach(preparePhone);
+    }
 
-            messageBox.appendChild(createEl('hr'));
-            messageBox.appendChild(createEl('p', 'mb-3 small text-muted fw-bold', '*This is a front-end demonstration. No data was sent to a server.'));
+    scanPhones();
 
-            const again = createEl('button', 'btn btn-outline-primary', 'Place another order');
-            again.type = 'button';
-            again.addEventListener('click', function () {                    // event: click
-                messageBox.classList.remove('d-block', 'show');
-                messageBox.classList.add('hidden');
-                form.reset();
-                pickedId = null;
-                form.classList.remove('d-none', 'fade');
-                refreshTotal();
-                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-            messageBox.appendChild(again);
+    // Catch registration inputs created by jQuery
+    const observer = new MutationObserver(scanPhones);
 
-            form.classList.add('fade');                                      // the form fades out, then the answer fades in
-            setTimeout(function () {
-                form.classList.add('d-none');
-                messageBox.classList.remove('hidden', 'd-none');
-                messageBox.classList.add('d-block');
-                showBlock(messageBox);
-                messageBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 200);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // Block invalid phone numbers before submit handlers
+    document.addEventListener('submit', function (event) {
+        const phone = event.target.querySelector(
+            'input[type="tel"], input[name="phone"], #phone'
+        );
+
+        if (
+            phone &&
+            typeof phone.sfValidatePhone === 'function' &&
+            !phone.sfValidatePhone(true)
+        ) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            phone.focus();
         }
+    }, true);
+}
+
+// ==========================================
+// 3. FLOWERS PAGE INTEGRATION
+// ==========================================
+
+function initFlowersIntegration() {
+    const catalog = document.querySelector(
+        '#flower-list, #catalog'
+    );
+
+    if (!catalog) return;
+
+    // Existing flowers.js owns catalog rendering and cart.
+    // This handler only supports explicit Select buttons.
+    catalog.addEventListener('click', function (event) {
+        const button = event.target.closest(
+            '.buy-btn[data-id]'
+        );
+
+        if (!button || !catalog.contains(button)) return;
+
+        const bouquet = findBouquet(button.dataset.id);
+
+        if (!bouquet || !bouquet.inStock) return;
+
+        writeStorage(PICK_KEY, String(bouquet.id));
+
+        location.href = 'order.html';
+    });
+}
+
+// ==========================================
+// 4. DELIVERY PAGE
+// ==========================================
+
+function initDeliveryCalculator() {
+    const table = document.querySelector(
+        'main .table-bordered'
+    );
+
+    if (!table) return;
+
+    // Do not create two calculators
+    if (document.getElementById('zoneSelect')) return;
+
+    const wrapper = createEl(
+        'div',
+        'mt-4 border-top pt-3'
+    );
+
+    const label = createEl(
+        'label',
+        'form-label fw-bold text-primary',
+        'Calculate Delivery to Your District:'
+    );
+
+    label.htmlFor = 'zoneSelect';
+
+    const select = createEl(
+        'select',
+        'form-select mb-3'
+    );
+
+    select.id = 'zoneSelect';
+
+    const placeholder = createEl(
+        'option',
+        '',
+        'Select district...'
+    );
+
+    placeholder.value = '';
+    select.appendChild(placeholder);
+
+    DELIVERY_ZONES.forEach(function (zone) {
+        const option = createEl('option', '', zone.name);
+
+        option.value = zone.id;
+
+        select.appendChild(option);
+    });
+
+    const result = createEl(
+        'div',
+        'alert alert-success fw-bold text-center d-none'
+    );
+
+    result.setAttribute('role', 'status');
+
+    wrapper.append(label, select, result);
+    table.parentNode.appendChild(wrapper);
+
+    select.addEventListener('change', function () {
+        const zone = findDistrict(select.value);
+
+        if (!zone) {
+            removeStorage(DELIVERY_KEY);
+            result.classList.add('d-none');
+            return;
+        }
+
+        writeStorage(DELIVERY_KEY, zone.id);
+
+        result.textContent =
+            'Delivery Fee: ' + formatPrice(zone.price);
+
+        result.classList.remove('d-none');
+    });
+
+    const saved = readStorage(DELIVERY_KEY);
+
+    if (findDistrict(saved)) {
+        select.value = saved;
+        select.dispatchEvent(new Event('change'));
+    }
+}
+
+// ==========================================
+// 5. ORDER PAGE
+// ==========================================
+
+function initOrderForm() {
+    const flowerSelect = document.getElementById('flowers');
+
+    if (!flowerSelect) return;
+
+    const form = flowerSelect.closest('form');
+
+    if (!form) return;
+
+    form.noValidate = true;
+
+    const nameInput = form.querySelector('#name');
+    const phoneInput = form.querySelector('#phone');
+    const emailInput = form.querySelector('#email');
+    const quantityInput = form.querySelector('#quantity');
+    const addressInput = form.querySelector('#address');
+    const dateInput = form.querySelector('#date');
+    const timeInput = form.querySelector('#time');
+
+    const submitButton = form.querySelector(
+        'button[type="submit"]'
+    );
+
+    const buttons = submitButton
+        ? submitButton.closest('.border-top')
+        : null;
+
+    if (dateInput) {
+        dateInput.min = todayISO();
     }
 
-    /* ============================== START ============================== */
+    // --------------------------------------
+    // AVAILABLE BOUQUETS
+    // --------------------------------------
 
-    function init() {
-        initAccountLink();
-        initCatalog();
-        initDeliveryCalculator();
-        initFloristTips();
-        initOrderForm();
+    flowerSelect.textContent = '';
+
+    const available = BOUQUETS.filter(function (bouquet) {
+        return bouquet.inStock;
+    });
+
+    available.forEach(function (bouquet) {
+        const option = createEl(
+            'option',
+            '',
+            bouquet.name + ' — ' + formatPrice(bouquet.price)
+        );
+
+        option.value = String(bouquet.id);
+        flowerSelect.appendChild(option);
+    });
+
+    if (!available.length) {
+        const option = createEl(
+            'option',
+            '',
+            'No bouquets available'
+        );
+
+        option.value = '';
+        flowerSelect.appendChild(option);
     }
 
-    // With `defer` the page is already parsed when this runs, so start at once; otherwise wait for it.
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+    const savedPick = Number(readStorage(PICK_KEY));
+
+    if (available.some(function (b) {
+        return b.id === savedPick;
+    })) {
+        flowerSelect.value = String(savedPick);
+    }
+
+    removeStorage(PICK_KEY);
+
+    // --------------------------------------
+    // DELIVERY AND PICKUP
+    // --------------------------------------
+
+    const deliveryGroup = createEl('div', 'mb-4');
+
+    const methodLabel = createEl(
+        'label',
+        'form-label fw-bold',
+        'Delivery Method:'
+    );
+
+    methodLabel.htmlFor = 'deliveryMethod';
+
+    const methodSelect = createEl(
+        'select',
+        'form-select mb-3'
+    );
+
+    methodSelect.id = 'deliveryMethod';
+
+    [
+        ['delivery', 'Home Delivery'],
+        ['pickup', 'Self Pickup — Free']
+    ].forEach(function (item) {
+        const option = createEl('option', '', item[1]);
+
+        option.value = item[0];
+        methodSelect.appendChild(option);
+    });
+
+    const districtLabel = createEl(
+        'label',
+        'form-label fw-bold',
+        'Choose Your District:'
+    );
+
+    districtLabel.htmlFor = 'orderDistrict';
+
+    const districtSelect = createEl(
+        'select',
+        'form-select mb-3'
+    );
+
+    districtSelect.id = 'orderDistrict';
+
+    DELIVERY_ZONES.forEach(function (zone) {
+        const option = createEl(
+            'option',
+            '',
+            zone.name + ' — ' + formatPrice(zone.price)
+        );
+
+        option.value = zone.id;
+        districtSelect.appendChild(option);
+    });
+
+    const savedDistrict = readStorage(DELIVERY_KEY);
+
+    if (findDistrict(savedDistrict)) {
+        districtSelect.value = savedDistrict;
+    }
+
+    const branchLabel = createEl(
+        'label',
+        'form-label fw-bold d-none',
+        'Pickup Branch:'
+    );
+
+    branchLabel.htmlFor = 'pickupBranch';
+
+    const branchSelect = createEl(
+        'select',
+        'form-select mb-3 d-none'
+    );
+
+    branchSelect.id = 'pickupBranch';
+
+    PICKUP_BRANCHES.forEach(function (branch) {
+        const option = createEl('option', '', branch);
+
+        option.value = branch;
+        branchSelect.appendChild(option);
+    });
+
+    deliveryGroup.append(
+        methodLabel,
+        methodSelect,
+        districtLabel,
+        districtSelect,
+        branchLabel,
+        branchSelect
+    );
+
+    const addressGroup = addressInput
+        ? addressInput.closest('.mb-3')
+        : null;
+
+    if (addressGroup) {
+        addressGroup.parentNode.insertBefore(
+            deliveryGroup,
+            addressGroup
+        );
     } else {
-        init();
+        form.prepend(deliveryGroup);
     }
-}());
+
+    // --------------------------------------
+    // PROMO AND TOTAL
+    // --------------------------------------
+
+    // Remove any previously created Total blocks
+    form.querySelectorAll('.alert-info').forEach(function (item) {
+        if (/^Total:/.test(item.textContent.trim())) {
+            item.remove();
+        }
+    });
+
+    form.querySelectorAll('#total-price').forEach(function (item) {
+        item.remove();
+    });
+
+    const oldPromo = form.querySelector('#promoCode');
+
+    if (oldPromo) {
+        const oldGroup = oldPromo.closest('.mb-3');
+
+        if (oldGroup) oldGroup.remove();
+    }
+
+    const promoGroup = createEl('div', 'mb-3');
+
+    const promoLabel = createEl(
+        'label',
+        'form-label fw-bold',
+        'Promo Code (optional):'
+    );
+
+    promoLabel.htmlFor = 'promoCode';
+
+    const promoInput = createEl(
+        'input',
+        'form-control'
+    );
+
+    promoInput.id = 'promoCode';
+    promoInput.placeholder = 'FLOWER10';
+    promoInput.autocomplete = 'off';
+
+    const promoResult = createEl(
+        'div',
+        'small mt-2'
+    );
+
+    promoGroup.append(
+        promoLabel,
+        promoInput,
+        promoResult
+    );
+
+    const totalBox = createEl(
+        'div',
+        'alert alert-info mt-4 fs-5 fw-bold text-center'
+    );
+
+    totalBox.id = 'total-price';
+
+    const totalLine = createEl('div');
+
+    const detailLine = createEl(
+        'div',
+        'fs-6 fw-normal mt-2'
+    );
+
+    totalBox.append(totalLine, detailLine);
+
+    if (buttons) {
+        buttons.parentNode.insertBefore(promoGroup, buttons);
+        buttons.parentNode.insertBefore(totalBox, buttons);
+    } else {
+        form.append(promoGroup, totalBox);
+    }
+
+    let activePromo = '';
+
+    // --------------------------------------
+    // DELIVERY CALCULATION
+    // --------------------------------------
+
+    function selectedDelivery() {
+        if (methodSelect.value === 'pickup') {
+            return {
+                method: 'pickup',
+                district: '',
+                branch: branchSelect.value,
+                fee: 0
+            };
+        }
+
+        const zone = findDistrict(districtSelect.value);
+
+        return {
+            method: 'delivery',
+            district: zone ? zone.name : '',
+            branch: '',
+            fee: zone ? zone.price : 0
+        };
+    }
+
+    function calculateTotal() {
+        const bouquet = findBouquet(flowerSelect.value);
+        const quantity = Number(quantityInput.value);
+
+        const validQuantity =
+            Number.isInteger(quantity) &&
+            quantity >= 1 &&
+            quantity <= 20;
+
+        const count = validQuantity ? quantity : 0;
+
+        const delivery = selectedDelivery();
+
+        const rate = PROMO_CODES[activePromo] || 0;
+
+        const sums = calculatePrice(
+            bouquet,
+            count,
+            rate,
+            delivery.fee
+        );
+
+        totalLine.textContent =
+            'Total: ' + formatPrice(sums.total);
+
+        detailLine.textContent =
+            'Flowers: ' + formatPrice(sums.subtotal) +
+            ' | Discount: -' + formatPrice(sums.discount) +
+            ' | Delivery: ' + formatPrice(sums.deliveryFee);
+
+        return {
+            bouquet: bouquet,
+            quantity: count,
+            delivery: delivery,
+            subtotal: sums.subtotal,
+            discount: sums.discount,
+            total: sums.total
+        };
+    }
+
+    function updateDeliveryMode() {
+        const pickup = methodSelect.value === 'pickup';
+
+        districtLabel.classList.toggle('d-none', pickup);
+        districtSelect.classList.toggle('d-none', pickup);
+
+        branchLabel.classList.toggle('d-none', !pickup);
+        branchSelect.classList.toggle('d-none', !pickup);
+
+        if (addressGroup) {
+            addressGroup.classList.toggle('d-none', pickup);
+        }
+
+        if (addressInput) {
+            addressInput.required = !pickup;
+
+            if (pickup) {
+                clearError(addressInput);
+            }
+        }
+
+        calculateTotal();
+    }
+
+    methodSelect.addEventListener(
+        'change',
+        updateDeliveryMode
+    );
+
+    districtSelect.addEventListener('change', function () {
+        writeStorage(DELIVERY_KEY, districtSelect.value);
+        calculateTotal();
+    });
+
+    flowerSelect.addEventListener('change', calculateTotal);
+    quantityInput.addEventListener('input', calculateTotal);
+
+    // --------------------------------------
+    // PROMO CODES
+    // --------------------------------------
+
+    const promoButton = form.querySelector('#promo-btn');
+
+    function applyPromo() {
+        const code = promoInput.value.trim().toUpperCase();
+
+        if (Object.prototype.hasOwnProperty.call(
+            PROMO_CODES,
+            code
+        )) {
+            activePromo = code;
+
+            promoResult.className =
+                'small mt-2 text-success';
+
+            promoResult.textContent =
+                'Promo applied: ' +
+                Math.round(PROMO_CODES[code] * 100) +
+                '% off';
+        } else {
+            activePromo = '';
+
+            promoResult.className =
+                'small mt-2 text-danger';
+
+            promoResult.textContent =
+                'Invalid promo code.';
+        }
+
+        calculateTotal();
+    }
+
+    if (promoButton) {
+        promoButton.addEventListener('click', applyPromo);
+    }
+
+    promoInput.addEventListener('input', function () {
+        activePromo = '';
+        promoResult.textContent = '';
+        calculateTotal();
+    });
+
+    updateDeliveryMode();
+
+    // --------------------------------------
+    // FORM VALIDATION
+    // --------------------------------------
+
+    function validateField(field) {
+        if (!field) return true;
+
+        const value = String(field.value || '').trim();
+        let message = '';
+
+        switch (field.id) {
+            case 'name':
+                if (value.length < 2) {
+                    message = 'Enter your full name.';
+                }
+                break;
+
+            case 'phone':
+                if (!isValidPhone(value)) {
+                    message =
+                        'Use +77 and exactly 11 digits, e.g. +77081115757.';
+                }
+                break;
+
+            case 'email':
+                if (!isValidEmail(value)) {
+                    message = 'Enter a valid email.';
+                }
+                break;
+
+            case 'flowers':
+                const bouquet = findBouquet(value);
+
+                if (!bouquet || !bouquet.inStock) {
+                    message = 'Choose an available bouquet.';
+                }
+                break;
+
+            case 'quantity':
+                const quantity = Number(value);
+
+                if (
+                    value === '' ||
+                    !Number.isInteger(quantity) ||
+                    quantity < 1 ||
+                    quantity > 20
+                ) {
+                    message = 'Choose 1 to 20 bouquets.';
+                }
+                break;
+
+            case 'address':
+                if (
+                    methodSelect.value === 'delivery' &&
+                    value.length < 5
+                ) {
+                    message = 'Enter your delivery address.';
+                }
+                break;
+
+            case 'date':
+                if (!value || value < todayISO()) {
+                    message =
+                        'Select today or a future date.';
+                }
+                break;
+
+            case 'time':
+                if (!/^\d{2}:\d{2}$/.test(value)) {
+                    message = 'Select a delivery time.';
+                }
+                break;
+        }
+
+        if (message) {
+            showError(field, message);
+            return false;
+        }
+
+        clearError(field);
+        return true;
+    }
+
+    const fields = [
+        nameInput,
+        phoneInput,
+        emailInput,
+        flowerSelect,
+        quantityInput,
+        addressInput,
+        dateInput,
+        timeInput
+    ].filter(Boolean);
+
+    form.addEventListener('input', function (event) {
+        if (fields.includes(event.target)) {
+            validateField(event.target);
+        }
+    });
+
+    form.addEventListener('change', function (event) {
+        if (fields.includes(event.target)) {
+            validateField(event.target);
+        }
+    });
+
+    // --------------------------------------
+    // RESET FORM
+    // --------------------------------------
+
+    form.addEventListener('reset', function () {
+        setTimeout(function () {
+            activePromo = '';
+            promoInput.value = '';
+            promoResult.textContent = '';
+
+            form.querySelectorAll('.sf-error')
+                .forEach(function (item) {
+                    item.remove();
+                });
+
+            fields.forEach(clearError);
+
+            if (phoneInput) {
+                phoneInput.value = '+77';
+                phoneInput.setCustomValidity('');
+            }
+
+            updateDeliveryMode();
+        }, 0);
+    });
+
+    // --------------------------------------
+    // SUBMIT ORDER
+    // --------------------------------------
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        let firstInvalid = null;
+
+        fields.forEach(function (field) {
+            if (!validateField(field) && !firstInvalid) {
+                firstInvalid = field;
+            }
+        });
+
+        if (firstInvalid) {
+            firstInvalid.focus();
+            return;
+        }
+
+        const result = calculateTotal();
+        const bouquet = result.bouquet;
+
+        if (!bouquet || !bouquet.inStock) return;
+
+        const delivery = result.delivery;
+        const username = readStorage(SESSION_KEY);
+
+        const order = {
+            id: Number(String(Date.now()).slice(-6)),
+            username: username,
+            bouquet: bouquet.name +
+                (result.quantity > 1
+                    ? ' × ' + result.quantity
+                    : ''),
+            ordered: todayISO(),
+            delivery: dateInput.value,
+            time: timeInput.value,
+            status: 'awaiting',
+            total: result.total,
+            subtotal: result.subtotal,
+            discount: result.discount,
+            deliveryFee: delivery.fee,
+            deliveryMethod: delivery.method,
+            district: delivery.district,
+            pickupBranch: delivery.branch,
+            address: addressInput.value.trim(),
+            phone: phoneInput.value.trim(),
+            promoCode: activePromo
+        };
+
+        // Compatible with My Orders
+        if (username) {
+            let orders = [];
+
+            try {
+                orders = JSON.parse(
+                    readStorage(ORDERS_KEY) || '[]'
+                );
+
+                if (!Array.isArray(orders)) {
+                    orders = [];
+                }
+            } catch (error) {
+                orders = [];
+            }
+
+            orders.push(order);
+
+            writeStorage(
+                ORDERS_KEY,
+                JSON.stringify(orders)
+            );
+        }
+
+        // --------------------------------------
+        // CONFIRMATION
+        // --------------------------------------
+
+        let messageBox = document.getElementById(
+            'order-message'
+        );
+
+        if (!messageBox) {
+            messageBox = createEl('div');
+        }
+
+        // Move outside form so it remains visible
+        form.insertAdjacentElement(
+            'afterend',
+            messageBox
+        );
+
+        messageBox.textContent = '';
+        messageBox.className =
+            'alert alert-success mt-3';
+
+        messageBox.appendChild(
+            createEl(
+                'h4',
+                'fw-bold',
+                'Order placed successfully!'
+            )
+        );
+
+        messageBox.appendChild(
+            createEl(
+                'p',
+                '',
+                result.quantity + ' × ' + bouquet.name
+            )
+        );
+
+        messageBox.appendChild(
+            createEl(
+                'p',
+                'fw-bold',
+                'Total: ' + formatPrice(result.total)
+            )
+        );
+
+        const deliveryText = delivery.method === 'pickup'
+            ? 'Self Pickup — Free. Branch: ' + delivery.branch
+            : 'Delivery to ' + delivery.district +
+              ', ' + order.address +
+              '. Fee: ' + formatPrice(delivery.fee);
+
+        messageBox.appendChild(
+            createEl('p', '', deliveryText)
+        );
+
+        messageBox.appendChild(
+            createEl(
+                'p',
+                '',
+                'Date: ' + order.delivery +
+                ' at ' + order.time
+            )
+        );
+
+        messageBox.appendChild(
+            createEl(
+                'p',
+                'small text-muted',
+                'Demo order only. No real payment or delivery was processed.'
+            )
+        );
+
+        if (username) {
+            const ordersLink = createEl(
+                'a',
+                'btn btn-outline-primary me-2',
+                'My Orders'
+            );
+
+            ordersLink.href = 'my-orders.html';
+
+            messageBox.appendChild(ordersLink);
+        }
+
+        const again = createEl(
+            'button',
+            'btn btn-primary',
+            'Place Another Order'
+        );
+
+        again.type = 'button';
+
+        messageBox.appendChild(again);
+
+        again.addEventListener('click', function () {
+            messageBox.classList.add('d-none');
+            form.classList.remove('d-none');
+
+            form.reset();
+            calculateTotal();
+
+            form.scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        form.classList.add('d-none');
+        messageBox.classList.remove('hidden', 'd-none');
+
+        messageBox.scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+}
+
+// ==========================================
+// INITIALIZATION
+// ==========================================
+
+function init() {
+    initNavigation();
+    initPhoneValidation();
+    initFlowersIntegration();
+    initDeliveryCalculator();
+    initOrderForm();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}

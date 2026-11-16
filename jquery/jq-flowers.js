@@ -90,6 +90,7 @@ $(function () {
     // Add bouquet to cart
     function addBouquetToCart(bouquet, $button) {
         if (!bouquet.inStock) return;
+        localStorage.setItem('sf_pick', String(bouquet.id));
 
         const existingItem = Cart.items.find(function (item) {
             return item.id === bouquet.id;
