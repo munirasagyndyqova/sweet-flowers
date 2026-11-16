@@ -49,6 +49,17 @@ const DELIVERY_KEY = 'sf_delivery_choice';
 // Shared functions and data for jQuery scripts
 window.BOUQUETS = BOUQUETS;
 window.DELIVERY_ZONES = DELIVERY_ZONES;
+
+window.Cart = window.Cart || {
+    items: [],
+
+    getTotal: function () {
+        return this.items.reduce(function (total, item) {
+            return total + item.price * item.qty;
+        }, 0);
+    }
+};
+
 window.SF_MAIN_OWNS_ORDER = true;
 
 // =====================================
