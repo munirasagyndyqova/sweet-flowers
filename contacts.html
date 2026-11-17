@@ -41,7 +41,7 @@
 <main class="container py-5">
   <h1 class="display-5 text-primary text-center mb-4 fade-in-up">Contact Sweet Flowers</h1>
 
-  <p class="text-center mb-4">Jump to: <a href="#main-shop" class="link-primary fw-bold">Main Shop</a> | <a href="#feedback-form" class="link-primary fw-bold">Leave Feedback</a></p>
+  <p class="text-center mb-4">Jump to: <a href="#main-shop" class="link-primary fw-bold">Main Shop</a></p>
 
   <section id="main-shop" class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up">
     <h2 class="text-primary border-bottom pb-2 mb-3">Our Details</h2>
@@ -147,78 +147,6 @@
   </div>
 
   <hr class="my-5">
-
-  <section id="feedback-form" class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up">
-    <h2 class="text-primary border-bottom pb-2 mb-3">Leave Feedback</h2>
-    <!-- This form does not send data to a server yet, as there is no backend in this phase.
-         When JS is added, it will validate the fields and show a message in #contactResult. -->
-    <form id="contactForm" method="post" action="#" novalidate>
-      <fieldset class="border rounded-3 p-4">
-        <legend class="fs-5 text-primary float-none w-auto px-2">Send us a message</legend>
-
-        <p class="mb-3">
-          <label for="contactName" class="form-label fw-semibold">Name:</label><br>
-          <input type="text" id="contactName" name="name" class="form-control" required placeholder="Your Name">
-        </p>
-
-        <p class="mb-3">
-          <label for="contactEmail" class="form-label fw-semibold">Email:</label><br>
-          <input type="email" id="contactEmail" name="email" class="form-control" required placeholder="your@email.com">
-        </p>
-
-        <p class="mb-3">
-          <label for="contactPhone" class="form-label fw-semibold">Phone:</label><br>
-          <input type="tel" id="contactPhone" name="phone" class="form-control" placeholder="+7 (___) ___-__-__">
-        </p>
-
-        <p class="mb-3">
-          <label for="contactQuantity" class="form-label fw-semibold">Number of bouquets:</label><br>
-          <input type="number" id="contactQuantity" name="quantity" class="form-control" min="1" max="100" value="1">
-        </p>
-
-        <p class="mb-3">
-          <label for="contactDate" class="form-label fw-semibold">Preferred delivery date:</label><br>
-          <input type="date" id="contactDate" name="delivery_date" class="form-control">
-        </p>
-
-        <p class="mb-3">
-          <label class="form-label fw-semibold">Preferred contact method:</label><br>
-          <input type="radio" id="contactPhoneR" name="contact_method" value="phone" class="form-check-input" checked>
-          <label for="contactPhoneR" class="form-check-label">Phone</label><br>
-          <input type="radio" id="contactEmailR" name="contact_method" value="email" class="form-check-input">
-          <label for="contactEmailR" class="form-check-label">Email</label>
-        </p>
-
-        <p class="form-check mb-3">
-          <input type="checkbox" id="contactNewsletter" name="newsletter" class="form-check-input" checked>
-          <label for="contactNewsletter" class="form-check-label">Subscribe to our newsletter</label>
-        </p>
-
-        <p class="mb-3">
-          <label for="contactSubject" class="form-label fw-semibold">Subject:</label><br>
-          <select id="contactSubject" name="subject" class="form-select">
-            <option value="order">Order Inquiry</option>
-            <option value="feedback">Feedback</option>
-            <option value="complaint">Complaint</option>
-            <option value="other">Other</option>
-          </select>
-        </p>
-
-        <p class="mb-3">
-          <label for="contactMessage" class="form-label fw-semibold">Your Message:</label><br>
-          <textarea id="contactMessage" name="message" rows="5" class="form-control" required placeholder="Write your message here..."></textarea>
-        </p>
-
-        <p class="d-flex flex-wrap gap-2 mb-0">
-          <button type="submit" id="contactSubmit" class="btn btn-primary">Send Message</button>
-          <button type="reset" class="btn btn-outline-secondary">Reset Form</button>
-        </p>
-      </fieldset>
-
-      <!-- Empty result area — JavaScript will put the confirmation or error here -->
-      <div id="contactResult" class="result-area" role="status" aria-live="polite"></div>
-    </form>
-  </section>
 
   <p>Our 5<sup>th</sup> anniversary is coming soon! We offer <b>exclusive</b> discounts for <i>loyal customers</i>.</p>
 
