@@ -182,5 +182,31 @@ $(function () {
         $('#reviewEmail').val(user.email);
         $('#reviewPhone').val(user.phone);
     });
+    $(document).ready(function () {
+        var currentUser = localStorage.getItem('sf_session_user');
+
+        if (!currentUser) {
+            $('button:contains("Delete my review")').hide();
+            return;
+        }
+
+        var cleanCurrentUser = currentUser.toLowerCase().trim();
+
+        $('button:contains("Delete my review")').each(function () {
+            var $btn = $(this);
+
+            var $reviewCard = $btn.closest('.card, .border, .bg-light, .p-3, [class*="border"]');
+
+            if ($reviewCard.length === 0) {
+                $reviewCard = $btn.parent().parent();
+            }
+
+            var cardText = $reviewCard.text().toLowerCase();
+
+            if (cardText.indexOf(cleanCurrentUser) === -1) {
+                $btn.hide();
+            }
+        });
+    });
 
 });
