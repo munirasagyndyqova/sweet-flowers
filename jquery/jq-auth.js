@@ -1,23 +1,3 @@
-/*
- * jq-auth.js - registration, login, session and the "database" of Sweet Flowers.
- *
- * jQuery version: 3.7.1 (CDN, linked in <head> BEFORE this file). It is needed here for
- * $.getJSON (AJAX), the Deferred promises and for building the registration dialog in code.
- * Needs jq-common.js (SF.form). main.js (plain JavaScript) puts a "Register" link into the menu; this file opens
- * the dialog when that link is clicked, and also when a page is opened as my-orders.html#register.
- *
- * HOW THE DATABASE WORKS
- *  - data/db.json is the database file: users and orders. It is read with $.getJSON().
- *  - Orders placed on order.html are saved by main.js in localStorage ('sf_orders') and merged into the
- *    logged-in user's list here, so a new order appears in "My Orders" at once.
- *  - A browser cannot write to a file on disk, so users who register on the site are saved
- *    in localStorage ('sf_users') and merged with the users from db.json on every read.
- *    To make registration write into db.json for real you need a server (Node/Express, PHP...).
- *  - Passwords are never stored as text: salt + SHA-256 (Web Crypto). This is a front-end demo;
- *    hashing in the browser does NOT replace real password handling on a server.
- *  - The session key 'sf_session_user' is the same key main.js reads, so its "Register"
- *    button disappears when somebody is logged in.
- */
 (function ($) {
     'use strict';
 
@@ -33,12 +13,18 @@
         return $.Deferred().reject({ message: message, code: code || 'error', field: field }).promise();
     }
 
+    // Never rejects: if data/db.json is missing or unreadable we resolve to an empty
+    // structure so that register() and login() still work from localStorage alone.
     function loadDb() {
         if (!dbPromise) {
-            dbPromise = $.getJSON('data/db.json').then(null, function () {
-                dbPromise = null;                // allow a retry next time
-                return fail('Could not load data/db.json. Open the site through a local web server, not as a file.', 'db');
-            });
+            dbPromise = $.getJSON('data/db.json').then(
+                function (db) {
+                    return (db && typeof db === 'object') ? db : { users: [], orders: [] };
+                },
+                function () {
+                    return { users: [], orders: [] };
+                }
+            );
         }
         return dbPromise;
     }
@@ -239,22 +225,25 @@
 
         var rules = [
             { field: '#regUsername', check: function (v) {
-                return /^[A-Za-z0-9_.-]{3,20}$/.test(v) ? '' : 'Use 3-20 letters, digits, dots, dashes or underscores.';
-            } },
+                    return /^[A-Za-z0-9_.-]{3,20}$/.test(v) ? '' : 'Use 3-20 letters, digits, dots, dashes or underscores.';
+                } },
             { field: '#regEmail', check: function (v) {
-                return SF.valid.email(v) ? '' : 'Enter a valid email, for example name@example.com.';
-            } },
+                    return SF.valid.email(v) ? '' : 'Enter a valid email, for example name@example.com.';
+                } },
             { field: '#regPhone', check: function (v) {
-                return SF.valid.phone(v) ? '' : 'Use a phone like +7 (708) 111-57-57.';
-            } },
+                    // main.js phone mask always keeps the "+77" prefix in the field,
+                    // so a bare "+77" (or empty) means "not provided" for this optional field.
+                    if (v === '+77' || v === '') { return ''; }
+                    return SF.valid.phone(v) ? '' : 'Use a phone like +7 (708) 111-57-57.';
+                } },
             { field: '#regPassword', raw: true, check: function (v) {
-                if (v.length < 8) { return 'Password must be at least 8 characters.'; }
-                if (!/[A-Za-z]/.test(v) || !/\d/.test(v)) { return 'Add at least one letter and one digit.'; }
-                return '';
-            } },
+                    if (v.length < 8) { return 'Password must be at least 8 characters.'; }
+                    if (!/[A-Za-z]/.test(v) || !/\d/.test(v)) { return 'Add at least one letter and one digit.'; }
+                    return '';
+                } },
             { field: '#regPassword2', raw: true, check: function (v, $f) {
-                return v === $f.closest('form').find('#regPassword').val() ? '' : 'The passwords do not match.';
-            } },
+                    return v === $f.closest('form').find('#regPassword').val() ? '' : 'The passwords do not match.';
+                } },
             { field: '#regTerms' }
         ];
         SF.form.watch($form, rules);
