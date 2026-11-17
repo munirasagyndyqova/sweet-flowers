@@ -1,141 +1,132 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Log in to your Sweet Flowers account and see your current and past orders.">
-    <meta name="author" content="Koshkinbayeva Akbota">
-    <title>My Orders — Sweet Flowers</title>
+/*
+ * jq-my-orders.js - login form, dashboard, logout for my-orders.html.
+ * Needs jq-common.js (SF.form, SF.valid, SF.formatPrice, SF.fmtDate)
+ * and jq-auth.js (SF.auth).
+ */
+(function ($) {
+    'use strict';
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/base.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="jquery/main.js" defer></script>
-    <script src="jquery/jq-common.js" defer></script>
-    <script src="jquery/jq-auth.js" defer></script>
-    <script src="jquery/jq-my-orders.js" defer></script>
-    <!-- Author: Koshkinbayeva Akbota -->
+    var SF = window.SF;
 
-</head>
-<body id="top">
+    function showLogin() {
+        $('#loginView').removeClass('d-none');
+        $('#dashboardView').addClass('d-none');
+    }
 
-<header class="bg-primary text-white text-center py-4 shadow-sm">
-    <p class="fs-3 fw-bold mb-2"><strong>Sweet Flowers</strong></p>
-    <nav aria-label="Main navigation">
-        <ul class="nav justify-content-center gap-2 flex-wrap">
-            <li class="nav-item"><a class="nav-link text-white" href="index.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="about.html">About</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="flowers.html">Flowers</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="delivery.html">Delivery</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="order.html">Order</a></li>
-            <li class="nav-item"><a class="nav-link text-white active" href="my-orders.html">My Orders</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="reviews.html">Reviews</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="contacts.html">Contacts</a></li>
-        </ul>
-    </nav>
-</header>
+    function showDashboard(user) {
+        $('#loginView').addClass('d-none');
+        $('#dashboardView').removeClass('d-none');
+        $('#customerName').text(user.username);
 
-<main class="container py-5">
-    <h1 class="display-5 text-primary text-center mb-4 fade-in-up">My Orders</h1>
+        SF.auth.getOrders(user.id).then(function (orders) {
+            renderCounts(orders);
+            renderOrders(orders);
+        }, function () {
+            renderCounts([]);
+            renderOrders([]);
+        });
+    }
 
-    <!-- LOGIN VIEW -->
-    <section id="loginView" class="bg-white rounded-3 shadow-sm p-4 mb-4 fade-in-up mx-auto" style="max-width: 600px;">
-        <h2 class="text-primary border-bottom pb-2 mb-3">Sign in</h2>
-        <p class="text-center text-muted small">Use the "Register" button in the top menu if you don't have an account.</p>
+    function renderCounts(orders) {
+        var active = 0, awaiting = 0, completed = 0;
+        orders.forEach(function (o) {
+            if (o.status === 'active')         { active++; }
+            else if (o.status === 'awaiting')  { awaiting++; }
+            else if (o.status === 'completed') { completed++; }
+        });
+        $('#activeCount').text(active);
+        $('#awaitingCount').text(awaiting);
+        $('#completedCount').text(completed);
+    }
 
-        <form id="loginForm" novalidate>
-            <fieldset class="border rounded-3 p-4">
-                <legend class="fs-5 text-primary float-none w-auto px-2">Your account</legend>
+    function statusBadge(status) {
+        var map = {
+            awaiting:  'bg-warning text-dark',
+            active:    'bg-primary',
+            completed: 'bg-success'
+        };
+        return $('<span>')
+            .addClass('badge ' + (map[status] || 'bg-secondary'))
+            .text(status || '—');
+    }
 
-                <div class="mb-3">
-                    <label for="loginUsername" class="form-label fw-semibold">Name or email</label>
-                    <input type="text" id="loginUsername" class="form-control" required autocomplete="username">
-                </div>
+    function renderOrders(orders) {
+        var $tbody = $('#ordersTbody').empty();
 
-                <div class="mb-3">
-                    <label for="loginPassword" class="form-label fw-semibold">Password</label>
-                    <input type="password" id="loginPassword" class="form-control" required autocomplete="current-password">
-                </div>
+        if (!orders.length) {
+            $tbody.append(
+                $('<tr>').append(
+                    $('<td>')
+                        .attr('colspan', 6)
+                        .addClass('text-center text-muted py-4')
+                        .text('You have no orders yet.')
+                )
+            );
+            return;
+        }
 
-                <div class="d-flex flex-wrap gap-2 mb-0">
-                    <button type="button" id="loginBtn" class="btn btn-primary">Log in</button>
-                </div>
-            </fieldset>
-            <div id="loginResult" class="result-area" role="status" aria-live="polite"></div>
-        </form>
-    </section>
+        orders.forEach(function (o) {
+            $tbody.append(
+                $('<tr>').append(
+                    $('<td>').text('#' + o.id),
+                    $('<td>').text(o.bouquet || ''),
+                    $('<td>').text(SF.fmtDate(o.ordered)),
+                    $('<td>').text(SF.fmtDate(o.delivery) + ' ' + (o.time || '')),
+                    $('<td>').append(statusBadge(o.status)),
+                    $('<td>').addClass('text-end').text(SF.formatPrice(Number(o.total) || 0))
+                )
+            );
+        });
+    }
 
-    <!-- DASHBOARD VIEW (Data from DB) -->
-    <section id="dashboardView" class="hidden" aria-label="My orders">
-        <h2 class="text-primary border-bottom pb-2 mb-3">Welcome back, <span id="customerName">User</span></h2>
-        <p class="text-muted mb-4">
-            Here is a summary of your orders. We update this table every morning.
-        </p>
+    $(function () {
+        // Already signed in? Jump straight to the dashboard.
+        if (SF.auth.sessionName()) {
+            SF.auth.currentUser().then(function (user) {
+                if (user) { showDashboard(user); } else { showLogin(); }
+            }, showLogin);
+        } else {
+            showLogin();
+        }
 
-        <!-- Variables instead of hardcoded numbers -->
-        <div class="status-summary d-flex flex-wrap gap-3 mb-4">
-            <article class="bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-primary flex-fill">
-                <h3 class="text-muted fs-6 mb-2">Active</h3>
-                <p class="display-6 fw-bold text-primary mb-1" id="activeCount">-</p>
-                <p class="small text-muted mb-0">Orders in progress right now.</p>
-            </article>
+        // Login button
+        $('#loginBtn').on('click', function () {
+            var $result  = $('#loginResult').removeClass().addClass('result-area').empty();
+            var identity = String($('#loginUsername').val() || '').trim();
+            var password = String($('#loginPassword').val() || '');
 
-            <article class="bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-warning flex-fill">
-                <h3 class="text-muted fs-6 mb-2">Awaiting delivery</h3>
-                <p class="display-6 fw-bold text-warning mb-1" id="awaitingCount">-</p>
-                <p class="small text-muted mb-0">Waiting for the driver.</p>
-            </article>
+            if (!identity || !password) {
+                $result.addClass('alert alert-danger mt-3')
+                    .text('Please enter your name/email and password.');
+                return;
+            }
 
-            <article class="bg-white rounded-3 shadow-sm p-4 text-center border-start border-4 border-danger flex-fill">
-                <h3 class="text-muted fs-6 mb-2">Completed</h3>
-                <p class="display-6 fw-bold text-danger mb-1" id="completedCount">-</p>
-                <p class="small text-muted mb-0">Delivered and confirmed.</p>
-            </article>
-        </div>
+            var $btn = $(this).prop('disabled', true).text('Logging in...');
 
-        <section class="bg-white rounded-3 shadow-sm p-4 mb-4">
-            <h3 class="text-primary border-bottom pb-2 mb-3">Order history</h3>
-            <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0">
-                    <caption class="text-muted">My Sweet Flowers orders</caption>
-                    <thead>
-                    <tr>
-                        <th scope="col">Order #</th>
-                        <th scope="col">Bouquet</th>
-                        <th scope="col">Ordered</th>
-                        <th scope="col">Delivery</th>
-                        <th scope="col">Status</th>
-                        <th scope="col" class="text-end">Total</th>
-                    </tr>
-                    </thead>
-                    <tbody id="ordersTbody">
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-4">Loading orders...</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+            SF.auth.login(identity, password).then(function () {
+                // Reload so main.js rewrites the menu ("Register" -> "Hi, <name>"),
+                // then our start-up code shows the dashboard.
+                window.location.reload();
+            }, function (err) {
+                $btn.prop('disabled', false).text('Log in');
+                $result.addClass('alert alert-danger mt-3')
+                    .text(err && err.message ? err.message : 'Login failed.');
+            });
+        });
 
-        <section class="bg-white rounded-3 shadow-sm p-4 mb-4">
-            <div class="d-flex flex-wrap gap-2 mb-3">
-                <a href="order.html" class="btn btn-primary">Order again</a>
-                <a href="contacts.html" class="btn btn-outline-secondary">Change address</a>
-            </div>
-            <p class="mb-0">
-                <button type="button" id="logoutBtn" class="btn btn-outline-secondary">Log out</button>
-            </p>
-        </section>
-    </section>
-</main>
+        // Enter key anywhere in the login form triggers the login button
+        $('#loginForm').on('submit', function (e) {
+            e.preventDefault();
+            $('#loginBtn').trigger('click');
+        });
+        $('#loginForm').on('keypress', 'input', function (e) {
+            if (e.which === 13) { e.preventDefault(); $('#loginBtn').trigger('click'); }
+        });
 
-<footer class="bg-dark text-white text-center py-4 mt-5">
-    <p class="mb-1">
-        Contact us:
-        <a href="mailto:info@sweetflowers.kz" class="link-light">info@sweetflowers.kz</a>
-    </p>
-    <p class="mb-0 small">&copy; 2026 Sweet Flowers. All rights reserved.</p>
-</footer>
-
-</body>
-</html>
+        // Logout
+        $('#logoutBtn').on('click', function () {
+            SF.auth.logout();
+            window.location.reload();
+        });
+    });
+}(jQuery));
